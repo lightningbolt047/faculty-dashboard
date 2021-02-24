@@ -5,6 +5,8 @@ const { post } = require('../app');
 const authRouter=express.Router();
 const User=require('../models/userSchema');
 
+//This route handles authentication
+
 authRouter.route('/')
 .post((req,res,next)=>{
     User.find({})
