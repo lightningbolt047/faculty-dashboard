@@ -31,6 +31,7 @@ export default function LoginScreen(){
 
     const signInHandler= async ()=>{
         //TODO we will generate token using username and password later
+        //Set cookie if keep me signed in is checked
         var responseBody=await backendQuery('POST','/auth',
             {
                 clgID:username,
