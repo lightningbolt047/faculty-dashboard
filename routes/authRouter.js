@@ -23,7 +23,7 @@ authRouter.route('/')
                     });
                     return;
                 }
-                if(users[i].authToken==req.body.token){
+                if(users[i].authToken==req.body.authToken){
                     User.findByIdAndUpdate(users[i]._id,{
                         $set:{'wrongAttempts':0}
                     }).then((document)=>{
@@ -42,7 +42,7 @@ authRouter.route('/')
                         res.statusCode=403;
                         res.json({
                             "status": "Wrong Password",
-                            "remainingAttempts": 10-users[i].wrongAttempts-1
+                            "remainingAttempts": 10-users[i].wrongAttempts
                         });
                     });
                     break;
