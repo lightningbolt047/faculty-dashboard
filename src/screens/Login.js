@@ -31,7 +31,6 @@ export default function LoginScreen(){
     const [password,setPassword]=useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
-    const [remainingAttempts,setRemainingAttempts]=useState(10);
 
     const signInHandler= async ()=>{
         //TODO we will generate token using username and password later
@@ -44,10 +43,13 @@ export default function LoginScreen(){
             }
         );
         if(responseBody.statusCode===403){
-            setRemainingAttempts(responseBody.remainingAttempts);
+            if(responseBody.status==="Account locked"){
+                setResponseMessage("Account Locked");
+            }else if(responseBody.status==="Wrong Password"){
+                setResponseMessage("Wrong Password "+"Remaining Attempts: "+responseBody.remainingAttempts);
+            }
         }
         setStatusCode(responseBody.statusCode);
-        setResponseMessage(responseBody.status);
         console.log(responseBody);
     }
 
@@ -55,8 +57,7 @@ export default function LoginScreen(){
         return (
             <div>
                 <Alert variant="filled" severity="error">
-                    {statusCode===403 && responseMessage==="Wrong Password" && responseMessage+" Remaining Attempts: "+remainingAttempts}
-                    {statusCode===403 && responseMessage==="Account locked" && responseMessage}
+                    {statusCode===403 && responseMessage}
                     {statusCode===404 && "No such College ID"}
                 </Alert>
             </div>
