@@ -5,7 +5,7 @@ const { post } = require('../app');
 const recoveryRouter=express.Router();
 const User=require('../models/userSchema');
 
-//This route handles authentication
+//This route handles recovery
 
 recoveryRouter.route('/')
 .post((req,res,next)=>{
