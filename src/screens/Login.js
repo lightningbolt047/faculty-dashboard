@@ -8,6 +8,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link} from 'react-router-dom';
+import ErrorIcon from '@material-ui/icons/Error';
+import Alert from '@material-ui/lab/Alert';
 
 import backendQuery from '../services/backendServices';
 
@@ -28,17 +30,38 @@ export default function LoginScreen(){
     const [keepSignedIn,setKeepSignedIn]=useState(true);
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
+    const [statusCode,setStatusCode]=useState(200);
+    const [responseMessage,setResponseMessage]=useState("");
+    const [remainingAttempts,setRemainingAttempts]=useState(10);
 
     const signInHandler= async ()=>{
         //TODO we will generate token using username and password later
         //Set cookie if keep me signed in is checked
+        console.log(password);
         var responseBody=await backendQuery('POST','/auth',
             {
                 clgID:username,
-                token:password
+                authToken:password
             }
         );
+        setStatusCode(responseBody.statusCode);
+        setResponseMessage(responseBody.status);
+        if(statusCode===403){
+            setRemainingAttempts(responseBody.remainingAttempts);
+        }
         console.log(responseBody);
+    }
+
+    const errDiv=()=>{
+        return (
+            <div>
+                <Alert variant="filled" severity="error">
+                    {statusCode===403 && responseMessage==="Wrong Password" && responseMessage+" Remaining Attempts: "+remainingAttempts}
+                    {statusCode===403 && responseMessage==="Account Locked" && responseMessage}
+                    {statusCode===404 && "No such College ID"}
+                </Alert>
+            </div>
+        );
     }
 
 
@@ -73,6 +96,7 @@ export default function LoginScreen(){
                         <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>Sign In</Button><br></br>
                         <Link to="/recovery">Forgot Password?</Link>
                         <Box height={8}/>
+                        {statusCode!==200 && errDiv()}
                     </CardContent>
                 </Card>
                 

@@ -25,6 +25,10 @@ body {
   }
 }
 
+.loginErrorCard {
+  background-color: crimson;
+}
+
 .loginScreenGrid {
   padding: 100px;
 }
