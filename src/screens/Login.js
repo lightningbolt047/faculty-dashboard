@@ -57,7 +57,7 @@ export default function LoginScreen(){
             <div>
                 <Alert variant="filled" severity="error">
                     {statusCode===403 && responseMessage==="Wrong Password" && responseMessage+" Remaining Attempts: "+remainingAttempts}
-                    {statusCode===403 && responseMessage==="Account Locked" && responseMessage}
+                    {statusCode===403 && responseMessage==="Account locked" && responseMessage}
                     {statusCode===404 && "No such College ID"}
                 </Alert>
             </div>
