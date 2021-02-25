@@ -7,8 +7,12 @@ var cors=require('cors');
 
 
 var authRouter=require('./routes/authRouter');
+var recoveryRouter=require('./routes/recoveryRouter');
 
 const mongoose=require('mongoose');
+mongoose.set('useFindAndModify', false);
+
+
 const dbURL='mongodb://127.0.0.1:27017/'
 
 const dbConnect=mongoose.connect(dbURL);
@@ -34,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 app.use('/auth',authRouter);
+app.use('/recovery',recoveryRouter);
 
 
 
