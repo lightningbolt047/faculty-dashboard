@@ -44,11 +44,11 @@ export default function LoginScreen(){
                 authToken:password
             }
         );
-        setStatusCode(responseBody.statusCode);
-        setResponseMessage(responseBody.status);
-        if(statusCode===403){
+        if(responseBody.statusCode===403){
             setRemainingAttempts(responseBody.remainingAttempts);
         }
+        setStatusCode(responseBody.statusCode);
+        setResponseMessage(responseBody.status);
         console.log(responseBody);
     }
 
