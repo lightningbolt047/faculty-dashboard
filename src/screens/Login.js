@@ -72,6 +72,7 @@ export default function LoginScreen(){
                         />
                         <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>Sign In</Button><br></br>
                         <Link to="/recovery">Forgot Password?</Link>
+                        <Box height={8}/>
                     </CardContent>
                 </Card>
                 
