@@ -1,6 +1,7 @@
 import './App.css';
 import './screens/Login';
 import LoginScreen from './screens/Login';
+import ForgotPwd from './screens/ForgotPwd';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom';
 
 
@@ -12,7 +13,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/recovery">
-            Recovery
+            <ForgotPwd/>
           </Route>
           <Route path="/">
             <LoginScreen/>
