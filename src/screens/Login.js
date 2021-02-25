@@ -8,7 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link} from 'react-router-dom';
-import ErrorIcon from '@material-ui/icons/Error';
 import Alert from '@material-ui/lab/Alert';
 
 import backendQuery from '../services/backendServices';
