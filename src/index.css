@@ -29,6 +29,14 @@ body {
   background-color: crimson;
 }
 
+#secQuestion {
+  text-align: left;
+}
+
 .loginScreenGrid {
   padding: 100px;
+}
+
+.forgotPasswordScreenGrid{
+  padding: 60px;
 }

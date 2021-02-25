@@ -9,8 +9,8 @@ import {useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link} from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-
 import backendQuery from '../services/backendServices';
+const crypto=require('crypto');
 
 const useStyles=makeStyles({
     title:{
@@ -32,14 +32,19 @@ export default function LoginScreen(){
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
 
+    const salt="~`!@#$%^&*()_";
+
     const signInHandler= async ()=>{
         //TODO we will generate token using username and password later
         //Set cookie if keep me signed in is checked
-        console.log(password);
+
+        var hash=crypto.createHash('sha1').update(username+salt+password).digest('hex');
+        console.log("Hash "+hash);
+
         var responseBody=await backendQuery('POST','/auth',
             {
                 clgID:username,
-                authToken:password
+                authToken:hash
             }
         );
         if(responseBody.statusCode===403){

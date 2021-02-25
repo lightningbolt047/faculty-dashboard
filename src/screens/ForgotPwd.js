@@ -25,20 +25,47 @@ export default function ForgotPasswordScreen(){
     const classes=useStyles();
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
+    const [confirmPassword,setConfirmPassword]=useState("");
+    const [secQuestion,setSecQuestion]=useState("");
     const [secAnswer,setSecAnswer]=useState("");
+    const [dbID,setDbID]=useState("");
+    const [statusCode,setStatusCode]=useState(0);
 
+    const checkUserPresence=async ()=>{
 
-    // const signInHandler= async ()=>{
-    //     //TODO we will generate token using username and password later
-    //     //Set cookie if keep me signed in is checked
-    //     var responseBody=await backendQuery('POST','/auth',
-    //         {
-    //             clgID:username,
-    //             token:password
-    //         }
-    //     );
-    //     console.log(responseBody);
-    // }
+        var responseBody=await backendQuery('POST','/recovery',
+            {
+                reqType:"userPresenceCheck",
+                clgID:username
+            }
+        );
+        setStatusCode(responseBody.statusCode);
+        if(responseBody.statusCode===200){
+            setDbID(responseBody.dbID);
+            setSecQuestion(responseBody.secQuestion);
+        }
+        console.log(responseBody);
+    }
+
+    const getRecoveryPasswordForm=()=>{
+        return (
+            <div className="getSecQuestion">
+                <p id="secQuestion">{"Security Question: "+secQuestion}</p>
+                <Grid container alignContent="center" justify="center">
+                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => setSecAnswer(event.target.value)} fullWidth/>
+                </Grid>
+                <Box height={8}/>
+                <Grid container alignContent="center" justify="center">
+                    <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => setPassword(event.target.value)} type='password' fullWidth/>
+                </Grid>
+                <Box height={8}/>
+                <Grid container alignContent="center" justify="center">
+                    <TextField variant="outlined" color="secondary" value={password} label="Confirm Password" onChange={event => setConfirmPassword(event.target.value)} type='password' fullWidth/>
+                </Grid>
+                <Box height={8}/>
+            </div>
+        );
+    }
 
 
     return (
@@ -46,7 +73,7 @@ export default function ForgotPasswordScreen(){
             <Grid container justify="center" alignItems="center" direction="column" style={{minHeight: "100vh"}}>
                 <Card>
                     <CardContent>
-                        <Grid container className="loginScreenGrid">
+                        <Grid container className="forgotPasswordScreenGrid">
                             <Typography variant="h4" className={classes.title}>
                                 Forgot Password?
                             </Typography>
@@ -57,21 +84,9 @@ export default function ForgotPasswordScreen(){
                             </Grid>
                             <Box height={8}/>
                         </div>
+                        {statusCode==200 && getRecoveryPasswordForm()}
 
-                        <div className="getSecQuestion">
-                            <p>This Is Placeholder For Security Qs</p>
-                            <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" value={secAnswer} label="SecAnswer" onChange={event => setSecAnswer(event.target.value)} fullWidth/>
-                            </Grid>
-                            <Box height={8}/>
-                            <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" value={password} label="password" onChange={event => setPassword(event.target.value)} type='password' fullWidth/>
-                            </Grid>
-                            <Box height={8}/>
-                        </div>
-
-
-                        <Button variant='contained' color='secondary'>Set New Password</Button><br></br>
+                        <Button variant='contained' color='secondary' onClick={async ()=>checkUserPresence()}>Set New Password</Button><br></br>
                         <Box height={8}/>
                     </CardContent>
                 </Card>
