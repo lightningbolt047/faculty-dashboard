@@ -5,8 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useState} from 'react';
-import {Link} from 'react-router-dom';
-
+import {Link, Redirect} from 'react-router-dom';
+import hashString from '../services/hashService';
+import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 
 const useStyles=makeStyles({
@@ -29,7 +30,9 @@ export default function ForgotPasswordScreen(){
     const [secQuestion,setSecQuestion]=useState("");
     const [secAnswer,setSecAnswer]=useState("");
     const [dbID,setDbID]=useState("");
-    const [statusCode,setStatusCode]=useState(0);
+    const [statusCode,setStatusCode]=useState(200);
+    const [userPresent,setUserPresent]=useState(false);
+    const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
 
     const checkUserPresence=async ()=>{
 
@@ -43,7 +46,30 @@ export default function ForgotPasswordScreen(){
         if(responseBody.statusCode===200){
             setDbID(responseBody.dbID);
             setSecQuestion(responseBody.secQuestion);
+            setUserPresent(true);
         }
+        console.log(responseBody);
+    }
+
+    const checkSecAnswerChangePassword=async ()=>{
+
+        if(password!==confirmPassword || password===""){   
+            return;
+        }
+
+        var responseBody=await backendQuery('POST','/recovery',
+            {
+                reqType:"secAnswerChangePassword",
+                dbID:dbID,
+                secAnswer:secAnswer,
+                authToken:hashString(username,password)
+            }
+        );
+        if(responseBody.statusCode===200){
+            setPasswordChangeSuccess(true);
+        }
+        setStatusCode(responseBody.statusCode);
+        
         console.log(responseBody);
     }
 
@@ -52,17 +78,49 @@ export default function ForgotPasswordScreen(){
             <div className="getSecQuestion">
                 <p id="secQuestion">{"Security Question: "+secQuestion}</p>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => setSecAnswer(event.target.value)} fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => setPassword(event.target.value)} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Confirm Password" onChange={event => setConfirmPassword(event.target.value)} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
+            </div>
+        );
+    }
+
+    const reqErrDiv=()=>{
+        return (
+        <div>
+            <Alert variant="filled" severity="error">
+                {!userPresent && statusCode===404 && "No such College ID"}
+                {userPresent && statusCode===403 && "Wrong Security Answer. Password not changed"}
+            </Alert>
+        </div>
+        );
+    }
+
+    const passwordMatchErrDiv=()=>{
+        return(
+        <div>
+            <Alert variant="filled" severity="warning">
+                {password==="" && "Password fields blank"}
+                {password!==confirmPassword && "Password fields do not match"}
+            </Alert>
+        </div>
+        );
+    }
+
+    const passwordChangeSuccessDiv=()=>{
+        return (
+            <div>
+                <Alert variant="filled" severity="success">
+                    Password change success
+                </Alert>
             </div>
         );
     }
@@ -80,17 +138,25 @@ export default function ForgotPasswordScreen(){
                         </Grid>
                         <div className="getUser">
                             <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" value={username} label="Username" onChange ={event => setUsername(event.target.value)}  fullWidth/>
+                                <TextField variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
                             </Grid>
                             <Box height={8}/>
                         </div>
-                        {statusCode==200 && getRecoveryPasswordForm()}
+                        {userPresent && getRecoveryPasswordForm()}
 
-                        <Button variant='contained' color='secondary' onClick={async ()=>checkUserPresence()}>Set New Password</Button><br></br>
+                        <Button variant='contained' color='secondary' onClick={async ()=>{
+                            if(userPresent){
+                                checkSecAnswerChangePassword();
+                            }else{
+                                checkUserPresence();
+                            }
+                        }}>{!userPresent && "Next"}{userPresent && "Set new password"}</Button><br></br>
                         <Box height={8}/>
+                        {statusCode!==200 && reqErrDiv()}
+                        {(password!==confirmPassword || password==="") && passwordMatchErrDiv()}
+                        {passwordChangeSuccess && passwordChangeSuccessDiv()}
                     </CardContent>
                 </Card>
-                
             </Grid>
         </div> 
     );
