@@ -5,12 +5,13 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link} from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
+import { useCookies } from 'react-cookie';
 
 const useStyles=makeStyles({
     title:{
@@ -25,12 +26,41 @@ const useStyles=makeStyles({
 
 
 export default function LoginScreen(){
+    const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
     const classes=useStyles();
     const [keepSignedIn,setKeepSignedIn]=useState(true);
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
+    
+
+    const cookieSignInHandler= async()=>{
+        if(cookies.dbID!=null && cookies.authToken!=null){
+            var responseBody=await backendQuery('POST','/auth',
+                {
+                    loginType:"cookie",
+                    dbID:cookies.dbID,
+                    authToken:cookies.authToken
+                }
+            );
+            if(responseBody.statusCode===403){
+                if(responseBody.status==="Account locked"){
+                    setResponseMessage("Account Locked");
+                }else if(responseBody.status==="Wrong Password"){
+                    //eslint-disable-next-line
+                    setResponseMessage("Wrong Password "+"Remaining Attempts: "+responseBody.remainingAttempts);
+                }
+            }
+            setStatusCode(responseBody.statusCode);
+            console.log(responseBody);
+        }
+    }
+
+    useEffect(()=>{
+        cookieSignInHandler();
+        //eslint-disable-next-line 
+    },[]);
 
     const signInHandler= async ()=>{
         //TODO we will generate token using username and password later
@@ -38,6 +68,7 @@ export default function LoginScreen(){
 
         var responseBody=await backendQuery('POST','/auth',
             {
+                loginType:"user",
                 clgID:username,
                 authToken:hashString(username,password)
             }
@@ -51,6 +82,15 @@ export default function LoginScreen(){
             }
         }
         setStatusCode(responseBody.statusCode);
+        if(statusCode===200){
+            if(keepSignedIn){
+                setCookie('dbID',responseBody.dbID);
+                setCookie('authToken',hashString(username,password));
+            }else{
+                removeCookie('dbID');
+                removeCookie('authToken');
+            }
+        }
         console.log(responseBody);
     }
 

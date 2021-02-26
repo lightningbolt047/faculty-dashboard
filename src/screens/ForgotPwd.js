@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useState} from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Link, Redirect, useHistory} from 'react-router-dom';
 import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
@@ -24,6 +24,8 @@ const useStyles=makeStyles({
 
 export default function ForgotPasswordScreen(){
     const classes=useStyles();
+    const history = useHistory()
+
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
     const [confirmPassword,setConfirmPassword]=useState("");
@@ -73,6 +75,17 @@ export default function ForgotPasswordScreen(){
         console.log(responseBody);
     }
 
+    const getNoSecurityQuestionDiv=()=>{
+        return (
+            <div>
+                <Alert variant="filled" severity="info">
+                    Sorry! No Security question was set for this account. Contact admin for account recovery
+                </Alert>
+                <Box height={8}/>
+            </div>
+        );
+    }
+
     const getRecoveryPasswordForm=()=>{
         return (
             <div className="getSecQuestion">
@@ -115,11 +128,18 @@ export default function ForgotPasswordScreen(){
         );
     }
 
+    const sendUserBackToLogin=async ()=>{
+        setTimeout(()=>{
+            history.goBack();
+        },5000);
+    }
+
     const passwordChangeSuccessDiv=()=>{
+        sendUserBackToLogin();
         return (
             <div>
                 <Alert variant="filled" severity="success">
-                    Password change success
+                    Password change success. You will be redirected to login screen soon!
                 </Alert>
             </div>
         );
@@ -142,18 +162,25 @@ export default function ForgotPasswordScreen(){
                             </Grid>
                             <Box height={8}/>
                         </div>
-                        {userPresent && getRecoveryPasswordForm()}
+                        {userPresent && secQuestion==null && getNoSecurityQuestionDiv()}
+                        {userPresent && secQuestion!=null && getRecoveryPasswordForm()}
 
                         <Button variant='contained' color='secondary' onClick={async ()=>{
-                            if(userPresent){
-                                checkSecAnswerChangePassword();
-                            }else{
+                            if(!userPresent){
                                 checkUserPresence();
+                                return;
                             }
-                        }}>{!userPresent && "Next"}{userPresent && "Set new password"}</Button><br></br>
+                            if(userPresent && secQuestion!=null){
+                                checkSecAnswerChangePassword();
+                                return;
+                            }
+                            if(userPresent && secQuestion==null){
+                                history.goBack();
+                            }
+                        }}>{!userPresent && "Next"}{userPresent && secQuestion!=null && "Set new password"}{userPresent && secQuestion==null && "Go back"}</Button><br></br>
                         <Box height={8}/>
                         {statusCode!==200 && reqErrDiv()}
-                        {(password!==confirmPassword || password==="") && passwordMatchErrDiv()}
+                        {userPresent && secQuestion!=null && (password!==confirmPassword || password==="") && passwordMatchErrDiv()}
                         {passwordChangeSuccess && passwordChangeSuccessDiv()}
                     </CardContent>
                 </Card>

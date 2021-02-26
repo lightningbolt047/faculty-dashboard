@@ -12,6 +12,7 @@
     "crypto": "^1.0.1",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
     "react-hash-string": "^1.0.0",
     "react-pro-sidebar": "^0.5.0",
