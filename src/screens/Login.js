@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import {useEffect, useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {Link} from 'react-router-dom';
+import {Link,useHistory} from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
@@ -26,18 +26,23 @@ const useStyles=makeStyles({
 
 
 export default function LoginScreen(){
-    const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const classes=useStyles();
     const [keepSignedIn,setKeepSignedIn]=useState(true);
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
+
+    const history=useHistory();
     
 
     const cookieSignInHandler= async()=>{
-        if(cookies.dbID!=null && cookies.authToken!=null){
-            var responseBody=await backendQuery('POST','/auth',
+
+        if(typeof cookies.dbID==='undefined' || typeof cookies.authToken==='undefined'){
+            return;
+        }
+        var responseBody=await backendQuery('POST','/auth',
                 {
                     loginType:"cookie",
                     dbID:cookies.dbID,
@@ -53,8 +58,14 @@ export default function LoginScreen(){
                 }
             }
             setStatusCode(responseBody.statusCode);
+            if(statusCode===200){
+                redirectToHome();
+            }
             console.log(responseBody);
-        }
+    }
+
+    const redirectToHome=()=>{
+        history.replace('/home');
     }
 
     useEffect(()=>{
@@ -90,6 +101,8 @@ export default function LoginScreen(){
                 removeCookie('dbID');
                 removeCookie('authToken');
             }
+            redirectToHome();
+
         }
         console.log(responseBody);
     }

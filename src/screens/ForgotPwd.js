@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useState} from 'react';
-import {Link, Redirect, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';

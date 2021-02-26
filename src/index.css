@@ -40,3 +40,9 @@ body {
 .forgotPasswordScreenGrid{
   padding: 50px;
 }
+
+.dashboardHomeAppBar {
+  background: linear-gradient(45deg,#7928ca, #6f4bd7, #6965e0, #d865cb, #f043aa, #ff0080);
+  background-size: 150% 150%;
+  animation: gradientAnimation 10s ease infinite;
+}
