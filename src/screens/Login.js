@@ -49,6 +49,7 @@ export default function LoginScreen(){
                     authToken:cookies.authToken
                 }
             );
+            console.log(responseBody.statusCode);
             if(responseBody.statusCode===403){
                 if(responseBody.status==="Account locked"){
                     setResponseMessage("Account Locked");
@@ -58,7 +59,7 @@ export default function LoginScreen(){
                 }
             }
             setStatusCode(responseBody.statusCode);
-            if(statusCode===200){
+            if(responseBody.statusCode===200){
                 redirectToHome();
             }
             console.log(responseBody);
@@ -74,9 +75,6 @@ export default function LoginScreen(){
     },[]);
 
     const signInHandler= async ()=>{
-        //TODO we will generate token using username and password later
-        //Set cookie if keep me signed in is checked
-
         var responseBody=await backendQuery('POST','/auth',
             {
                 loginType:"user",
@@ -85,6 +83,7 @@ export default function LoginScreen(){
             }
         );
         if(responseBody.statusCode===403){
+
             if(responseBody.status==="Account locked"){
                 setResponseMessage("Account Locked");
             }else if(responseBody.status==="Wrong Password"){
@@ -93,7 +92,7 @@ export default function LoginScreen(){
             }
         }
         setStatusCode(responseBody.statusCode);
-        if(statusCode===200){
+        if(responseBody.statusCode===200){
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID);
                 setCookie('authToken',hashString(username,password));
@@ -102,7 +101,6 @@ export default function LoginScreen(){
                 removeCookie('authToken');
             }
             redirectToHome();
-
         }
         console.log(responseBody);
     }
