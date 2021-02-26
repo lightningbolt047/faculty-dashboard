@@ -32,7 +32,7 @@ authRouter.route('/')
                 });
             }
         },(err)=>{
-            res.status=500;
+            res.statusCode=500;
             res.json({
                 status:"Something went wrong"
             });
