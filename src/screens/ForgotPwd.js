@@ -111,7 +111,7 @@ export default function ForgotPasswordScreen(){
         <div>
             <Alert variant="filled" severity="error">
                 {!userPresent && statusCode===404 && "No such College ID"}
-                {userPresent && statusCode===403 && "Wrong Security Answer. Password not changed"}
+                {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"}
             </Alert>
         </div>
         );

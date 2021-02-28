@@ -23,6 +23,11 @@ const useStyles=makeStyles({
     },
   });
 
+  const cookieOptions={
+      path:'/',
+      maxAge: 3600*24*7
+  };
+
 
 
 export default function LoginScreen(){
@@ -50,7 +55,7 @@ export default function LoginScreen(){
                 }
             );
             console.log(responseBody.statusCode);
-            if(responseBody.statusCode===403){
+            if(responseBody.statusCode===401){
                 if(responseBody.status==="Account locked"){
                     setResponseMessage("Account Locked");
                 }else if(responseBody.status==="Wrong Password"){
@@ -82,7 +87,7 @@ export default function LoginScreen(){
                 authToken:hashString(username,password)
             }
         );
-        if(responseBody.statusCode===403){
+        if(responseBody.statusCode===401){
 
             if(responseBody.status==="Account locked"){
                 setResponseMessage("Account Locked");
@@ -94,8 +99,8 @@ export default function LoginScreen(){
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
             if(keepSignedIn){
-                setCookie('dbID',responseBody.dbID);
-                setCookie('authToken',hashString(username,password));
+                setCookie('dbID',responseBody.dbID,cookieOptions);
+                setCookie('authToken',hashString(username,password),cookieOptions);
             }else{
                 removeCookie('dbID');
                 removeCookie('authToken');
@@ -109,7 +114,7 @@ export default function LoginScreen(){
         return (
             <div>
                 <Alert variant="filled" severity="error">
-                    {statusCode===403 && responseMessage}
+                    {statusCode===401 && responseMessage}
                     {statusCode===404 && "No such College ID"}
                 </Alert>
             </div>
