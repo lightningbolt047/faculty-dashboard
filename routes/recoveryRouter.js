@@ -22,7 +22,7 @@ recoveryRouter.route('/')
             res.statusCode=200;
             res.json({
                 userPresent:true,
-                dbID:user.dbID,
+                dbID:user._id,
                 secQuestion:user.secQuestion
             });
         })
