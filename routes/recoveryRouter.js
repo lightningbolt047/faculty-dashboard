@@ -10,31 +10,21 @@ const User=require('../models/userSchema');
 recoveryRouter.route('/')
 .post((req,res,next)=>{
     if(req.body.reqType=="userPresenceCheck"){
-        var userPresent=false;
-        var dbID;
-        var secQuestion;
-        User.find({}).then((users)=>{
-            for(var i=0;i<users.length;i++){
-                if(users[i].clgID==req.body.clgID){
-                    userPresent=true;
-                    dbID=users[i]._id;
-                    secQuestion=users[i].secQuestion;
-                    break;
-                }
-            }
-            if(userPresent){
-                res.statusCode=200;
-                res.json({
-                    userPresent:userPresent,
-                    dbID:dbID,
-                    secQuestion:secQuestion
-                });
-            }else{
+        User.findOne({clgID:req.body.clgID})
+        .then((user)=>{
+            if(!user){
                 res.statusCode=404;
                 res.json({
-                    userPresent:userPresent
+                    userPresent:false
                 });
+                return;
             }
+            res.statusCode=200;
+            res.json({
+                userPresent:true,
+                dbID:user.dbID,
+                secQuestion:user.secQuestion
+            });
         })
     }else if(req.body.reqType=="secAnswerChangePassword"){
         User.findById(req.body.dbID)
@@ -49,7 +39,7 @@ recoveryRouter.route('/')
                     });
                 });
             }else{
-                res.statusCode=403;
+                res.statusCode=401;
                 res.json({
                     status:"wrongAnswer"
                 });
