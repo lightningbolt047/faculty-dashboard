@@ -39,16 +39,16 @@ authRouter.route('/')
         });
     }
     if(req.body.loginType==="user"){
-        User.find({clgID:req.body.clgID})
-        .then((users)=>{ 
-            if(users.length===0){
+        User.findOne({clgID:req.body.clgID})
+        .then((user)=>{ 
+            if(!user){
                 res.statusCode=404;
                 res.json({
                     "status": "No such clgID"
                 });
                 return;
             }
-            if(users[0].wrongAttempts>=10){
+            if(user.wrongAttempts>=10){
                 res.statusCode=401;
                 res.json({
                     "status":"Account locked",
@@ -56,27 +56,27 @@ authRouter.route('/')
                 });
                 return;
             }
-            if(users[0].authToken===req.body.authToken){
-                User.findByIdAndUpdate(users[0]._id,{
+            if(user.authToken===req.body.authToken){
+                User.findByIdAndUpdate(user._id,{
                     $set:{'wrongAttempts':0}
                 }).then(()=>{
                     res.statusCode=200;
                     res.json({
                         "status": "Login Success",
-                        "dbID": users[0]._id,
+                        "dbID": user._id,
                         "remainingAttempts": 10
                     });
                 });
             }
             else{
-                User.findByIdAndUpdate(users[0]._id,{
-                    $set:{'wrongAttempts':users[0].wrongAttempts+1}
+                User.findByIdAndUpdate(user._id,{
+                    $set:{'wrongAttempts':user.wrongAttempts+1}
                 })
                 .then((document)=>{
                     res.statusCode=401;
                     res.json({
                         "status": "Wrong Password",
-                        "remainingAttempts": 10-users[0].wrongAttempts
+                        "remainingAttempts": 10-user.wrongAttempts
                     });
                 });
             }
