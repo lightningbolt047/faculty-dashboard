@@ -7,6 +7,7 @@ const backendQuery = async (reqType,endpoint,reqBody) => {
     }
     var response= await fetch('http://localhost:4000'+endpoint,reqOptions);
     var data=await response.json();
+    data.statusCode=response.status;
     return data;
 }
  

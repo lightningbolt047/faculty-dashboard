@@ -5,11 +5,14 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {Link} from 'react-router-dom';
-
+import {Link,useHistory} from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
+import hashString from '../services/hashService';
+import { useCookies } from 'react-cookie';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles=makeStyles({
     title:{
@@ -21,24 +24,106 @@ const useStyles=makeStyles({
     },
   });
 
+  const cookieOptions={
+      path:'/',
+      maxAge: 3600*24*7
+  };
+
 
 
 export default function LoginScreen(){
+    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const classes=useStyles();
     const [keepSignedIn,setKeepSignedIn]=useState(true);
     const [username,setUsername]=useState("");
     const [password,setPassword]=useState("");
+    const [statusCode,setStatusCode]=useState(200);
+    const [responseMessage,setResponseMessage]=useState("");
+    const [signInWorking,setSignInWorking]=useState(false);
+
+    const history=useHistory();
+    
+
+    const cookieSignInHandler= async()=>{
+        if(typeof cookies.dbID==='undefined' || typeof cookies.authToken==='undefined'){
+            return;
+        }
+        setSignInWorking(true);
+        var responseBody=await backendQuery('POST','/auth',
+                {
+                    loginType:"cookie",
+                    dbID:cookies.dbID,
+                    authToken:cookies.authToken
+                }
+            );
+            console.log(responseBody.statusCode);
+            if(responseBody.statusCode===401){
+                if(responseBody.status==="Account locked"){
+                    setResponseMessage("Account Locked");
+                }else if(responseBody.status==="Wrong Password"){
+                    //eslint-disable-next-line
+                    setResponseMessage("Wrong Password "+"Remaining Attempts: "+responseBody.remainingAttempts);
+                }
+            }
+            setStatusCode(responseBody.statusCode);
+            setSignInWorking(false);
+            if(responseBody.statusCode===200){
+                redirectToHome();
+            }
+            console.log(responseBody);
+    }
+
+    const redirectToHome=()=>{
+        history.replace('/home');
+    }
+
+    useEffect(()=>{
+        cookieSignInHandler();
+        //eslint-disable-next-line 
+    },[]);
 
     const signInHandler= async ()=>{
-        //TODO we will generate token using username and password later
-        //Set cookie if keep me signed in is checked
+        setSignInWorking(true);
         var responseBody=await backendQuery('POST','/auth',
             {
+                loginType:"user",
                 clgID:username,
-                token:password
+                authToken:hashString(username,password)
             }
         );
+        if(responseBody.statusCode===401){
+
+            if(responseBody.status==="Account locked"){
+                setResponseMessage("Account Locked");
+            }else if(responseBody.status==="Wrong Password"){
+                //eslint-disable-next-line
+                setResponseMessage("Wrong Password "+"Remaining Attempts: "+responseBody.remainingAttempts);
+            }
+        }
+        setStatusCode(responseBody.statusCode);
+        if(responseBody.statusCode===200){
+            if(keepSignedIn){
+                setCookie('dbID',responseBody.dbID,cookieOptions);
+                setCookie('authToken',hashString(username,password),cookieOptions);
+            }else{
+                removeCookie('dbID');
+                removeCookie('authToken');
+            }
+            redirectToHome();
+        }
+        setSignInWorking(false);
         console.log(responseBody);
+    }
+
+    const errDiv=()=>{
+        return (
+            <div>
+                <Alert variant="filled" severity="error">
+                    {statusCode===401 && responseMessage}
+                    {statusCode===404 && "No such College ID"}
+                </Alert>
+            </div>
+        );
     }
 
 
@@ -70,9 +155,15 @@ export default function LoginScreen(){
                             onChange={(e)=>{setKeepSignedIn(!keepSignedIn)}}
                             label="Keep me signed in"
                         />
-                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>Sign In</Button><br></br>
+                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>
+                            {!signInWorking && "Sign In"}
+                            {signInWorking && <CircularProgress size={24} color="inherit"/>}
+                        </Button>
+                        
+                        <Box height={8}/>
                         <Link to="/recovery">Forgot Password?</Link>
                         <Box height={8}/>
+                        {statusCode!==200 && errDiv()}
                     </CardContent>
                 </Card>
                 
