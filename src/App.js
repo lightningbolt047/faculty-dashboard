@@ -16,7 +16,7 @@ function App() {
           <Route exact path="/recovery">
             <ForgotPwd/>
           </Route>
-          <Route exact path="/home">
+          <Route exact path="/dashboard">
             <DashboardHome/>
           </Route>
           <Route path="/">

@@ -74,7 +74,7 @@ export default function LoginScreen(){
     }
 
     const redirectToHome=()=>{
-        history.replace('/home');
+        history.replace('/dashboard');
     }
 
     useEffect(()=>{

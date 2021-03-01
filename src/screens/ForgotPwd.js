@@ -136,7 +136,7 @@ export default function ForgotPasswordScreen(){
 
     const sendUserBackToLogin=async ()=>{
         setTimeout(()=>{
-            history.goBack();
+            history.replace('/');
         },5000);
     }
 
