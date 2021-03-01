@@ -36,7 +36,6 @@ export default function DashboardHome(){
                     <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
                         <LogoutIcon/>
                     </IconButton>
-    
                 </Toolbar>
             </AppBar>
         </div>

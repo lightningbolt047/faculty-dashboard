@@ -9,6 +9,7 @@ import {useHistory} from 'react-router-dom';
 import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles=makeStyles({
     title:{
@@ -35,8 +36,10 @@ export default function ForgotPasswordScreen(){
     const [statusCode,setStatusCode]=useState(200);
     const [userPresent,setUserPresent]=useState(false);
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
+    const [buttonWorking,setButtonWorking]=useState(false);
 
     const checkUserPresence=async ()=>{
+        setButtonWorking(true);
 
         var responseBody=await backendQuery('POST','/recovery',
             {
@@ -50,6 +53,7 @@ export default function ForgotPasswordScreen(){
             setSecQuestion(responseBody.secQuestion);
             setUserPresent(true);
         }
+        setButtonWorking(false);
         console.log(responseBody);
     }
 
@@ -58,6 +62,7 @@ export default function ForgotPasswordScreen(){
         if(password!==confirmPassword || password===""){   
             return;
         }
+        setButtonWorking(true);
 
         var responseBody=await backendQuery('POST','/recovery',
             {
@@ -71,6 +76,7 @@ export default function ForgotPasswordScreen(){
             setPasswordChangeSuccess(true);
         }
         setStatusCode(responseBody.statusCode);
+        setButtonWorking(false);
         
         console.log(responseBody);
     }
@@ -177,7 +183,13 @@ export default function ForgotPasswordScreen(){
                             if(userPresent && secQuestion==null){
                                 history.goBack();
                             }
-                        }}>{!userPresent && "Next"}{userPresent && secQuestion!=null && "Set new password"}{userPresent && secQuestion==null && "Go back"}</Button><br></br>
+                        }}>
+                            {!buttonWorking && !userPresent && "Next"}
+                            {!buttonWorking && userPresent && secQuestion!=null && "Set new password"}
+                            {!buttonWorking && userPresent && secQuestion==null && "Go back"}
+                            {buttonWorking && <CircularProgress size={24} color="inherit"/>}
+
+                        </Button><br></br>
                         <Box height={8}/>
                         {statusCode!==200 && reqErrDiv()}
                         {userPresent && secQuestion!=null && (password!==confirmPassword || password==="") && passwordMatchErrDiv()}

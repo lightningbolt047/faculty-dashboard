@@ -12,6 +12,7 @@ import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
 import { useCookies } from 'react-cookie';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles=makeStyles({
     title:{
@@ -38,15 +39,16 @@ export default function LoginScreen(){
     const [password,setPassword]=useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
+    const [signInWorking,setSignInWorking]=useState(false);
 
     const history=useHistory();
     
 
     const cookieSignInHandler= async()=>{
-
         if(typeof cookies.dbID==='undefined' || typeof cookies.authToken==='undefined'){
             return;
         }
+        setSignInWorking(true);
         var responseBody=await backendQuery('POST','/auth',
                 {
                     loginType:"cookie",
@@ -64,6 +66,7 @@ export default function LoginScreen(){
                 }
             }
             setStatusCode(responseBody.statusCode);
+            setSignInWorking(false);
             if(responseBody.statusCode===200){
                 redirectToHome();
             }
@@ -80,6 +83,7 @@ export default function LoginScreen(){
     },[]);
 
     const signInHandler= async ()=>{
+        setSignInWorking(true);
         var responseBody=await backendQuery('POST','/auth',
             {
                 loginType:"user",
@@ -107,6 +111,7 @@ export default function LoginScreen(){
             }
             redirectToHome();
         }
+        setSignInWorking(false);
         console.log(responseBody);
     }
 
@@ -150,7 +155,12 @@ export default function LoginScreen(){
                             onChange={(e)=>{setKeepSignedIn(!keepSignedIn)}}
                             label="Keep me signed in"
                         />
-                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>Sign In</Button><br></br>
+                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>
+                            {!signInWorking && "Sign In"}
+                            {signInWorking && <CircularProgress size={24} color="inherit"/>}
+                        </Button>
+                        
+                        <Box height={8}/>
                         <Link to="/recovery">Forgot Password?</Link>
                         <Box height={8}/>
                         {statusCode!==200 && errDiv()}
