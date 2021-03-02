@@ -13,6 +13,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import clsx from 'clsx';
+import Profile from './sub-screens/Profile';
 
 
 const sidebarWidth=240;
@@ -69,6 +70,12 @@ export default function DashboardHome(){
         return sidebarWidth/3.5;
     }
 
+    const getMainUIContent=()=>{
+        return (
+            <Profile/>
+        );
+    }
+
     return (
         <div>
             <AppBar className="dashboardHomeAppBar" position="static">
@@ -113,6 +120,7 @@ export default function DashboardHome(){
                     </ListItem>
                 </List>
             </Drawer>
+            {getMainUIContent()}
         </div>
     );
 }

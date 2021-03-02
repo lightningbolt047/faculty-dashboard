@@ -151,7 +151,7 @@ export default function ForgotPasswordScreen(){
         );
     }
 
-
+    
     return (
         <div className="loginScreen">
             <Grid container justify="center" alignItems="center" direction="column" style={{minHeight: "100vh"}}>

@@ -5,9 +5,6 @@ import ForgotPwd from './screens/ForgotPwd';
 import DashboardHome from './screens/DashboardHome';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom';
 
-
-
-
 function App() {
   return (
     <Router>
