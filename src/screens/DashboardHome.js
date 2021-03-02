@@ -120,7 +120,9 @@ export default function DashboardHome(){
                     </ListItem>
                 </List>
             </Drawer>
-            {getMainUIContent()}
+            <div className="dashboardContentSpace">
+                {getMainUIContent()}
+            </div>
         </div>
     );
 }
