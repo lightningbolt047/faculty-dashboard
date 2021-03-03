@@ -8,6 +8,7 @@ var cors=require('cors');
 
 var authRouter=require('./routes/authRouter');
 var recoveryRouter=require('./routes/recoveryRouter');
+var profileRouter=require('./routes/profileRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -39,6 +40,7 @@ app.use(cors());
 
 app.use('/auth',authRouter);
 app.use('/recovery',recoveryRouter);
+app.use('/profile',profileRouter);
 
 
 
