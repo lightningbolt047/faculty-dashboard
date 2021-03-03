@@ -18,7 +18,6 @@ function checkCredentials(req,res,next){
             return;
         }
         if(user.authToken===req.headers['authtoken']){
-            console.log("Auth done");
             next();
         }
         else{
@@ -35,7 +34,6 @@ profileRouter.route('/:dbID')
 .get(checkCredentials,(req,res,next)=>{
     User.findById(req.params.dbID)
     .then((user)=>{
-        console.log("Here in maindb");
         var userData=user;
         userData.__v=undefined;
         userData.authToken=undefined;
@@ -57,7 +55,8 @@ profileRouter.route('/:dbID')
                 "address":req.body.address,
                 "email":req.body.email,
                 "secQuestion":req.body.secQuestion,
-                "secAnswer":req.body.secAnswer
+                "secAnswer":req.body.secAnswer,
+                "imagePath":req.body.imagePath
             }
         }).then((user)=>{
             res.statusCode=200;
