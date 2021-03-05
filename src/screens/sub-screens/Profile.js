@@ -1,17 +1,54 @@
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import EditableInput from '../../components/EditableInput';
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import EditableDropdown from '../../components/EditableDropdown';
+import globalVariables from '../../services/globalVariables';
+import backendQuery from '../../services/backendServices';
 
 
 export default function Profile(){
 
-    const [phNo,setPhNo]=useState("982323232");
-    const [email,setEmail]=useState("sdsu@email.com");
-    const [address,setAddress]=useState("9, 9th Ave");
+    const [phNo,setPhNo]=useState("982-345-1234");
+    const [email,setEmail]=useState("abc@email.com");
+    const [address,setAddress]=useState("Winter Street");
+    const secQsArray = ["Select a security question","When Were You Married?","What Is Your Spouse's Favorite Food?","What Is Your Favorite Visiting Place?","What Course Did You First Offer In College?"];
+    const [selectedSecQn,setSelectedSecQn]=useState(secQsArray[0]);
+    const [securityAnswer,setSecurityAnswer]=useState("2004");
+    const [fetchingData,setFetchingData]=useState(true);
+    const [statusCode,setStatusCode]=useState(0);
+    const [name,setName]=useState("");
+    const [clgID,setClgID]=useState("");
+    // const [imagePath,setImagePath]=useState();
+
+    const getInfoFromBackend=async ()=>{
+        setFetchingData(true);
+        var responseBody=await backendQuery('GET','/profile'+'/'+globalVariables.USER_DB_ID,
+            {}
+        );
+        // if(responseBody.statusCode===404){
+
+        // }
+        console.log(responseBody);
+        setStatusCode(responseBody.statusCode);
+        if(responseBody.statusCode===200){
+            setPhNo(responseBody.phoneNumber);
+            setEmail(responseBody.email);
+            setAddress(responseBody.address);
+            setSelectedSecQn(responseBody.secQuestion);
+            setSecurityAnswer(responseBody.secAnswer);
+            setName(responseBody.name);
+            setClgID(responseBody.clgID);
+        }
+        setFetchingData(false);
+    };
+    //eslint-disable-next-line
+    useEffect(()=>{
+        getInfoFromBackend();
+    },[]);
 
 
     const handlePhNoChange=(event)=>{
@@ -23,6 +60,24 @@ export default function Profile(){
     const handleAddressChange=(event)=>{
         setAddress(event.target.value);
     }
+    const handleSecurityQnChange=(event)=>{
+        setSelectedSecQn(secQsArray[event.target.value]);
+    }
+    const handleSecurityAnswerChange=(event)=>{
+        setSecurityAnswer(event.target.value);
+    }
+
+    const getDefaultQnIndex=()=>{
+        if(typeof selectedSecQn==='undefined' || selectedSecQn===""){
+            return 0;
+        }
+        for(var i;i<secQsArray.length;i++){
+            if(secQsArray[i]===selectedSecQn){
+                return i;
+            }
+        }
+        return 0;
+    }
     
     return (
         <div>
@@ -30,8 +85,8 @@ export default function Profile(){
                 <Avatar src='.../assets/userDefaultProfile.png' className="profilePageProfileAvatar" onClick={()=>console.log("Clicked")}/>
             </div>
             <div>
-                <Typography display='block' variant="h5">Eswar</Typography>
-                <Typography display='block' variant="h6">CB.EN.U4CSE18318</Typography>
+                <Typography display='block' variant="h5">{name}</Typography>
+                <Typography display='block' variant="h6">{clgID}</Typography>
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
@@ -44,6 +99,14 @@ export default function Profile(){
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
                         <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <EditableDropdown fieldLabel={"Security Question"} secQuestions={secQsArray} selectedQn={selectedSecQn} defaultIndex={getDefaultQnIndex()} handleValueChange={handleSecurityQnChange}/>
+                    </Grid>
+                    <Grid item>
+                    <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
