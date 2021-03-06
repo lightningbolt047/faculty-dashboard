@@ -5,9 +5,10 @@ import {useState,useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import EditableDropdown from '../../components/EditableDropdown';
 import globalVariables from '../../services/globalVariables';
 import backendQuery from '../../services/backendServices';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Alert from '@material-ui/lab/Alert';
 
 
 export default function Profile(){
@@ -15,33 +16,36 @@ export default function Profile(){
     const [phNo,setPhNo]=useState("982-345-1234");
     const [email,setEmail]=useState("abc@email.com");
     const [address,setAddress]=useState("Winter Street");
-    const secQsArray = ["Select a security question","When Were You Married?","What Is Your Spouse's Favorite Food?","What Is Your Favorite Visiting Place?","What Course Did You First Offer In College?"];
-    const [selectedSecQn,setSelectedSecQn]=useState(secQsArray[0]);
+    const [securityQuestion,setSecQn]=useState("");
     const [securityAnswer,setSecurityAnswer]=useState("2004");
     const [fetchingData,setFetchingData]=useState(true);
     const [statusCode,setStatusCode]=useState(0);
     const [name,setName]=useState("");
     const [clgID,setClgID]=useState("");
-    // const [imagePath,setImagePath]=useState();
+    const [sendingData,setSendingData]=useState(false);
+    const [profileUpdateStatus,setProfileUpdateStatus]=useState(0);
+
+    const [imagePath,setImagePath]=useState();
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
-        var responseBody=await backendQuery('GET','/profile'+'/'+globalVariables.USER_DB_ID,
+        var responseBody=await backendQuery('GET',`/profile/${globalVariables.USER_DB_ID}`,
             {}
         );
         // if(responseBody.statusCode===404){
 
         // }
-        console.log(responseBody);
         setStatusCode(responseBody.statusCode);
+        console.log(responseBody);
         if(responseBody.statusCode===200){
             setPhNo(responseBody.phoneNumber);
             setEmail(responseBody.email);
             setAddress(responseBody.address);
-            setSelectedSecQn(responseBody.secQuestion);
+            setSecQn(responseBody.secQuestion);
             setSecurityAnswer(responseBody.secAnswer);
             setName(responseBody.name);
             setClgID(responseBody.clgID);
+            setImagePath(responseBody.imagePath);
         }
         setFetchingData(false);
     };
@@ -49,6 +53,27 @@ export default function Profile(){
     useEffect(()=>{
         getInfoFromBackend();
     },[]);
+
+    const postInfoToBackend=async ()=>{
+        setSendingData(true);
+        var responseBody=await backendQuery('POST',`/profile/${globalVariables.USER_DB_ID}`,
+            {
+                updateType:'personalInfoUpdate',
+                phoneNumber:phNo,
+                address:address,
+                email:email,
+                secQuestion:securityQuestion,
+                secAnswer:securityAnswer,
+                imagePath:imagePath
+            }
+        );
+        // if(responseBody.statusCode===404){
+
+        // }
+        setProfileUpdateStatus(responseBody.statusCode);
+        console.log(responseBody);
+        setSendingData(false);
+    }
 
 
     const handlePhNoChange=(event)=>{
@@ -61,22 +86,10 @@ export default function Profile(){
         setAddress(event.target.value);
     }
     const handleSecurityQnChange=(event)=>{
-        setSelectedSecQn(secQsArray[event.target.value]);
+        setSecQn(event.target.value);
     }
     const handleSecurityAnswerChange=(event)=>{
         setSecurityAnswer(event.target.value);
-    }
-
-    const getDefaultQnIndex=()=>{
-        if(typeof selectedSecQn==='undefined' || selectedSecQn===""){
-            return 0;
-        }
-        for(var i;i<secQsArray.length;i++){
-            if(secQsArray[i]===selectedSecQn){
-                return i;
-            }
-        }
-        return 0;
     }
     
     return (
@@ -103,10 +116,10 @@ export default function Profile(){
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableDropdown fieldLabel={"Security Question"} secQuestions={secQsArray} selectedQn={selectedSecQn} defaultIndex={getDefaultQnIndex()} handleValueChange={handleSecurityQnChange}/>
+                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange}/>
                     </Grid>
                     <Grid item>
-                    <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange}/>
+                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
@@ -117,14 +130,29 @@ export default function Profile(){
                     </Grid>
                     
                     <Grid item>
-                        <Button variant='contained' color='secondary'>
-                            Save
+                        <Button variant='contained' color='secondary' onClick={postInfoToBackend}>
+                            {sendingData && <CircularProgress size={24} color="inherit"/>}
+                            {!sendingData && "Save"}
                         </Button>
                     </Grid>
-                    <Grid item>
-                </Grid>
+                    <Box height={8}/>
+                    <Grid container spacing={3} alignContent="center" justify="center">
+                        <Grid item>
+                            {profileUpdateStatus===200 &&
+                            <Alert variant="filled" severity="success">
+                                {"Successfully updated"}
+                            </Alert>
+                            }
+                            {profileUpdateStatus!==200 &&
+                            <Alert variant="filled" severity="error">
+                                {`Something went wrong: Error ${profileUpdateStatus}`}
+                            </Alert>
+                            }
+                        </Grid>
+                    </Grid>
                 </Grid>
            </div>
+
 
         </div>
     );

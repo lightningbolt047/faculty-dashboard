@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import {useHistory} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +15,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import clsx from 'clsx';
 import Profile from './sub-screens/Profile';
+import BookIcon from '@material-ui/icons/Book';
+import CloseIcon from '@material-ui/icons/Close';
+import ListIcon from '@material-ui/icons/List';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 
 const sidebarWidth=240;
@@ -54,8 +59,6 @@ export default function DashboardHome(){
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    var iconText = ["Icon 1","Icon 2","Icon 3","Icon 4","Icon 5"];
-    var icons = [<MenuIcon/>,<LogoutIcon/>,<MenuIcon/>,<LogoutIcon/>,<MenuIcon/>];
 
     const logoutRoutine=()=>{
         removeCookie("dbID");
@@ -108,15 +111,30 @@ export default function DashboardHome(){
             }}
             >
                 <List>
-                    {iconText.map((text, index) => (
-                    <ListItem button key={text}>
-                    <ListItemIcon>{icons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
+                    <ListItem button key="Profile">
+                        <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
+                        <ListItemText primary="Profile"/>
                     </ListItem>
-                ))}
-                <ListItem button onClick={()=>setSidebarOpen(false)}>
-                    <ListItemIcon>{<MenuIcon/>}</ListItemIcon>
-                    <ListItemText primary={"Close"} />
+                    <ListItem button key="Attendance">
+                        <ListItemIcon>{<ListIcon/>}</ListItemIcon>
+                        <ListItemText primary="Attendance"/>
+                    </ListItem>
+                    <ListItem button key="Course Info">
+                        <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
+                        <ListItemText primary="Course Info"/>
+                    </ListItem>
+                    <ListItem button key="Gate Pass">
+                        <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
+                        <ListItemText primary="Gate Pass"/>
+                    </ListItem>
+                    <ListItem button key="Mentoring Diary">
+                        <ListItemIcon>{<BookIcon/>}</ListItemIcon>
+                        <ListItemText primary="Mentoring Diary"/>
+                    </ListItem>
+               
+                    <ListItem button onClick={()=>setSidebarOpen(false)}>
+                        <ListItemIcon>{<CloseIcon/>}</ListItemIcon>
+                        <ListItemText primary={"Close"} />
                     </ListItem>
                 </List>
             </Drawer>

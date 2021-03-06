@@ -69,7 +69,8 @@ export default function LoginScreen(){
             setStatusCode(responseBody.statusCode);
             setSignInWorking(false);
             if(responseBody.statusCode===200){
-                dbID=cookies.dbID;
+                dbID=responseBody.dbID;
+                globalVariables.USER_AUTH_TOKEN=cookies.authToken;
                 redirectToHome();
             }
             console.log(responseBody);
@@ -77,7 +78,6 @@ export default function LoginScreen(){
 
     const redirectToHome=()=>{
         globalVariables.USER_DB_ID=dbID;
-        globalVariables.USER_AUTH_TOKEN=hashString(username,password);
         history.replace('/dashboard');
     }
 
@@ -106,6 +106,7 @@ export default function LoginScreen(){
         }
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
+            globalVariables.USER_AUTH_TOKEN=hashString(username,password);
             dbID=responseBody.dbID;
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);
