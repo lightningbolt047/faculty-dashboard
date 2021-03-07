@@ -167,7 +167,8 @@ export default function LoginScreen(){
                         </Button>
                         
                         <Box height={8}/>
-                        <Link to="/recovery">Forgot Password?</Link>
+                        <Link to="/recovery">Forgot Password?</Link><br/>
+                        <Link to="/authChange">Change Password</Link>
                         <Box height={8}/>
                         {statusCode!==200 && errDiv()}
                     </CardContent>

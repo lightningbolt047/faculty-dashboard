@@ -3,6 +3,7 @@ import './screens/Login';
 import LoginScreen from './screens/Login';
 import ForgotPwd from './screens/ForgotPwd';
 import DashboardHome from './screens/DashboardHome';
+import ChangePassword from './screens/ChangePassword';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom';
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
         <Switch>
           <Route exact path="/recovery">
             <ForgotPwd/>
+          </Route>
+          <Route exact path="/authChange">
+            <ChangePassword/>
           </Route>
           <Route exact path="/dashboard">
             <DashboardHome/>

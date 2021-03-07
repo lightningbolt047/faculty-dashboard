@@ -1,9 +1,9 @@
-import globalVariables from './globalVariables';
+// import globalVariables from './globalVariables';
 
-const backendQuery = async (reqType,endpoint,reqBody) => {
+const backendQuery = async (reqType,endpoint,reqBody,authToken) => {
     const reqOptions={
         method:reqType,
-        headers:{'Content-Type':'application/json','authtoken':globalVariables.USER_AUTH_TOKEN},
+        headers:{'Content-Type':'application/json','authtoken':authToken},
         body:reqType==='GET'?null:JSON.stringify(reqBody)
     }
     var response= await fetch('http://localhost:4000'+endpoint,reqOptions);

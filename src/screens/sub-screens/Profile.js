@@ -9,6 +9,7 @@ import globalVariables from '../../services/globalVariables';
 import backendQuery from '../../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '@material-ui/lab/Alert';
+import {useHistory} from 'react-router-dom';
 
 
 export default function Profile(){
@@ -23,14 +24,15 @@ export default function Profile(){
     const [name,setName]=useState("");
     const [clgID,setClgID]=useState("");
     const [sendingData,setSendingData]=useState(false);
-    const [profileUpdateStatus,setProfileUpdateStatus]=useState(0);
+    const [profileUpdateStatus,setProfileUpdateStatus]=useState(-1);
+    const history=useHistory();
 
     const [imagePath,setImagePath]=useState();
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
         var responseBody=await backendQuery('GET',`/profile/${globalVariables.USER_DB_ID}`,
-            {}
+            {},globalVariables.USER_AUTH_TOKEN
         );
         // if(responseBody.statusCode===404){
 
@@ -65,7 +67,7 @@ export default function Profile(){
                 secQuestion:securityQuestion,
                 secAnswer:securityAnswer,
                 imagePath:imagePath
-            }
+            },globalVariables.USER_AUTH_TOKEN
         );
         // if(responseBody.statusCode===404){
 
@@ -91,13 +93,22 @@ export default function Profile(){
     const handleSecurityAnswerChange=(event)=>{
         setSecurityAnswer(event.target.value);
     }
+
+    const getLoadingUI=()=>{
+        return (
+            <div className="centerScreenProgressbar">
+                <CircularProgress size={32} color="secondary"/>
+            </div>
+        );
+    }
     
     return (
         <div>
-            <div className="centerAligningDivs">
+            {fetchingData && getLoadingUI()}
+            {!fetchingData && <div className="centerAligningDivs">
                 <Avatar src='.../assets/userDefaultProfile.png' className="profilePageProfileAvatar" onClick={()=>console.log("Clicked")}/>
-            </div>
-            <div>
+            </div>}
+            {!fetchingData && <div>
                 <Typography display='block' variant="h5">{name}</Typography>
                 <Typography display='block' variant="h6">{clgID}</Typography>
                 <Box height={20}/>
@@ -124,7 +135,7 @@ export default function Profile(){
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <Button variant='contained' color='secondary'>
+                        <Button variant='contained' color='secondary' onClick={()=>history.replace('/authChange')}>
                                 Change Password
                         </Button>
                     </Grid>
@@ -143,7 +154,7 @@ export default function Profile(){
                                 {"Successfully updated"}
                             </Alert>
                             }
-                            {profileUpdateStatus!==200 &&
+                            {(profileUpdateStatus!==200 && profileUpdateStatus!==-1) &&
                             <Alert variant="filled" severity="error">
                                 {`Something went wrong: Error ${profileUpdateStatus}`}
                             </Alert>
@@ -152,8 +163,7 @@ export default function Profile(){
                     </Grid>
                 </Grid>
            </div>
-
-
+           }
         </div>
     );
 }

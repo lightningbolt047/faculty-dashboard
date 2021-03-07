@@ -64,3 +64,10 @@ body {
   margin-right: auto;
 }
 
+.centerScreenProgressbar {
+  align-items: center;
+  display:flex;
+  height: 20em;
+  justify-content: center;
+}
+
