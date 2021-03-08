@@ -1,4 +1,3 @@
-// import globalVariables from './globalVariables';
 
 const backendQuery = async (reqType,endpoint,reqBody,authToken) => {
     const reqOptions={

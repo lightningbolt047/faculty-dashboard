@@ -10,7 +10,6 @@ import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import globalVariables from '../services/globalVariables';
 import { useCookies } from 'react-cookie';
 const useStyles=makeStyles({
     title:{
@@ -27,13 +26,13 @@ const useStyles=makeStyles({
 export default function ChangePasswordScreen(){
     const classes=useStyles();
     const history = useHistory();
+    // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
 
     const [username,setUsername]=useState("");
     const [oldPassword,setOldPassword]=useState("");
     const [newPassword,setNewPassword]=useState("");
     const [confirmNewPassword,setConfirmNewPassword] = useState("");
-    const [dbID,setDbID]=useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [userPresent,setUserPresent]=useState(false);
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
@@ -50,7 +49,6 @@ export default function ChangePasswordScreen(){
         );
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
-            setDbID(responseBody.dbID);
             setUserPresent(true);
         }
         setButtonWorking(false);
@@ -58,15 +56,14 @@ export default function ChangePasswordScreen(){
     }
 
     const checkOldPasswordChangePassword=async ()=>{
-        console.log(globalVariables.USER_DB_ID);
-        console.log(dbID);
+        console.log(sessionStorage.USER_DB_ID);
 
         if(newPassword!==confirmNewPassword || newPassword===""){   
             return;
         }
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST',!globalVariables.USER_DB_ID?`/profile/${dbID}`:`/profile/${globalVariables.USER_DB_ID}`,
+        var responseBody=await backendQuery('POST',`/profile/${sessionStorage.USER_DB_ID}`,
             {
                 updateType:"authTokenChange",
                 authToken:hashString(username,newPassword)
@@ -164,6 +161,10 @@ export default function ChangePasswordScreen(){
                         <Button variant='contained' color='secondary' onClick={async ()=>{
                             if(!userPresent){
                                 checkUserPresence();
+                                return;
+                            }
+                            if(userPresent && passwordChangeSuccess){
+                                history.replace('/');
                                 return;
                             }
                             if(userPresent){

@@ -13,7 +13,6 @@ import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
 import { useCookies } from 'react-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import globalVariables from '../services/globalVariables';
 const useStyles=makeStyles({
     title:{
       flexGrow:1,
@@ -70,14 +69,14 @@ export default function LoginScreen(){
             setSignInWorking(false);
             if(responseBody.statusCode===200){
                 dbID=responseBody.dbID;
-                globalVariables.USER_AUTH_TOKEN=cookies.authToken;
+                sessionStorage.USER_AUTH_TOKEN=cookies.authToken;
                 redirectToHome();
             }
             console.log(responseBody);
     }
 
     const redirectToHome=()=>{
-        globalVariables.USER_DB_ID=dbID;
+        sessionStorage.USER_DB_ID=dbID;
         history.replace('/dashboard');
     }
 
@@ -106,7 +105,7 @@ export default function LoginScreen(){
         }
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
-            globalVariables.USER_AUTH_TOKEN=hashString(username,password);
+            sessionStorage.USER_AUTH_TOKEN=hashString(username,password);
             dbID=responseBody.dbID;
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);
@@ -120,6 +119,7 @@ export default function LoginScreen(){
         setSignInWorking(false);
         console.log(responseBody);
     }
+
 
     const errDiv=()=>{
         return (

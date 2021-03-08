@@ -5,7 +5,6 @@ import {useState,useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import globalVariables from '../../services/globalVariables';
 import backendQuery from '../../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '@material-ui/lab/Alert';
@@ -20,7 +19,6 @@ export default function Profile(){
     const [securityQuestion,setSecQn]=useState("");
     const [securityAnswer,setSecurityAnswer]=useState("2004");
     const [fetchingData,setFetchingData]=useState(true);
-    const [statusCode,setStatusCode]=useState(0);
     const [name,setName]=useState("");
     const [clgID,setClgID]=useState("");
     const [sendingData,setSendingData]=useState(false);
@@ -31,13 +29,12 @@ export default function Profile(){
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
-        var responseBody=await backendQuery('GET',`/profile/${globalVariables.USER_DB_ID}`,
-            {},globalVariables.USER_AUTH_TOKEN
+        var responseBody=await backendQuery('GET',`/profile/${sessionStorage.USER_DB_ID}`,
+            {},sessionStorage.USER_AUTH_TOKEN
         );
         // if(responseBody.statusCode===404){
 
         // }
-        setStatusCode(responseBody.statusCode);
         console.log(responseBody);
         if(responseBody.statusCode===200){
             setPhNo(responseBody.phoneNumber);
@@ -58,7 +55,7 @@ export default function Profile(){
 
     const postInfoToBackend=async ()=>{
         setSendingData(true);
-        var responseBody=await backendQuery('POST',`/profile/${globalVariables.USER_DB_ID}`,
+        var responseBody=await backendQuery('POST',`/profile/${sessionStorage.USER_DB_ID}`,
             {
                 updateType:'personalInfoUpdate',
                 phoneNumber:phNo,
@@ -67,7 +64,7 @@ export default function Profile(){
                 secQuestion:securityQuestion,
                 secAnswer:securityAnswer,
                 imagePath:imagePath
-            },globalVariables.USER_AUTH_TOKEN
+            },sessionStorage.USER_AUTH_TOKEN
         );
         // if(responseBody.statusCode===404){
 
