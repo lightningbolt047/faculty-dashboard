@@ -149,7 +149,7 @@ export default function ChangePasswordScreen(){
                 <Card>
                     <CardContent>
                         <Grid container className="forgotPasswordScreenGrid">
-                            <Typography variant="h4" className={classes.title}>
+                            <Typography variant="h4" className={classes.title} color='secondary'>
                                 Change Password
                             </Typography>
                         </Grid>

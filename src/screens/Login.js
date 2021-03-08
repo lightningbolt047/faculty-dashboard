@@ -139,7 +139,7 @@ export default function LoginScreen(){
                 <Card>
                     <CardContent>
                         <Grid container className="loginScreenGrid">
-                            <Typography variant="h3" className={classes.title}>
+                            <Typography variant="h3" className={classes.title} color='secondary'>
                                 Login
                             </Typography>
                         </Grid>

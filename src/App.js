@@ -14,7 +14,7 @@ function App() {
           <Route exact path="/recovery">
             <ForgotPwd/>
           </Route>
-          <Route exact path="/authChange">
+          <Route exact path="/authChange">  
             <ChangePassword/>
           </Route>
           <Route exact path="/dashboard">
