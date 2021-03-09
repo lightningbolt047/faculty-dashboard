@@ -106,7 +106,7 @@ export default function LoginScreen(){
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
             sessionStorage.USER_AUTH_TOKEN=hashString(username,password);
-            dbID=responseBody.dbID;
+            dbID=responseBody.dbID; 
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);
                 setCookie('authToken',hashString(username,password),cookieOptions);
