@@ -30,24 +30,39 @@ function checkCredentials(req,res,next){
     })
 }
 
-profileRouter.route('/:dbID')
+profileRouter.route('/:dbID/:reqType')
 .get(checkCredentials,(req,res,next)=>{
     User.findById(req.params.dbID)
     .then((user)=>{
-        var userData=user;
-        userData.__v=undefined;
-        userData.authToken=undefined;
-        res.statusCode=200;
-        res.json(userData);
+        if(req.params.reqType==='getFullProfile'){
+            var userData=user;
+            userData.__v=undefined;
+            userData.authToken=undefined;
+            res.statusCode=200;
+            res.json(userData);
+        }
+        else if(req.params.reqType==='getClgIDOnly'){
+            res.statusCode=200;
+            res.json({
+                clgID:user.clgID
+            });
+        }
     },(err)=>{
         res.statusCode=500;
         res.json({
             status:'Internal Server Error'
-        })
+        });
     })
 })
 
+profileRouter.route('/:dbID')
 .post(checkCredentials,(req,res,next)=>{
+    if(typeof req.params.dbID==='undefined'){
+        res.statusCode=404;
+        res.json({
+            status:'Invalid dbID'
+        });
+    }
     if(req.body.updateType==='personalInfoUpdate'){
         User.findByIdAndUpdate(req.params.dbID,{
             "$set":{
