@@ -58,12 +58,12 @@ export default function DashboardHome(){
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    const dbID=sessionStorage.USER_DB_ID;
     console.log("sessionStorage "+sessionStorage.USER_DB_ID);
 
     const logoutRoutine=()=>{
         removeCookie("dbID");
         removeCookie("authToken");
+        sessionStorage.clear();
         history.replace('/');
     };
 
@@ -76,7 +76,7 @@ export default function DashboardHome(){
 
     const getMainUIContent=()=>{
         return (
-            <Profile dbID={dbID}/>
+            <Profile/>
         );
     }
 

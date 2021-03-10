@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
@@ -21,6 +21,8 @@ const useStyles=makeStyles({
     },
   });
 
+  var dbID=sessionStorage.USER_DB_ID;
+
 
 
 export default function ChangePasswordScreen(){
@@ -29,7 +31,7 @@ export default function ChangePasswordScreen(){
     // eslint-disable-next-line
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
 
-    const [username,setUsername]=useState("");
+    var [username,setUsername]=useState("");
     const [oldPassword,setOldPassword]=useState("");
     const [newPassword,setNewPassword]=useState("");
     const [confirmNewPassword,setConfirmNewPassword] = useState("");
@@ -37,6 +39,7 @@ export default function ChangePasswordScreen(){
     const [userPresent,setUserPresent]=useState(false);
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
     const [buttonWorking,setButtonWorking]=useState(false);
+    const [alreadyLoggedIn,setAlreadyLoggedIn]=useState(false);
 
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
@@ -51,9 +54,20 @@ export default function ChangePasswordScreen(){
         if(responseBody.statusCode===200){
             setUserPresent(true);
         }
+        dbID=responseBody.dbID;
         setButtonWorking(false);
         console.log(responseBody);
     }
+
+    useEffect(()=>{
+        if(typeof sessionStorage.USER_DB_ID!=='undefined'){
+            setStatusCode(200);
+            dbID=sessionStorage.USER_DB_ID;
+            setUserPresent(true);
+            setAlreadyLoggedIn(true);
+            return;
+        }
+    },[]);
 
     const checkOldPasswordChangePassword=async ()=>{
         console.log(sessionStorage.USER_DB_ID);
@@ -63,7 +77,14 @@ export default function ChangePasswordScreen(){
         }
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST',`/profile/${sessionStorage.USER_DB_ID}`,
+        if(typeof sessionStorage.USER_DB_ID!=='undefined'){
+            var usernameResponse=await backendQuery('GET',`/profile/${sessionStorage.USER_DB_ID}/getClgIDOnly`,
+                {},sessionStorage.USER_AUTH_TOKEN
+            );
+            username=usernameResponse.clgID;
+        }
+
+        var responseBody=await backendQuery('POST',`/profile/${typeof sessionStorage.USER_DB_ID==='undefined' || sessionStorage.USER_DB_ID!==dbID?dbID:sessionStorage.USER_DB_ID}`,
             {
                 updateType:"authTokenChange",
                 authToken:hashString(username,newPassword)
@@ -72,6 +93,7 @@ export default function ChangePasswordScreen(){
         if(responseBody.statusCode===200){
             removeCookie('dbID');
             removeCookie('authToken');
+            sessionStorage.clear();
             setPasswordChangeSuccess(true);
         }
         setStatusCode(responseBody.statusCode);
@@ -117,15 +139,19 @@ export default function ChangePasswordScreen(){
             <Alert variant="filled" severity="warning">
                 {newPassword==="" && "Password fields blank"}
                 {newPassword!==confirmNewPassword && "Password fields do not match"}
+                {userPresent && statusCode===401 && "Wrong old password"}
             </Alert>
         </div>
         );
     }
 
+    var timeoutObject;
+
     const sendUserBackToLogin=async ()=>{
-        setTimeout(()=>{
+        timeoutObject=setTimeout(()=>{
             history.replace('/');
-        },5000);
+        },1000);
+        return ()=>clearTimeout(timeoutObject)
     }
 
     const passwordChangeSuccessDiv=()=>{
@@ -150,12 +176,12 @@ export default function ChangePasswordScreen(){
                                 Change Password
                             </Typography>
                         </Grid>
-                        <div className="getUser">
+                        {!alreadyLoggedIn && <div className="getUser">
                             <Grid container alignContent="center" justify="center">
                                 <TextField variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
                             </Grid>
                             <Box height={8}/>
-                        </div>
+                        </div>}
                         {userPresent && changePasswordRequestForm()}
 
                         <Button variant='contained' color='secondary' onClick={async ()=>{

@@ -41,6 +41,8 @@ export default function LoginScreen(){
     const [signInWorking,setSignInWorking]=useState(false);
     var dbID=null;
 
+    sessionStorage.clear();
+
     const history=useHistory();
     
 

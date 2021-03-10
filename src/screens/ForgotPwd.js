@@ -134,10 +134,14 @@ export default function ForgotPasswordScreen(){
         );
     }
 
+    var timeoutObject;
+
     const sendUserBackToLogin=async ()=>{
-        setTimeout(()=>{
+        timeoutObject=setTimeout(()=>{
             history.replace('/');
-        },5000);
+        },1000);
+
+        return ()=>clearTimeout(timeoutObject);
     }
 
     const passwordChangeSuccessDiv=()=>{
@@ -185,8 +189,8 @@ export default function ForgotPasswordScreen(){
                             }
                         }}>
                             {!buttonWorking && !userPresent && "Next"}
-                            {!buttonWorking && userPresent && secQuestion!=null && "Set new password"}
-                            {!buttonWorking && userPresent && secQuestion==null && "Go back"}
+                            {!buttonWorking && userPresent && secQuestion!=null && !passwordChangeSuccess && "Set new password"}
+                            {!buttonWorking && passwordChangeSuccess && "Go back"}
                             {buttonWorking && <CircularProgress size={24} color="inherit"/>}
 
                         </Button><br></br>
