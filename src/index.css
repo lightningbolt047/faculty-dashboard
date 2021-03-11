@@ -78,6 +78,18 @@ body {
   padding-top: 10px;
 }
 
-.accordionSpace .accText {
+.accordionText {
+  text-align: left;
+}
+
+#accordionTextSecondary {
+  font-weight: 100;
+}
+
+#accordionTextPrimary {
+  font-weight: 700;
+}
+
+.accordionDetailsLeft {
   text-align: left;
 }
