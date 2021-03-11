@@ -1,34 +1,35 @@
 const express=require('express');
 const bodyParser=require('body-parser');
 const { post } = require('../app');
+const multer = require('multer');
+const fs=require('fs');
 
 const profileRouter=express.Router();
 const User=require('../models/userSchema');
+const checkCredentials=require('../services/checkCredentialsService');
 
 //This route handles authentication
 
-function checkCredentials(req,res,next){
-    User.findById(req.params.dbID)
-    .then((user)=>{
-        if(!user){
-            res.statusCode=404;
-            res.json({
-                status: "Invalid dbID"
-            });
-            return;
+
+const uploader=multer({
+    storage: multer.diskStorage({
+        destination: (req,res,cb)=>{
+            cb(null, 'public/images');
+        },
+    
+        filename: (req,file,cb)=>{
+            cb(null,Date.now()+'_'+file.originalname);
         }
-        if(user.authToken===req.headers['authtoken']){
-            next();
+    }),
+    fileFilter: (req,file,cb)=>{
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('You can upload only image files'),false);
         }
-        else{
-            res.statusCode=401;
-            res.json({
-                status: "Invalid authToken"
-            });
-            return;
-        }
-    })
-}
+        cb(null,true);
+    }
+});
+
+
 
 profileRouter.route('/:dbID/:reqType')
 .get(checkCredentials,(req,res,next)=>{
@@ -103,6 +104,28 @@ profileRouter.route('/:dbID')
             });
         })
     }
+});
+
+profileRouter.route('/uploadimg/:dbID')
+.post(checkCredentials,uploader.single('imageFile'),(req,res)=>{
+    User.findById(req.params.dbID)
+    .then((user)=>{
+        if(typeof (user.imagePath) !== 'undefined'){
+            if(fs.existsSync(user.imagePath)){
+                fs.unlinkSync(user.imagePath);
+                console.log("Old image deleted");
+            }
+        }
+        User.findByIdAndUpdate(req.params.dbID,{
+            $set:{'imagePath':req.file.path}
+        }).then((document)=>{
+            res.statusCode=200;
+            res.json(document);
+        },(err)=>{
+            res.statusCode=500;
+            res.end('An error occurred');
+        })
+    })
 });
 
 
