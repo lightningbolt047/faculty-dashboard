@@ -1,7 +1,7 @@
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import EditableInput from '../../components/EditableInput';
-import {useState,useEffect} from 'react';
+import {useState,useEffect,useRef} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -9,6 +9,7 @@ import backendQuery from '../../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router-dom';
+import axios from 'axios';
 
 
 export default function Profile(){
@@ -24,8 +25,11 @@ export default function Profile(){
     const [sendingData,setSendingData]=useState(false);
     const [profileUpdateStatus,setProfileUpdateStatus]=useState(-1);
     const history=useHistory();
+    var imageUploadSuccess=false;
 
-    const [imagePath,setImagePath]=useState();
+    var uploadImageFile=useRef(null);
+
+    const [imagePath,setImagePath]=useState('');
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
@@ -90,6 +94,46 @@ export default function Profile(){
     const handleSecurityAnswerChange=(event)=>{
         setSecurityAnswer(event.target.value);
     }
+    const handleFileSelection=(event)=>{
+        if(!imageUploadSuccess){
+            uploadImageFile=event.target.files[0];
+            console.log(uploadImageFile);
+            handleSendImage();
+        }
+    }
+    const handleSendImage=(event)=>{
+
+        if(uploadImageFile==null){
+            return;
+        }
+        
+        var formData=new FormData();
+
+        formData.append('imageFile',uploadImageFile);
+
+        axios({
+            url:`http://localhost:4000/profile/uploadimg/${sessionStorage.USER_DB_ID}`,
+            method:'POST',
+            headers:{
+                authtoken:sessionStorage.USER_AUTH_TOKEN
+            },
+            data: formData
+        })
+        .then((res)=>{
+            window.location.reload();
+        });
+        console.log("Exec");
+    }
+
+    const getImagePath=()=>{
+        if(typeof imagePath==='undefined' || imagePath===''){
+            return '.../assets/userDefaultProfile.png';
+        }
+        return `http://localhost:4000/images/${sessionStorage.USER_DB_ID}/`;
+    }
+
+
+
 
     const getLoadingUI=()=>{
         return (
@@ -103,7 +147,12 @@ export default function Profile(){
         <div>
             {fetchingData && getLoadingUI()}
             {!fetchingData && <div className="centerAligningDivs">
-                <Avatar src='.../assets/userDefaultProfile.png' className="profilePageProfileAvatar" onClick={()=>console.log("Clicked")}/>
+                <input style={{display:'none'}} accept=".jpg,.jpeg,.png" type='file' ref={uploadImageFile} onChange={(e)=>handleFileSelection(e)}/>
+                <Box flex={1}>
+                    <Avatar src={getImagePath()} style={{width:'120px',height:'120px'}}onClick={(e)=>{if(!imageUploadSuccess){
+                        uploadImageFile.current.click()
+                    }}}/>
+                </Box>
             </div>}
             {!fetchingData && <div>
                 <Typography display='block' variant="h5">{name}</Typography>

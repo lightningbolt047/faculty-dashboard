@@ -51,14 +51,10 @@ body {
   margin-left: 70px;
 }
 
-.profilePageProfileAvatar {
-  padding: 20px;
-  align-self: center;
-}
 
 .centerAligningDivs{
   display: block;
-  width: 80px;
+  width: 120px;
   padding: 10px;
   margin-left: auto;
   margin-right: auto;
