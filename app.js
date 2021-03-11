@@ -8,9 +8,14 @@ var cors=require('cors');
 
 var authRouter=require('./routes/authRouter');
 var recoveryRouter=require('./routes/recoveryRouter');
+var profileRouter=require('./routes/profileRouter');
+const checkCredentials=require('./services/checkCredentialsService');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
+
+
+const User=require('./models/userSchema');
 
 
 const dbURL='mongodb://127.0.0.1:27017/'
@@ -39,6 +44,33 @@ app.use(cors());
 
 app.use('/auth',authRouter);
 app.use('/recovery',recoveryRouter);
+app.use('/profile',profileRouter);
+
+
+app.get('/images/:dbID/',(req,res,next)=>{
+
+  console.log("dbID"+req.params.dbID);
+
+  User.findById(req.params.dbID)
+    .then((user)=>{
+        if(!user){
+            res.statusCode=404;
+            res.json({
+                status: "Invalid dbID"
+            });
+            return;
+        }
+        var imageName=user.imagePath.split('\\')[2];
+        res.sendFile(imageName,{
+          root: './public/images',
+          dotfiles:'deny',
+          headers: {
+            'x-timestamp':Date.now(),
+            'x-sent': true
+          }
+        });
+    });
+});
 
 
 
