@@ -60,24 +60,15 @@ app.get('/images/:dbID/',(req,res,next)=>{
             });
             return;
         }
-        if(user.authToken===req.headers['authtoken']){
-            var imageName=user.imagePath.split('\\')[2];
-            res.sendFile(imageName,{
-              root: './public/images',
-              dotfiles:'deny',
-              headers: {
-                'x-timestamp':Date.now(),
-                'x-sent': true
-              }
-            });
-        }
-        else{
-            res.statusCode=401;
-            res.json({
-                status: "Invalid authToken"
-            });
-            return;
-        }
+        var imageName=user.imagePath.split('\\')[2];
+        res.sendFile(imageName,{
+          root: './public/images',
+          dotfiles:'deny',
+          headers: {
+            'x-timestamp':Date.now(),
+            'x-sent': true
+          }
+        });
     });
 });
 
