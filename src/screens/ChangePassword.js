@@ -4,13 +4,13 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import { useCookies } from 'react-cookie';
 const useStyles=makeStyles({
     title:{
       flexGrow:1,
@@ -21,22 +21,25 @@ const useStyles=makeStyles({
     },
   });
 
+  var dbID=sessionStorage.USER_DB_ID;
 
 
-export default function ForgotPasswordScreen(){
+
+export default function ChangePasswordScreen(){
     const classes=useStyles();
-    const history = useHistory()
+    const history = useHistory();
+    // eslint-disable-next-line
+    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
 
-    const [username,setUsername]=useState("");
-    const [password,setPassword]=useState("");
-    const [confirmPassword,setConfirmPassword]=useState("");
-    const [secQuestion,setSecQuestion]=useState("");
-    const [secAnswer,setSecAnswer]=useState("");
-    const [dbID,setDbID]=useState("");
+    var [username,setUsername]=useState("");
+    const [oldPassword,setOldPassword]=useState("");
+    const [newPassword,setNewPassword]=useState("");
+    const [confirmNewPassword,setConfirmNewPassword] = useState("");
     const [statusCode,setStatusCode]=useState(200);
     const [userPresent,setUserPresent]=useState(false);
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
     const [buttonWorking,setButtonWorking]=useState(false);
+    const [alreadyLoggedIn,setAlreadyLoggedIn]=useState(false);
 
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
@@ -49,30 +52,48 @@ export default function ForgotPasswordScreen(){
         );
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
-            setDbID(responseBody.dbID);
-            setSecQuestion(responseBody.secQuestion);
             setUserPresent(true);
         }
+        dbID=responseBody.dbID;
         setButtonWorking(false);
         console.log(responseBody);
     }
 
-    const checkSecAnswerChangePassword=async ()=>{
+    useEffect(()=>{
+        if(typeof sessionStorage.USER_DB_ID!=='undefined'){
+            setStatusCode(200);
+            dbID=sessionStorage.USER_DB_ID;
+            setUserPresent(true);
+            setAlreadyLoggedIn(true);
+            return;
+        }
+    },[]);
 
-        if(password!==confirmPassword || password===""){   
+    const checkOldPasswordChangePassword=async ()=>{
+        console.log(sessionStorage.USER_DB_ID);
+
+        if(newPassword!==confirmNewPassword || newPassword===""){   
             return;
         }
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        if(typeof sessionStorage.USER_DB_ID!=='undefined'){
+            var usernameResponse=await backendQuery('GET',`/profile/${sessionStorage.USER_DB_ID}/getClgIDOnly`,
+                {},sessionStorage.USER_AUTH_TOKEN
+            );
+            username=usernameResponse.clgID;
+        }
+
+        var responseBody=await backendQuery('POST',`/profile/${typeof sessionStorage.USER_DB_ID==='undefined' || sessionStorage.USER_DB_ID!==dbID?dbID:sessionStorage.USER_DB_ID}`,
             {
-                reqType:"secAnswerChangePassword",
-                dbID:dbID,
-                secAnswer:secAnswer,
-                authToken:hashString(username,password)
-            }
+                updateType:"authTokenChange",
+                authToken:hashString(username,newPassword)
+            },hashString(username,oldPassword)
         );
         if(responseBody.statusCode===200){
+            removeCookie('dbID');
+            removeCookie('authToken');
+            sessionStorage.clear();
             setPasswordChangeSuccess(true);
         }
         setStatusCode(responseBody.statusCode);
@@ -81,31 +102,20 @@ export default function ForgotPasswordScreen(){
         console.log(responseBody);
     }
 
-    const getNoSecurityQuestionDiv=()=>{
+
+    const changePasswordRequestForm=()=>{
         return (
             <div>
-                <Alert variant="filled" severity="info">
-                    Sorry! No Security question was set for this account. Contact admin for account recovery
-                </Alert>
-                <Box height={8}/>
-            </div>
-        );
-    }
-
-    const getRecoveryPasswordForm=()=>{
-        return (
-            <div className="getSecQuestion">
-                <p id="secQuestion">{"Security Question: "+secQuestion}</p>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={oldPassword} label="Old Password" onChange={event => {if(!passwordChangeSuccess){setOldPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={newPassword} label="New Password" onChange={event => {if(!passwordChangeSuccess){setNewPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={confirmNewPassword} label="Confirm New Password" onChange={event => {if(!passwordChangeSuccess){setConfirmNewPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -117,7 +127,7 @@ export default function ForgotPasswordScreen(){
         <div>
             <Alert variant="filled" severity="error">
                 {!userPresent && statusCode===404 && "No such College ID"}
-                {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"}
+                {/* {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"} */}
             </Alert>
         </div>
         );
@@ -127,8 +137,9 @@ export default function ForgotPasswordScreen(){
         return(
         <div>
             <Alert variant="filled" severity="warning">
-                {password==="" && "Password fields blank"}
-                {password!==confirmPassword && "Password fields do not match"}
+                {newPassword==="" && "Password fields blank"}
+                {newPassword!==confirmNewPassword && "Password fields do not match"}
+                {userPresent && statusCode===401 && "Wrong old password"}
             </Alert>
         </div>
         );
@@ -140,8 +151,7 @@ export default function ForgotPasswordScreen(){
         timeoutObject=setTimeout(()=>{
             history.replace('/');
         },1000);
-
-        return ()=>clearTimeout(timeoutObject);
+        return ()=>clearTimeout(timeoutObject)
     }
 
     const passwordChangeSuccessDiv=()=>{
@@ -163,40 +173,40 @@ export default function ForgotPasswordScreen(){
                     <CardContent>
                         <Grid container className="forgotPasswordScreenGrid">
                             <Typography variant="h4" className={classes.title} color='secondary'>
-                                Forgot Password?
+                                Change Password
                             </Typography>
                         </Grid>
-                        <div className="getUser">
+                        {!alreadyLoggedIn && <div className="getUser">
                             <Grid container alignContent="center" justify="center">
                                 <TextField variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
                             </Grid>
                             <Box height={8}/>
-                        </div>
-                        {userPresent && secQuestion==null && getNoSecurityQuestionDiv()}
-                        {userPresent && secQuestion!=null && getRecoveryPasswordForm()}
+                        </div>}
+                        {userPresent && changePasswordRequestForm()}
 
                         <Button variant='contained' color='secondary' onClick={async ()=>{
                             if(!userPresent){
                                 checkUserPresence();
                                 return;
                             }
-                            if(userPresent && secQuestion!=null){
-                                checkSecAnswerChangePassword();
+                            if(userPresent && passwordChangeSuccess){
+                                history.replace('/');
                                 return;
                             }
-                            if(userPresent && secQuestion==null){
-                                history.goBack();
+                            if(userPresent){
+                                checkOldPasswordChangePassword();
+                                return;
                             }
                         }}>
                             {!buttonWorking && !userPresent && "Next"}
-                            {!buttonWorking && userPresent && secQuestion!=null && !passwordChangeSuccess && "Set new password"}
-                            {!buttonWorking && passwordChangeSuccess && "Go back"}
+                            {!buttonWorking && userPresent && !passwordChangeSuccess && "Set new password"}
+                            {!buttonWorking && userPresent && passwordChangeSuccess && "Go back"}
                             {buttonWorking && <CircularProgress size={24} color="inherit"/>}
 
                         </Button><br></br>
                         <Box height={8}/>
                         {statusCode!==200 && reqErrDiv()}
-                        {userPresent && secQuestion!=null && (password!==confirmPassword || password==="") && passwordMatchErrDiv()}
+                        {userPresent && (newPassword!==confirmNewPassword || newPassword==="") && passwordMatchErrDiv()}
                         {passwordChangeSuccess && passwordChangeSuccessDiv()}
                     </CardContent>
                 </Card>

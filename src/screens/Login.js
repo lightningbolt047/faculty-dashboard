@@ -13,7 +13,6 @@ import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
 import { useCookies } from 'react-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 const useStyles=makeStyles({
     title:{
       flexGrow:1,
@@ -40,6 +39,9 @@ export default function LoginScreen(){
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
     const [signInWorking,setSignInWorking]=useState(false);
+    var dbID=null;
+
+    sessionStorage.clear();
 
     const history=useHistory();
     
@@ -68,13 +70,16 @@ export default function LoginScreen(){
             setStatusCode(responseBody.statusCode);
             setSignInWorking(false);
             if(responseBody.statusCode===200){
+                dbID=responseBody.dbID;
+                sessionStorage.USER_AUTH_TOKEN=cookies.authToken;
                 redirectToHome();
             }
             console.log(responseBody);
     }
 
     const redirectToHome=()=>{
-        history.replace('/home');
+        sessionStorage.USER_DB_ID=dbID;
+        history.replace('/dashboard');
     }
 
     useEffect(()=>{
@@ -102,6 +107,8 @@ export default function LoginScreen(){
         }
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
+            sessionStorage.USER_AUTH_TOKEN=hashString(username,password);
+            dbID=responseBody.dbID; 
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);
                 setCookie('authToken',hashString(username,password),cookieOptions);
@@ -114,6 +121,7 @@ export default function LoginScreen(){
         setSignInWorking(false);
         console.log(responseBody);
     }
+
 
     const errDiv=()=>{
         return (
@@ -133,7 +141,7 @@ export default function LoginScreen(){
                 <Card>
                     <CardContent>
                         <Grid container className="loginScreenGrid">
-                            <Typography variant="h3" className={classes.title}>
+                            <Typography variant="h3" className={classes.title} color='secondary'>
                                 Login
                             </Typography>
                         </Grid>
@@ -162,6 +170,8 @@ export default function LoginScreen(){
                         
                         <Box height={8}/>
                         <Link to="/recovery">Forgot Password?</Link>
+                        <Box height={8}/>
+                        <Link to="/authChange">Change Password</Link>
                         <Box height={8}/>
                         {statusCode!==200 && errDiv()}
                     </CardContent>
