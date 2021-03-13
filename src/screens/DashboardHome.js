@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import clsx from 'clsx';
 import MentorDiary from './sub-screens/MentorDiary';
+import Profile from './sub-screens/Profile';
 import BookIcon from '@material-ui/icons/Book';
 import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
@@ -76,7 +77,7 @@ export default function DashboardHome(){
 
     const getMainUIContent=()=>{
         return (
-            <MentorDiary/>
+            <Profile/>
         );
     }
 
