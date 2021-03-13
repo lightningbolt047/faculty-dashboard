@@ -77,7 +77,7 @@ export default function DashboardHome(){
 
     const getMainUIContent=()=>{
         return (
-            <Profile/>
+            <MentorDiary/>
         );
     }
 
