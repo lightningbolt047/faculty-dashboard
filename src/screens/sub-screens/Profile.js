@@ -22,6 +22,7 @@ export default function Profile(){
     const [fetchingData,setFetchingData]=useState(true);
     const [name,setName]=useState("");
     const [clgID,setClgID]=useState("");
+    const [department,setDepartment]=useState("");
     const [sendingData,setSendingData]=useState(false);
     const [profileUpdateStatus,setProfileUpdateStatus]=useState(-1);
     const history=useHistory();
@@ -49,6 +50,7 @@ export default function Profile(){
             setName(responseBody.name);
             setClgID(responseBody.clgID);
             setImagePath(responseBody.imagePath);
+            setDepartment(responseBody.department);
         }
         setFetchingData(false);
     };
@@ -157,6 +159,7 @@ export default function Profile(){
             {!fetchingData && <div>
                 <Typography display='block' variant="h5">{name}</Typography>
                 <Typography display='block' variant="h6">{clgID}</Typography>
+                <Typography display='block' variant="h6">{department}</Typography>
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
