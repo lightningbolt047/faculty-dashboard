@@ -42,6 +42,13 @@ const userSchema=new Schema({
     facultyType:{
         type: String,
         required: true
+    },
+    department:{
+        type:String,
+        required:true
+    },
+    hod:{
+        type:Boolean
     }
 });
 
