@@ -34,7 +34,7 @@ export default function Profile(){
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
-        var responseBody=await backendQuery('GET',`/profile/${sessionStorage.USER_DB_ID}/getFullProfile`,
+        var responseBody=await backendQuery('GET',`/profile/getFullProfile/${sessionStorage.USER_DB_ID}/`,
             {},sessionStorage.USER_AUTH_TOKEN
         );
         // if(responseBody.statusCode===404){

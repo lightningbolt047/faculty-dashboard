@@ -78,7 +78,7 @@ export default function ChangePasswordScreen(){
         setButtonWorking(true);
 
         if(typeof sessionStorage.USER_DB_ID!=='undefined'){
-            var usernameResponse=await backendQuery('GET',`/profile/${sessionStorage.USER_DB_ID}/getClgIDOnly`,
+            var usernameResponse=await backendQuery('GET',`/profile/getClgIDOnly/${sessionStorage.USER_DB_ID}/`,
                 {},sessionStorage.USER_AUTH_TOKEN
             );
             username=usernameResponse.clgID;
