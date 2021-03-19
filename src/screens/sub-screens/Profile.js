@@ -34,8 +34,8 @@ export default function Profile(){
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
-        var responseBody=await backendQuery('GET',`/profile/getFullProfile/${sessionStorage.USER_DB_ID}/`,
-            {},sessionStorage.USER_AUTH_TOKEN
+        var responseBody=await backendQuery('GET',`/profile/getFullProfile/`,
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
 
@@ -61,7 +61,7 @@ export default function Profile(){
 
     const postInfoToBackend=async ()=>{
         setSendingData(true);
-        var responseBody=await backendQuery('POST',`/profile/${sessionStorage.USER_DB_ID}`,
+        var responseBody=await backendQuery('POST',`/profile/`,
             {
                 updateType:'personalInfoUpdate',
                 phoneNumber:phNo,
@@ -70,7 +70,7 @@ export default function Profile(){
                 secQuestion:securityQuestion,
                 secAnswer:securityAnswer,
                 imagePath:imagePath
-            },sessionStorage.USER_AUTH_TOKEN
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
 
@@ -114,10 +114,11 @@ export default function Profile(){
         formData.append('imageFile',uploadImageFile);
 
         axios({
-            url:`http://localhost:4000/profile/uploadimg/${sessionStorage.USER_DB_ID}`,
+            url:`http://localhost:4000/profile/uploadimg/`,
             method:'POST',
             headers:{
-                authtoken:sessionStorage.USER_AUTH_TOKEN
+                authtoken:sessionStorage.USER_AUTH_TOKEN,
+                dbid:sessionStorage.USER_DB_ID
             },
             data: formData
         })

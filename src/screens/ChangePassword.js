@@ -78,17 +78,17 @@ export default function ChangePasswordScreen(){
         setButtonWorking(true);
 
         if(typeof sessionStorage.USER_DB_ID!=='undefined'){
-            var usernameResponse=await backendQuery('GET',`/profile/getClgIDOnly/${sessionStorage.USER_DB_ID}/`,
-                {},sessionStorage.USER_AUTH_TOKEN
+            var usernameResponse=await backendQuery('GET',`/profile/getClgIDOnly/`,
+                {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
             );
             username=usernameResponse.clgID;
         }
 
-        var responseBody=await backendQuery('POST',`/profile/${typeof sessionStorage.USER_DB_ID==='undefined' || sessionStorage.USER_DB_ID!==dbID?dbID:sessionStorage.USER_DB_ID}`,
+        var responseBody=await backendQuery('POST',`/profile/`,
             {
                 updateType:"authTokenChange",
                 authToken:hashString(username,newPassword)
-            },hashString(username,oldPassword)
+            },hashString(username,oldPassword),typeof sessionStorage.USER_DB_ID==='undefined' || sessionStorage.USER_DB_ID!==dbID?dbID:sessionStorage.USER_DB_ID
         );
         if(responseBody.statusCode===200){
             removeCookie('dbID');
@@ -127,7 +127,7 @@ export default function ChangePasswordScreen(){
         <div>
             <Alert variant="filled" severity="error">
                 {!userPresent && statusCode===404 && "No such College ID"}
-                {/* {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"} */}
+                {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"}
             </Alert>
         </div>
         );
