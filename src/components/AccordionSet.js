@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import {useState} from 'react';
+import EditableTextArea from '../components/EditableTextArea';
 
 export default function AccordionSet(){
     return (
@@ -23,14 +24,27 @@ export default function AccordionSet(){
                 <AccordionDetails>
                     <Grid container alignItems='center'>
                         <Box flex={1}>
-                            <div className='accordionDetailsLeft'>
-                                Hello
+                            <div className='accordionDividerContent'>
+                                CGPA:   9.63<br/>
+                                Current Semester:   VI<br/>
+                                Year:   III<br/>
+                                Class Advisor:  Vidhya S<br/>
+                                <Box height={8}/>
+                                <EditableTextArea/>
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />
                         <Box flex={1}>
-                            <div className='accordionDetailsLeft'>
-                                Hello
+                            <div className='accordionDividerContent'>
+                                Attendance Summary:<br/>
+                                    Software Engineering:   100%<br/>
+                                    Computer Networks:   100%<br/>
+                                    Compiler Design:   100%<br/>
+                                    Soft Skills:  100%<br/>
+                                    Verbal:   100%<br/>
+                                    Aptitude:   100%<br/>
+                                    Computational Intelligence:   100%<br/>
+                                    Principles Of Machine Learnng:  100%<br/>
                             </div>
                         </Box>
                     </Grid>
