@@ -2,7 +2,7 @@ const User=require('../models/userSchema');
 
 
 module.exports=checkCredentials=(req,res,next)=>{
-    User.findById(req.params.dbID)
+    User.findById(req.headers['dbid'])
     .then((user)=>{
         if(!user){
             res.statusCode=404;
@@ -23,7 +23,7 @@ module.exports=checkCredentials=(req,res,next)=>{
         }
     },(err)=>{
         res.statusCode=400;
-        if(req.params.dbID==='undefined'){
+        if(typeof req.headers['dbid']==='undefined' || req.headers['dbid']==='undefined'){
             res.json({
                 status:"Bad request: undefined dbID"
             });

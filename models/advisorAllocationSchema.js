@@ -11,11 +11,18 @@ const advisorAllocationSchema=new Schema({
         ref:'User',
         required:true
     },
-    studentIDs:{
-        type:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Student'
-        }],
+    students:{
+        type:[
+            {
+                studentID:{
+                    type:mongoose.Schema.Types.ObjectId,
+                    ref:'Student'
+                },
+                mentorText:{
+                    type:String
+                }
+            }
+        ],
         required:true
     }
 });

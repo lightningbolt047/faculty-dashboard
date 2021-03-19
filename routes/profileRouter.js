@@ -31,9 +31,9 @@ const uploader=multer({
 
 
 
-profileRouter.route('/:reqType/:dbID')
+profileRouter.route('/:reqType')
 .get(checkCredentials,(req,res,next)=>{
-    User.findById(req.params.dbID)
+    User.findById(req.headers['dbid'])
     .then((user)=>{
         if(req.params.reqType==='getFullProfile'){
             var userData=user;
@@ -56,16 +56,16 @@ profileRouter.route('/:reqType/:dbID')
     })
 })
 
-profileRouter.route('/:dbID')
+profileRouter.route('/')
 .post(checkCredentials,(req,res,next)=>{
-    if(typeof req.params.dbID==='undefined'){
+    if(typeof req.headers['dbid']==='undefined'){
         res.statusCode=404;
         res.json({
             status:'Invalid dbID'
         });
     }
     if(req.body.updateType==='personalInfoUpdate'){
-        User.findByIdAndUpdate(req.params.dbID,{
+        User.findByIdAndUpdate(req.headers['dbid'],{
             "$set":{
                 "phoneNumber":req.body.phoneNumber,
                 "address":req.body.address,
@@ -87,7 +87,7 @@ profileRouter.route('/:dbID')
         });
     }
     if(req.body.updateType==='authTokenChange'){
-        User.findByIdAndUpdate(req.params.dbID,{
+        User.findByIdAndUpdate(req.headers['dbid'],{
             "$set":{
                 "authToken":req.body.authToken,
             }
@@ -106,17 +106,16 @@ profileRouter.route('/:dbID')
     }
 });
 
-profileRouter.route('/uploadimg/:dbID')
+profileRouter.route('/uploadimg/')
 .post(checkCredentials,uploader.single('imageFile'),(req,res)=>{
-    User.findById(req.params.dbID)
+    User.findById(req.headers['dbid'])
     .then((user)=>{
         if(typeof (user.imagePath) !== 'undefined'){
             if(fs.existsSync(user.imagePath)){
                 fs.unlinkSync(user.imagePath);
-                console.log("Old image deleted");
             }
         }
-        User.findByIdAndUpdate(req.params.dbID,{
+        User.findByIdAndUpdate(req.headers['dbid'],{
             $set:{'imagePath':req.file.path}
         }).then((document)=>{
             res.statusCode=200;

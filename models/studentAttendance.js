@@ -17,6 +17,10 @@ const studentAttendanceSchema=new Schema({
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'SemesterProgression',
             },
+            courseID:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Course',
+            },
             classesAttended:{
                 type:Number,
             }

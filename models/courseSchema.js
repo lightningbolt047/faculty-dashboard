@@ -8,7 +8,8 @@ const courseSchema=new Schema({
     },
     courseCode:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     credits:{
         type:Number,
