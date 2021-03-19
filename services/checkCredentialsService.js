@@ -2,7 +2,6 @@ const User=require('../models/userSchema');
 
 
 module.exports=checkCredentials=(req,res,next)=>{
-    console.log(req.params.dbID);
     User.findById(req.params.dbID)
     .then((user)=>{
         if(!user){
@@ -22,5 +21,16 @@ module.exports=checkCredentials=(req,res,next)=>{
             });
             return;
         }
+    },(err)=>{
+        res.statusCode=400;
+        if(req.params.dbID==='undefined'){
+            res.json({
+                status:"Bad request: undefined dbID"
+            });
+            return;
+        }
+        res.json({
+            status:"Bad request"
+        });
     });
 }

@@ -31,7 +31,7 @@ const uploader=multer({
 
 
 
-profileRouter.route('/:dbID/:reqType')
+profileRouter.route('/:reqType/:dbID')
 .get(checkCredentials,(req,res,next)=>{
     User.findById(req.params.dbID)
     .then((user)=>{
