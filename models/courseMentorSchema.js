@@ -11,12 +11,12 @@ const courseMentorSchema=new Schema({
         required:true
     },
     facultyID:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref:'User',
         required:true
     },
     courseID:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref:'Course',
         required:true
     }

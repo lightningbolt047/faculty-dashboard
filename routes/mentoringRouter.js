@@ -20,44 +20,110 @@ mentoringRouter.route('/')
     })
     .then((documents)=>{
         maxYear=documents[0].year;
-        var recentDocument;
-        for(let i=1;i<documents.length;i++){
+        var recentDocumentID=documents[0]._id;
+        for(let i=0;i<documents.length;i++){
             if(maxYear<documents[i].year){
                 maxYear=documents[i].year;
-                recentDocument=documents[i];
+                recentDocument=documents[i]._id;
             }
-        }
-        AdvisorAllocation.findById(recentDocument._id)
+        }      
+
+
+        AdvisorAllocation.findById(recentDocumentID)
         .populate('students.studentID')
         .then(async (document)=>{
-            var studentAttendance;
-            var sendDocument=[];
-            for(let i=0;i<document.students.length;i++){
-                sendDocument.push({
-                    personalDetails:document.students,
-                    attendanceDetails:[]
-                });
-                studentAttendance=await StudentAttendance.findOne({sem:document.students[i],studentID:document.students[i]._id});
-                for(let j=0;j<studentAttendance.courseDetails.length;j++){
-                    let courseName=await Course.findById(studentAttendance.courseDetails[j].courseID).courseName;
-                    sendDocument[i].attendanceDetails.push({
-                        courseName:courseName,
-                        studentAttendance:studentAttendance.courseDetails[j].classesAttended
+            try{
+                var studentAttendance;
+                var sendDocument=[];
+                for(let i=0;i<document.students.length;i++){
+                    sendDocument.push({
+                        personalDetails:document.students,
+                        attendanceDetails:[]
                     });
-                    let semesterProgression=await SemesterProgression.findById(studentAttendance.courseDetails[j].semesterProgressionID);
-                    for(let k=0;k<semesterProgression.courseProgression.length;k++){
-                        if(studentAttendance.courseDetails[j].courseID===semesterProgression.courseProgression[k].courseID){
-                            sendDocument[i].attendanceDetails[j].classesTaken=semesterProgression.courseProgression[k].classesTaken;
+            
+
+                    studentAttendance=await StudentAttendance.findOne({sem:document.students[i].studentID.curSem,studentID:document.students[i].studentID._id});
+                    for(let j=0;j<studentAttendance.courseDetails.length;j++){
+                        let course=await Course.findById(studentAttendance.courseDetails[j].courseID);
+                        let courseName=course.courseName;
+                        let semesterProgression=await SemesterProgression.findById(studentAttendance.courseDetails[j].semesterProgressionID);
+                        let classesTaken=0;
+                        for(let k=0;k<semesterProgression.courseProgression.length;k++){
+                            if(studentAttendance.courseDetails[j].courseID.toString()===semesterProgression.courseProgression[k].courseID.toString()){
+                                classesTaken=semesterProgression.courseProgression[k].classesTaken;
+                                break;
+                            }
                         }
+                        sendDocument[i].attendanceDetails.push({
+                            courseName:courseName,
+                            studentAttendance:studentAttendance.courseDetails[j].classesAttended,
+                            classesTaken:classesTaken
+                        });
                     }
                 }
+                res.statusCode=200;
+                res.json(sendDocument);
+            }catch(e){
+                res.statusCode=500;
+                res.json({
+                    status:"Internal Server Error"
+                });
             }
-            res.statusCode=200;
-            res.json(sendDocument);
+        },(err)=>{
+            res.statusCode=500;
+            res.json({
+                status:"Internal Server Error"
+            });
         });
         
     });
 })
+
+.post(checkCredentials,(req,res,next)=>{
+    AdvisorAllocation.find({
+        advisorID:req.headers['dbid']
+    })
+    .then((documents)=>{
+        maxYear=documents[0].year;
+        var recentDocumentID=documents[0]._id;
+        for(let i=0;i<documents.length;i++){
+            if(maxYear<documents[i].year){
+                maxYear=documents[i].year;
+                recentDocument=documents[i]._id;
+            }
+        }      
+        AdvisorAllocation.findById(recentDocumentID)
+        .then((document)=>{
+            for(let i=0;i<document.students.length;i++){
+                if(document.students[i].studentID.toString()===req.body.studentID.toString()){
+                    document.students[i].mentorText=req.body.mentorText;
+                }
+            }
+            document.save()
+            .then(()=>{
+                res.statusCode=200;
+                res.json({
+                    status:"Mentor text updated successfully"
+                });
+            },(err)=>{
+                res.statusCode=500;
+                res.json({
+                    status:"Internal Server Error"
+                });
+            });
+        },(err)=>{
+            res.statusCode=500;
+            res.json({
+                status:"Internal Server Error"
+            });
+        });
+    },(err)=>{
+        res.statusCode=500;
+        res.json({
+            status:"Internal Server Error"
+        });
+    });
+});
 
 
 

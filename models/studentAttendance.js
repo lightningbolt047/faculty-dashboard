@@ -7,8 +7,7 @@ const studentAttendanceSchema=new Schema({
         required:true
     },
     studentID:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Student',
+        type:String,
         required:true
     },
     courseDetails:{

@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
+const Student=require('./studentSchema');
 
 const advisorAllocationSchema=new Schema({
     year:{
@@ -7,7 +8,7 @@ const advisorAllocationSchema=new Schema({
         required:true
     },
     advisorID:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref:'User',
         required:true
     },
