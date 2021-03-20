@@ -10,6 +10,7 @@ var authRouter=require('./routes/authRouter');
 var recoveryRouter=require('./routes/recoveryRouter');
 var profileRouter=require('./routes/profileRouter');
 const checkCredentials=require('./services/checkCredentialsService');
+const mentoringRouter = require('./routes/mentoringRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -45,6 +46,7 @@ app.use(cors());
 app.use('/auth',authRouter);
 app.use('/recovery',recoveryRouter);
 app.use('/profile',profileRouter);
+app.use('/mentoring',mentoringRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{
