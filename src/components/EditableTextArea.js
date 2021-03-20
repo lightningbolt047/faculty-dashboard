@@ -4,13 +4,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import IconButton from '@material-ui/core/IconButton';
 import {useState} from 'react';
 
-export default function EditableTextArea(){
+export default function EditableTextArea(key,mentorDiaryText, handleTextChange){
 
     const [editing,setEditing]=useState(false);
 
     return (
         <div>
-            <TextareaAutosize rowsMin={5} disabled={!editing} placeholder="Enter Students Grievences And Acheivements" />
+            <TextareaAutosize rowsMin={5} className="txtArea" disabled={!editing} value={mentorDiaryText} onChange={event=>handleTextChange(key,event)} />
             <IconButton onClick={()=>{
                 if(editing){
                     setEditing(false);
