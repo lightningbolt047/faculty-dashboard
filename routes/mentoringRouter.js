@@ -7,7 +7,6 @@ const mentoringRouter=express.Router();
 const AdvisorAllocation=require('../models/advisorAllocationSchema');
 const SemesterProgression=require('../models/semesterProgressionSchema');
 const StudentAttendance=require('../models/studentAttendance');
-const SemesterProgression=require('../models/semesterProgressionSchema');
 const Course=require('../models/courseSchema');
 
 const checkCredentials=require('../services/checkCredentialsService');
