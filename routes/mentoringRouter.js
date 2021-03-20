@@ -37,7 +37,7 @@ mentoringRouter.route('/')
                 var sendDocument=[];
                 for(let i=0;i<document.students.length;i++){
                     sendDocument.push({
-                        personalDetails:document.students,
+                        personalDetails:document.students[i],
                         attendanceDetails:[]
                     });
             
