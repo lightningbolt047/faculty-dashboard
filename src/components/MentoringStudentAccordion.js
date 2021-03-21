@@ -6,10 +6,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import {useState} from 'react';
-import EditableTextArea from '../components/EditableTextArea';
+import EditableTextArea from './EditableTextArea';
 
-export default function AccordionSet({key, studentJSON, mentorDairyText, handleMentorTextChange}){
+export default function MentoringStudentAccordion({accordionID, studentJSON, mentorDairyText, handleMentorTextChange,handleMentorTextSubmit}){
 
     const getCGPA=()=>{
         let sum=0;
@@ -54,11 +53,9 @@ export default function AccordionSet({key, studentJSON, mentorDairyText, handleM
                                 <Box height={4}/>
                                 <b>Current Semester</b>:   {studentJSON.personalDetails.studentID.curSem}
                                 <Box height={4}/>
-                                <b>Disciplinary Actions</b>:   {studentJSON.personalDetails.studentID.disciplinaryActions}
-                                <Box height={4}/>
                                 <b>Department</b>: {studentJSON.personalDetails.studentID.department}
                                 <Box height={8}/>
-                                <EditableTextArea key={key} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange}/>
+                                <EditableTextArea key={accordionID} studentID={studentJSON.personalDetails.studentID._id} textAreaHelpText={"Enter student mentoring notes"} accordionID={accordionID} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange} handleSubmit={handleMentorTextSubmit}/>
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />
@@ -71,6 +68,17 @@ export default function AccordionSet({key, studentJSON, mentorDairyText, handleM
                                             <Box height={4}/>
                                         </div>
                                     ))}
+                                <Box height={8}/>
+                                <Divider />
+                                
+                                <b>Disciplinary Actions</b>
+                                <Box height={10}/>
+                                    {studentJSON.personalDetails.studentID.disciplinaryActions.map((item,index)=>(
+                                        <div>{item}
+                                            <Box height={4}/>
+                                        </div>
+                                    ))}
+                                    
                             </div>
                         </Box>
                     </Grid>

@@ -94,3 +94,9 @@ body {
 .txtArea{
   resize: None;
 }
+
+.searchComponent{
+  margin-left: 5%;
+  margin-top: 5px;
+  width: 20%;
+}

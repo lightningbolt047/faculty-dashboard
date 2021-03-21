@@ -1,57 +1,110 @@
-import AccordionSet from '../../components/AccordionSet';
+import MentoringStudentAccordion from '../../components/MentoringStudentAccordion';
+import SearchBar from '../../components/SearchBar';
 import backendQuery from '../../services/backendServices';
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 
 var studentsDetails=[];
 
 export default function MentorDiary(){
 
-    const [fetchingData,setFetchingData]=useState(false);
     const [statusCode,setStatusCode]=useState(0);
+    var [shownStudentsDetails,setShownStudentsDetails]=useState([]);
 
     const [mentoringDiaries,setMentoringDiaries]=useState([]);
+    const [showSearchText,setShowSearchText]=useState('');
+    var searchText='';
     // const [studentsDetails,setStudentsDetails]=useState([]);
 
 
 
     const getInfoFromBackend=async ()=>{
-        setFetchingData(true);
         var responseBody=await backendQuery('GET',`/mentoring/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
 
         // }
-        console.log(responseBody);
         if(responseBody.statusCode===200){
             studentsDetails=responseBody;
         }
         setStatusCode(responseBody.statusCode);
-        setFetchingData(false);
     };
 
+    const sendMentoringTextToBackend=async (studentID,accordionID)=>{
+        var responseBody=await backendQuery('POST',`/mentoring/`,
+            {
+                studentID:studentID,
+                mentorText:mentoringDiaries[accordionID]
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        // if(responseBody.statusCode===404){
 
-    //eslint-disable-next-line
-    useEffect(async ()=>{
-        await getInfoFromBackend();
+        // }
+        setStatusCode(responseBody.statusCode);
+    }
+
+    const getSearchResults=()=>{
+        var filteredResults=[];
+        if(searchText==='' || typeof searchText==='undefined'){
+            for(let i=0;i<studentsDetails.length;i++){
+                filteredResults.push(studentsDetails[i]);
+            }
+        }
+        else{
+            for(let i=0;i<studentsDetails.length;i++){
+                if(studentsDetails[i].personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentsDetails[i].personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
+                    filteredResults.push(studentsDetails[i]);
+                }
+            }
+        }
+        setShownStudentsDetails(filteredResults);
+        setMentoringTextArray(filteredResults);
+    }
+
+    const setMentoringTextArray=(filteredResults)=>{
         var mentoringDiariesText=[];
-        for(let i=0;i<studentsDetails.length;i++){       
-            mentoringDiariesText.push(studentsDetails[i].personalDetails.mentorText);
+        for(let i=0;i<filteredResults.length;i++){       
+            mentoringDiariesText.push(filteredResults[i].personalDetails.mentorText);
         }
         setMentoringDiaries(mentoringDiariesText);
+    }
+
+
+    useEffect(()=>{
+        async function fetchFromServer(){
+            await getInfoFromBackend();
+            getSearchResults();
+        }
+        fetchFromServer();
+        //eslint-disable-next-line
     },[]);
 
     const handleMentorTextChange=(accordionID,event)=>{
-        var mentorTexts=mentoringDiaries;
-        mentorTexts[accordionID]=event.target.value;
+        var mentorTexts=[];
+        mentoringDiaries[accordionID]=event.target.value;
+        for(let i=0;i<mentoringDiaries.length;i++){
+            mentorTexts.push(mentoringDiaries[i]);
+        }
         setMentoringDiaries(mentorTexts);
+    }
+
+    const handleSearchTextChange=(event)=>{
+        setShowSearchText(event.target.value);
+        searchText=event.target.value;
+        getSearchResults();
     }
 
     const getAccordionUI=()=>{
         return (
-            studentsDetails.map((studentItem,index)=>(
-                <AccordionSet key={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange}/>
-            ))
+            <div>
+                <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
+                <Box height={10}/>
+                {shownStudentsDetails.map((studentItem,index)=>(
+                <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
+                ))}
+            </div>
         );
     }
     
@@ -59,7 +112,8 @@ export default function MentorDiary(){
 
     return (
         <div>
-            {statusCode===200 && getAccordionUI()}            
+            {statusCode===200 && getAccordionUI()}
+            {statusCode!==200 && <CircularProgress size={24} color="secondary"/>}          
         </div>
         
 
