@@ -26,6 +26,12 @@ const userSchema=new Schema({
         required:true,
         range: [0,10]
     },
+    accountLockTime:{
+        type: Date
+    },
+    lastSuccessfulLogin:{
+        type:Date
+    },
     phoneNumber:{
         type:String,
     },

@@ -19,6 +19,13 @@ mentoringRouter.route('/')
         advisorID:req.headers['dbid']
     })
     .then((documents)=>{
+        if(!documents || documents.length===0){
+            res.statusCode=404;
+            res.json({
+                status:"Resource Not found"
+            });
+            return;
+        }
         maxYear=documents[0].year;
         var recentDocumentID=documents[0]._id;
         for(let i=0;i<documents.length;i++){
@@ -84,6 +91,13 @@ mentoringRouter.route('/')
         advisorID:req.headers['dbid']
     })
     .then((documents)=>{
+        if(!documents || documents.length===0){
+            res.statusCode=404;
+            res.json({
+                status:"Resource Not found"
+            });
+            return;
+        }
         maxYear=documents[0].year;
         var recentDocumentID=documents[0]._id;
         for(let i=0;i<documents.length;i++){
