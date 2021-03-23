@@ -73,7 +73,10 @@ export default function LoginScreen(){
             setSignInWorking(false);
             if(responseBody.statusCode===200){
                 dbID=responseBody.dbID;
+                sessionStorage.DASHBOARD_SUB_SCREEN_ID=0;
                 sessionStorage.USER_AUTH_TOKEN=cookies.authToken;
+                sessionStorage.FACULTY_TYPE=responseBody.facultyType;
+                sessionStorage.FACULTY_NAME=responseBody.name;
                 redirectToHome();
             }
             console.log(responseBody);
@@ -111,6 +114,9 @@ export default function LoginScreen(){
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
             sessionStorage.USER_AUTH_TOKEN=hashString(username,password);
+            sessionStorage.DASHBOARD_SUB_SCREEN_ID=0;
+            sessionStorage.FACULTY_TYPE=responseBody.facultyType;
+            sessionStorage.FACULTY_NAME=responseBody.name;
             dbID=responseBody.dbID; 
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);

@@ -7,6 +7,9 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import EditableTextArea from './EditableTextArea';
+import CheckIcon from '@material-ui/icons/CheckCircle';
+import WarningIcon from '@material-ui/icons/Warning';
+import AlertIcon from '@material-ui/icons/Error';
 
 export default function MentoringStudentAccordion({accordionID, studentJSON, mentorDairyText, handleMentorTextChange,handleMentorTextSubmit}){
 
@@ -42,6 +45,10 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.studentID.name}</Typography>
                     </Box>
+                    {studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='mentorCheckIcon'/>}
+                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='mentorAlertIcon'/>}
+                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='mentorWarningIcon'/>}
+                    <Box width={8}/>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container>
@@ -70,14 +77,16 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                     ))}
                                 <Box height={8}/>
                                 <Divider />
-                                
+                                <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
                                     {studentJSON.personalDetails.studentID.disciplinaryActions.map((item,index)=>(
-                                        <div>{item}
+                                        <div className='disciplinaryActionText'>{item}
                                             <Box height={4}/>
                                         </div>
                                     ))}
+                                    {studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <div className='noDisciplinaryActionText'>No disciplinary actions
+                                        </div>}
                                     
                             </div>
                         </Box>
