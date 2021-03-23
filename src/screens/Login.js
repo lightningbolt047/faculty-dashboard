@@ -107,15 +107,7 @@ export default function LoginScreen(){
                 authToken:hashString(username,password)
             }
         );
-        if(responseBody.statusCode===401){
-
-            if(responseBody.status==="Account locked"){
-                setResponseMessage("Account Locked");
-            }else if(responseBody.status==="Wrong Password"){
-                //eslint-disable-next-line
-                setResponseMessage("Wrong Password "+"Remaining Attempts: "+responseBody.remainingAttempts);
-            }
-        }
+        setResponseMessage(responseBody.status);
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
             sessionStorage.USER_AUTH_TOKEN=hashString(username,password);
