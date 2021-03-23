@@ -45,6 +45,8 @@ authRouter.route('/')
                     res.json({
                         "status": "Login Success",
                         "dbID": user._id,
+                        "name":user.name,
+                        "facultyType":user.facultyType,
                         "remainingAttempts": 10
                     });
                 });
@@ -103,6 +105,8 @@ authRouter.route('/')
                     res.json({
                         "status": "Login Success",
                         "dbID": user._id,
+                        "name":user.name,
+                        "facultyType":user.facultyType,
                         "remainingAttempts": 10
                     });
                 });
