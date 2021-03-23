@@ -85,7 +85,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                             <Box height={4}/>
                                         </div>
                                     ))}
-                                    {studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <div className='noDisciplinaryActionText'>No disciplinary actions
+                                    {(typeof studentJSON.personalDetails.studentID.disciplinaryActions.length==='undefined' || studentJSON.personalDetails.studentID.disciplinaryActions.length===0) && <div className='noDisciplinaryActionText'>No disciplinary actions
                                         </div>}
                                     
                             </div>
