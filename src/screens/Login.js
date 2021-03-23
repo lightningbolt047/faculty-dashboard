@@ -13,6 +13,7 @@ import backendQuery from '../services/backendServices';
 import hashString from '../services/hashService';
 import { useCookies } from 'react-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 const useStyles=makeStyles({
     title:{
       flexGrow:1,
@@ -39,6 +40,7 @@ export default function LoginScreen(){
     const [statusCode,setStatusCode]=useState(200);
     const [responseMessage,setResponseMessage]=useState("");
     const [signInWorking,setSignInWorking]=useState(false);
+    const [snackbarOpen,setSnackbarOpen]=useState(true);
     var dbID=null;
 
     sessionStorage.clear();
@@ -89,6 +91,15 @@ export default function LoginScreen(){
 
     const signInHandler= async ()=>{
         setSignInWorking(true);
+        if((password==='' || typeof password === 'undefined')){
+            setStatusCode(1000);
+            setResponseMessage('Password Empty');
+            if(username==='' || typeof username==='undefined'){
+                setResponseMessage('Username and Password Empty');
+            }
+            setSignInWorking(false);
+            return;
+        }
         var responseBody=await backendQuery('POST','/auth',
             {
                 loginType:"user",
@@ -118,6 +129,9 @@ export default function LoginScreen(){
             }
             redirectToHome();
         }
+        else{
+            setSnackbarOpen(true);
+        }
         setSignInWorking(false);
         console.log(responseBody);
     }
@@ -129,9 +143,16 @@ export default function LoginScreen(){
                 <Alert variant="filled" severity="error">
                     {statusCode===401 && responseMessage}
                     {statusCode===404 && "No such College ID"}
+                    {statusCode===1000 && responseMessage}
                 </Alert>
             </div>
         );
+    }
+
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setSnackbarOpen(false);
+        }
     }
 
 
@@ -173,7 +194,9 @@ export default function LoginScreen(){
                         <Box height={8}/>
                         <Link to="/authChange">Change Password</Link>
                         <Box height={8}/>
-                        {statusCode!==200 && errDiv()}
+                        {statusCode!==200 && <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={handleSnackbarClose}>
+                            {errDiv()}
+                            </Snackbar>}
                     </CardContent>
                 </Card>
                 

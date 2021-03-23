@@ -4,6 +4,8 @@ import backendQuery from '../../services/backendServices';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 var studentsDetails=[];
 
@@ -15,6 +17,8 @@ export default function MentorDiary(){
     const [mentoringDiaries,setMentoringDiaries]=useState([]);
     const [showSearchText,setShowSearchText]=useState('');
     var searchText='';
+    const [openSnackbar,setOpenSnackbar]=useState(false);
+    const [sendStatusCode,setSendStatusCode]=useState(0);
     // const [studentsDetails,setStudentsDetails]=useState([]);
 
 
@@ -39,10 +43,10 @@ export default function MentorDiary(){
                 mentorText:mentoringDiaries[accordionID]
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
-        // if(responseBody.statusCode===404){
-
-        // }
-        setStatusCode(responseBody.statusCode);
+        setSendStatusCode(responseBody.statusCode);
+        if(responseBody.statusCode===200){
+            setOpenSnackbar(true);
+        }
     }
 
     const getSearchResults=()=>{
@@ -71,6 +75,12 @@ export default function MentorDiary(){
         setMentoringDiaries(mentoringDiariesText);
     }
 
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setOpenSnackbar(false);
+        }
+    }
+
 
     useEffect(()=>{
         async function fetchFromServer(){
@@ -96,6 +106,16 @@ export default function MentorDiary(){
         getSearchResults();
     }
 
+    const errDiv=()=>{
+        return (
+            <div>
+                {sendStatusCode===200 && <Alert variant="filled" severity="success">
+                    Mentor Diary updated successfully
+                </Alert>}
+            </div>
+        );
+    }
+
     const getAccordionUI=()=>{
         return (
             <div>
@@ -104,6 +124,9 @@ export default function MentorDiary(){
                 {shownStudentsDetails.map((studentItem,index)=>(
                 <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
                 ))}
+                <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
+                    {errDiv()}
+                </Snackbar>
             </div>
         );
     }
