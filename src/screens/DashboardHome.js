@@ -20,6 +20,7 @@ import BookIcon from '@material-ui/icons/Book';
 import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import {useMediaQuery} from 'react-responsive';
 
 
 const sidebarWidth=240;
@@ -59,7 +60,11 @@ export default function DashboardHome(){
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    console.log("sessionStorage "+sessionStorage.USER_DB_ID);
+    var subScreenList=[<div/>,<Profile/>,<MentorDiary/>];
+    const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
+    const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
+
+    console.log("sessionStorage "+sessionStorage.DASHBOARD_SUB_SCREEN_ID);
 
     const logoutRoutine=()=>{
         removeCookie("dbID");
@@ -76,9 +81,13 @@ export default function DashboardHome(){
     }
 
     const getMainUIContent=()=>{
-        return (
-            <Profile/>
-        );
+        return subScreenList[curScreen];
+    }
+
+    const handleSubScreenChange=(index)=>{
+        sessionStorage.DASHBOARD_SUB_SCREEN_ID=index;
+        setCurScreen(index);
+        setSidebarOpen(false);
     }
 
     return (
@@ -92,7 +101,11 @@ export default function DashboardHome(){
                         </IconButton>
                         <h2>Home</h2>
                     </Box>
-                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={()=>console.log("Hello")}>
+                    {!isSmallWidth && <div>
+                        <h2>Hello {sessionStorage.FACULTY_NAME} !</h2>
+                        <Box width={8}/>
+                    </div>}
+                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
                         <AccountCircleIcon/>
                     </IconButton>
                     <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
@@ -113,7 +126,7 @@ export default function DashboardHome(){
             }}
             >
                 <List>
-                    <ListItem button key="Profile">
+                    <ListItem button key="Profile" onClick={()=>handleSubScreenChange(1)}>
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
@@ -125,14 +138,14 @@ export default function DashboardHome(){
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    <ListItem button key="Gate Pass">
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass">
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
                         <ListItemText primary="Gate Pass"/>
-                    </ListItem>
-                    <ListItem button key="Mentoring Diary">
+                    </ListItem>}
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" onClick={()=>handleSubScreenChange(2)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>
-                    </ListItem>
+                    </ListItem>}
                
                     <ListItem button onClick={()=>setSidebarOpen(false)}>
                         <ListItemIcon>{<CloseIcon/>}</ListItemIcon>

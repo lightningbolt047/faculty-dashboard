@@ -86,6 +86,35 @@ body {
   font-weight: 700;
 }
 
-.accordionDetailsLeft {
+.accordionDividerContent{
+  padding-left: 10px;
   text-align: left;
+}
+
+.txtArea{
+  resize: None;
+}
+
+.searchComponent{
+  margin-left: 5%;
+  margin-top: 5px;
+  width: 20%;
+}
+
+.disciplinaryActionText {
+  color: #ff1744;
+}
+
+.noDisciplinaryActionText{
+  color: #00a152;
+}
+
+#mentorCheckIcon{
+  color: #00a152;
+}
+#mentorAlertIcon{
+  color: #ffc400;
+}
+#mentorWarningIcon{
+  color: #ff1744;
 }
