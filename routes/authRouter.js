@@ -27,7 +27,7 @@ authRouter.route('/')
                 if(((timeDiff/(1000*60*60))).toFixed(2)<12){
                     res.statusCode=401;
                     res.json({
-                        "status":"Account locked",
+                        "status":"Account locked! Try after "+(12-(timeDiff/(1000*60*60))).toFixed(2)+" hours",
                         "remainingAttempts":0
                     });
                     console.log("Time remaining: "+(12-(timeDiff/(1000*60*60))).toFixed(2));
@@ -57,8 +57,7 @@ authRouter.route('/')
                 .then(()=>{
                     res.statusCode=401;
                     res.json({
-                        "status": "Wrong Password",
-                        "remainingAttempts": 10-user.wrongAttempts
+                        "status": `Wrong Password Remaining Attempts: ${10-user.wrongAttempts}`,
                     });
                     return;
                 });
@@ -87,7 +86,7 @@ authRouter.route('/')
                 if(((timeDiff/(1000*60*60))).toFixed(2)<12){
                     res.statusCode=401;
                     res.json({
-                        "status":"Account locked",
+                        "status":"Account locked! Try after "+(12-(timeDiff/(1000*60*60))).toFixed(2)+" hours",
                         "remainingAttempts":0
                     });
                     console.log("Time remaining: "+(12-(timeDiff/(1000*60*60))).toFixed(2));
@@ -117,8 +116,7 @@ authRouter.route('/')
                 .then(()=>{
                     res.statusCode=401;
                     res.json({
-                        "status": "Wrong Password",
-                        "remainingAttempts": 10-user.wrongAttempts
+                        "status": `Wrong Password Remaining Attempts: ${10-user.wrongAttempts}`,
                     });
                     return;
                 });
