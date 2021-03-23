@@ -2,8 +2,7 @@ const User=require('../models/userSchema');
 
 
 module.exports=checkCredentials=(req,res,next)=>{
-    console.log(req.params.dbID);
-    User.findById(req.params.dbID)
+    User.findById(req.headers['dbid'])
     .then((user)=>{
         if(!user){
             res.statusCode=404;
@@ -22,5 +21,16 @@ module.exports=checkCredentials=(req,res,next)=>{
             });
             return;
         }
+    },(err)=>{
+        res.statusCode=400;
+        if(typeof req.headers['dbid']==='undefined' || req.headers['dbid']==='undefined'){
+            res.json({
+                status:"Bad request: undefined dbID"
+            });
+            return;
+        }
+        res.json({
+            status:"Bad request"
+        });
     });
 }

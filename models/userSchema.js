@@ -26,6 +26,12 @@ const userSchema=new Schema({
         required:true,
         range: [0,10]
     },
+    accountLockTime:{
+        type: Date
+    },
+    lastSuccessfulLogin:{
+        type:Date
+    },
     phoneNumber:{
         type:String,
     },
@@ -42,6 +48,13 @@ const userSchema=new Schema({
     facultyType:{
         type: String,
         required: true
+    },
+    department:{
+        type:String,
+        required:true
+    },
+    hod:{
+        type:Boolean
     }
 });
 
