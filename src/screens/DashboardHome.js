@@ -21,6 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import {useMediaQuery} from 'react-responsive';
+import HomeIcon from '@material-ui/icons/Home';
 
 
 const sidebarWidth=240;
@@ -126,6 +127,10 @@ export default function DashboardHome(){
             }}
             >
                 <List>
+                <ListItem button key="Home" onClick={()=>handleSubScreenChange(0)}>
+                        <ListItemIcon>{<HomeIcon/>}</ListItemIcon>
+                        <ListItemText primary="Home"/>
+                    </ListItem>
                     <ListItem button key="Profile" onClick={()=>handleSubScreenChange(1)}>
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
