@@ -8,7 +8,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import {useHistory} from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import Drawer from '@material-ui/core/Drawer';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -91,6 +91,13 @@ export default function DashboardHome(){
         setSidebarOpen(false);
     }
 
+    useEffect(()=>{
+        if(typeof sessionStorage.USER_DB_ID==='undefined' || typeof sessionStorage.USER_AUTH_TOKEN==='undefined'){
+            history.replace('/');
+        }
+        // eslint-disable-next-line
+    },[]);
+
     return (
         <div>
             <AppBar className="dashboardHomeAppBar" position="static">
@@ -103,8 +110,7 @@ export default function DashboardHome(){
                         <h2>Home</h2>
                     </Box>
                     {!isSmallWidth && <div>
-                        <h2>Hello {sessionStorage.FACULTY_NAME} !</h2>
-                        <Box width={8}/>
+                        <h2 id="userGreetMessage">Hello {sessionStorage.FACULTY_NAME} !</h2>
                     </div>}
                     <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
                         <AccountCircleIcon/>
