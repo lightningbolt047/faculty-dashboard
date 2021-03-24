@@ -136,6 +136,7 @@ export default function MentorDiary(){
     return (
         <div>
             {statusCode===200 && getAccordionUI()}
+            <Box height={12}/>
             {statusCode!==200 && <CircularProgress size={24} color="secondary"/>}          
         </div>
         
