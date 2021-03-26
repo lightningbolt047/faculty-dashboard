@@ -25,6 +25,7 @@ export default function Profile(){
     const [department,setDepartment]=useState("");
     const [sendingData,setSendingData]=useState(false);
     const [profileUpdateStatus,setProfileUpdateStatus]=useState(-1);
+    const [enableSaveButton,setEnableSaveButton]=useState(true);
     const history=useHistory();
     var imageUploadSuccess=false;
 
@@ -80,6 +81,9 @@ export default function Profile(){
         setSendingData(false);
     }
 
+    const handleEnableSaveButton=(value)=>{
+        setEnableSaveButton(value);
+    }
 
     const handlePhNoChange=(event)=>{
         setPhNo(event.target.value);
@@ -164,34 +168,34 @@ export default function Profile(){
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange}/>
+                        <EditableInput fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton}/>
                     </Grid>
                     <Grid item>
-                        <EditableInput fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange}/>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} alignContent="center" justify="center">
-                    <Grid item>
-                        <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange}/>
+                        <EditableInput fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange}/>
-                    </Grid>
-                    <Grid item>
-                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange}/>
+                        <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <Button variant='contained' color='secondary' onClick={()=>history.replace('/authChange')}>
+                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                    </Grid>
+                    <Grid item>
+                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <Button variant='contained' color='secondary' onClick={()=>history.push('/authChange')}>
                                 Change Password
                         </Button>
                     </Grid>
                     
                     <Grid item>
-                        <Button variant='contained' color='secondary' onClick={postInfoToBackend}>
+                        <Button variant='contained' color='secondary' disabled={!enableSaveButton} onClick={postInfoToBackend}>
                             {sendingData && <CircularProgress size={24} color="inherit"/>}
                             {!sendingData && "Save"}
                         </Button>
