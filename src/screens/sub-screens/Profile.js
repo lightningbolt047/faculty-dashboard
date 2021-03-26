@@ -11,7 +11,7 @@ import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
-
+var buttonEnabledList=[true,true,true,true,true];
 export default function Profile(){
 
     const [phNo,setPhNo]=useState("982-345-1234");
@@ -61,6 +61,16 @@ export default function Profile(){
     },[]);
 
     const postInfoToBackend=async ()=>{
+
+        if(phNo==='' || email==='' || address==='' || securityQuestion==='' || securityAnswer==='' || email.split('@').length!==2){
+            setProfileUpdateStatus(1000);
+            setTimeout(()=>{
+                getInfoFromBackend();
+                setProfileUpdateStatus(-1);
+            },2000);
+            return;
+        }
+
         setSendingData(true);
         var responseBody=await backendQuery('POST',`/profile/`,
             {
@@ -81,12 +91,28 @@ export default function Profile(){
         setSendingData(false);
     }
 
-    const handleEnableSaveButton=(value)=>{
-        setEnableSaveButton(value);
+    const handleEnableSaveButton=(index,value)=>{
+        let count=0;
+        buttonEnabledList[index]=value;
+        for(let i=0;i<buttonEnabledList.length;i++){
+            if(buttonEnabledList[i]===true){
+                count++;
+            }
+        }
+        if(count===buttonEnabledList.length){
+            setEnableSaveButton(true);
+        }
+        else{
+            setEnableSaveButton(false);
+        }
     }
 
     const handlePhNoChange=(event)=>{
-        setPhNo(event.target.value);
+        let result=parseInt(event.target.value)
+        
+        if(!isNaN(result) && result.toString().length===event.target.value.length){
+            setPhNo(event.target.value);
+        }
     }
     const handleEmailChange=(event)=>{
         setEmail(event.target.value);
@@ -168,23 +194,23 @@ export default function Profile(){
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                        <EditableInput fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={0}/>
                     </Grid>
                     <Grid item>
-                        <EditableInput fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton}/>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} alignContent="center" justify="center">
-                    <Grid item>
-                        <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                        <EditableInput fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={1}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                        <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={2}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={3}/>
                     </Grid>
                     <Grid item>
-                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton}/>
+                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={4}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
@@ -208,9 +234,14 @@ export default function Profile(){
                                 {"Successfully updated"}
                             </Alert>
                             }
-                            {(profileUpdateStatus!==200 && profileUpdateStatus!==-1) &&
+                            {(profileUpdateStatus!==200 && profileUpdateStatus!==-1 && profileUpdateStatus!==1000) &&
                             <Alert variant="filled" severity="error">
                                 {`Something went wrong: Error ${profileUpdateStatus}`}
+                            </Alert>
+                            }
+                            {profileUpdateStatus===1000 &&
+                            <Alert variant="filled" severity="error">
+                                Enter Proper details
                             </Alert>
                             }
                         </Grid>
