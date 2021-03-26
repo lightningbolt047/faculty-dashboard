@@ -34,6 +34,17 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
         return sgpaString;
     }
 
+    const getAttendancePercentageTextStyle=(percentage)=>{
+        if(percentage<75){
+            return 'warningColor';
+        }else if(percentage>=75 && percentage<=85){
+            return 'alertColor';
+        }
+        else{
+            return 'okColor';
+        }
+    }
+
 
     return (
         <div className="accordionSpace">
@@ -45,9 +56,9 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.studentID.name}</Typography>
                     </Box>
-                    {studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='mentorCheckIcon'/>}
-                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='mentorAlertIcon'/>}
-                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='mentorWarningIcon'/>}
+                    {studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}
+                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}
+                        {studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}
                     <Box width={8}/>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -71,9 +82,14 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
                                     {studentJSON.attendanceDetails.map((item,index)=>(
-                                        <div>{item.courseName+" : "+((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}
-                                            <Box height={4}/>
+                                        <div>
+                                            <span>{item.courseName+" : "}</span>
+                                            <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
                                         </div>
+
+                                        // <div>{item.courseName+" : "+((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}
+                                        //     <Box height={4}/>
+                                        // </div>
                                     ))}
                                 <Box height={8}/>
                                 <Divider />

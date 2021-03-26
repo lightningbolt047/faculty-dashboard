@@ -109,12 +109,22 @@ body {
   color: #00a152;
 }
 
-#mentorCheckIcon{
+#okColor{
   color: #00a152;
 }
-#mentorAlertIcon{
+#alertColor{
   color: #ffc400;
 }
-#mentorWarningIcon{
+#warningColor{
   color: #ff1744;
+}
+
+#userGreetMessage {
+  padding-right: 20px;
+}
+
+#mentorNotAllocated {
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
 }

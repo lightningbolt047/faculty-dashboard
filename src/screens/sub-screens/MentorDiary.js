@@ -106,7 +106,7 @@ export default function MentorDiary(){
         getSearchResults();
     }
 
-    const errDiv=()=>{
+    const successDiv=()=>{
         return (
             <div>
                 {sendStatusCode===200 && <Alert variant="filled" severity="success">
@@ -125,8 +125,18 @@ export default function MentorDiary(){
                 <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
                 ))}
                 <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
-                    {errDiv()}
+                    {successDiv()}
                 </Snackbar>
+            </div>
+        );
+    }
+
+    const errDiv=()=>{
+        return (
+            <div id='mentorNotAllocated'>
+                <Alert variant="filled" severity="error">
+                    You have not been assigned to a class
+                </Alert>
             </div>
         );
     }
@@ -137,7 +147,8 @@ export default function MentorDiary(){
         <div>
             {statusCode===200 && getAccordionUI()}
             <Box height={12}/>
-            {statusCode!==200 && <CircularProgress size={24} color="secondary"/>}          
+            {statusCode!==200 && statusCode!==404 && <CircularProgress size={24} color="secondary"/>}
+            {statusCode===404 && errDiv()}          
         </div>
         
 
