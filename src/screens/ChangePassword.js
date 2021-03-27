@@ -110,15 +110,15 @@ export default function ChangePasswordScreen(){
         return (
             <div>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={oldPassword} label="Old Password" onChange={event => {if(!passwordChangeSuccess){setOldPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={oldPassword} label="Old Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setOldPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={newPassword} label="New Password" onChange={event => {if(!passwordChangeSuccess){setNewPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={newPassword} label="New Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setNewPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={confirmNewPassword} label="Confirm New Password" onChange={event => {if(!passwordChangeSuccess){setConfirmNewPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={confirmNewPassword} label="Confirm New Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmNewPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -181,6 +181,10 @@ export default function ChangePasswordScreen(){
         if (reason!=='clickaway'){
             setOpenSnackbar(false);
         }
+    }
+
+    const discardCutCopyPaste=(event)=>{
+        event.preventDefault();
     }
 
     

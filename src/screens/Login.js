@@ -154,6 +154,10 @@ export default function LoginScreen(){
         }
     }
 
+    const discardCutCopyPaste=(event)=>{
+        event.preventDefault();
+    }
+
 
     return (
         <div className="loginScreen">
@@ -170,7 +174,7 @@ export default function LoginScreen(){
                         </Grid>
                         <Box height={8}/>
                         <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => setPassword(event.target.value)} type='password' fullWidth/>
+                            <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => setPassword(event.target.value)} onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} type='password' fullWidth/>
                         </Grid>
                         <Box height={8}/>
                         <FormControlLabel

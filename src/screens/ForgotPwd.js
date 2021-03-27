@@ -108,11 +108,11 @@ export default function ForgotPasswordScreen(){
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -178,6 +178,10 @@ export default function ForgotPasswordScreen(){
         if (reason!=='clickaway'){
             setOpenSnackbar(false);
         }
+    }
+
+    const discardCutCopyPaste=(event)=>{
+        event.preventDefault();
     }
 
     
