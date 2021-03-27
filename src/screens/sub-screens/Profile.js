@@ -110,7 +110,7 @@ export default function Profile(){
     const handlePhNoChange=(event)=>{
         let result=parseInt(event.target.value)
         
-        if(!isNaN(result) && result.toString().length===event.target.value.length){
+        if(event.target.value==='' || (!isNaN(result) && result.toString().length===event.target.value.length)){
             setPhNo(event.target.value);
         }
     }
