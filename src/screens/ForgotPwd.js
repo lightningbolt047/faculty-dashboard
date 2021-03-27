@@ -10,6 +10,7 @@ import hashString from '../services/hashService';
 import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const useStyles=makeStyles({
     title:{
@@ -37,6 +38,7 @@ export default function ForgotPasswordScreen(){
     const [userPresent,setUserPresent]=useState(false);
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
     const [buttonWorking,setButtonWorking]=useState(false);
+    const [openSnackbar,setOpenSnackbar]=useState(false);
 
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
@@ -52,6 +54,9 @@ export default function ForgotPasswordScreen(){
             setDbID(responseBody.dbID);
             setSecQuestion(responseBody.secQuestion);
             setUserPresent(true);
+            setOpenSnackbar(false);
+        }else{
+            setOpenSnackbar(true);
         }
         setButtonWorking(false);
         console.log(responseBody);
@@ -59,7 +64,8 @@ export default function ForgotPasswordScreen(){
 
     const checkSecAnswerChangePassword=async ()=>{
 
-        if(password!==confirmPassword || password===""){   
+        if(password!==confirmPassword || password===""){
+            setOpenSnackbar(true);  
             return;
         }
         setButtonWorking(true);
@@ -77,6 +83,7 @@ export default function ForgotPasswordScreen(){
         }
         setStatusCode(responseBody.statusCode);
         setButtonWorking(false);
+        setOpenSnackbar(true);
         
         console.log(responseBody);
     }
@@ -155,6 +162,24 @@ export default function ForgotPasswordScreen(){
         );
     }
 
+    const getSnackbarContent=()=>{
+        if(statusCode!==200){
+            return reqErrDiv();
+        }
+        if(userPresent && secQuestion!=null && (password!==confirmPassword || password==="")){
+            return passwordMatchErrDiv();
+        }
+        if(passwordChangeSuccess){
+            return passwordChangeSuccessDiv()
+        }
+    }
+
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setOpenSnackbar(false);
+        }
+    }
+
     
     return (
         <div className="loginScreen">
@@ -195,12 +220,12 @@ export default function ForgotPasswordScreen(){
 
                         </Button><br></br>
                         <Box height={8}/>
-                        {statusCode!==200 && reqErrDiv()}
-                        {userPresent && secQuestion!=null && (password!==confirmPassword || password==="") && passwordMatchErrDiv()}
-                        {passwordChangeSuccess && passwordChangeSuccessDiv()}
                     </CardContent>
                 </Card>
             </Grid>
+            <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
+                {getSnackbarContent()}
+            </Snackbar>
         </div> 
     );
 }

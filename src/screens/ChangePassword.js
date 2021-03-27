@@ -11,6 +11,7 @@ import Alert from '@material-ui/lab/Alert';
 import backendQuery from '../services/backendServices';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useCookies } from 'react-cookie';
+import Snackbar from '@material-ui/core/Snackbar';
 const useStyles=makeStyles({
     title:{
       flexGrow:1,
@@ -21,7 +22,7 @@ const useStyles=makeStyles({
     },
   });
 
-  var dbID=sessionStorage.USER_DB_ID;
+  var dbID;
 
 
 
@@ -40,6 +41,7 @@ export default function ChangePasswordScreen(){
     const [passwordChangeSuccess,setPasswordChangeSuccess]=useState(false);
     const [buttonWorking,setButtonWorking]=useState(false);
     const [alreadyLoggedIn,setAlreadyLoggedIn]=useState(false);
+    const [openSnackbar,setOpenSnackbar]=useState(false);
 
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
@@ -53,10 +55,12 @@ export default function ChangePasswordScreen(){
         setStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
             setUserPresent(true);
+            setOpenSnackbar(false);
+        }else{
+            setOpenSnackbar(true);
         }
         dbID=responseBody.dbID;
         setButtonWorking(false);
-        console.log(responseBody);
     }
 
     useEffect(()=>{
@@ -70,9 +74,9 @@ export default function ChangePasswordScreen(){
     },[]);
 
     const checkOldPasswordChangePassword=async ()=>{
-        console.log(sessionStorage.USER_DB_ID);
 
-        if(newPassword!==confirmNewPassword || newPassword===""){   
+        if(newPassword!==confirmNewPassword || newPassword===""){
+            setOpenSnackbar(true);
             return;
         }
         setButtonWorking(true);
@@ -88,7 +92,7 @@ export default function ChangePasswordScreen(){
             {
                 updateType:"authTokenChange",
                 authToken:hashString(username,newPassword)
-            },hashString(username,oldPassword),typeof sessionStorage.USER_DB_ID==='undefined' || sessionStorage.USER_DB_ID!==dbID?dbID:sessionStorage.USER_DB_ID
+            },hashString(username,oldPassword),dbID
         );
         if(responseBody.statusCode===200){
             removeCookie('dbID');
@@ -98,8 +102,7 @@ export default function ChangePasswordScreen(){
         }
         setStatusCode(responseBody.statusCode);
         setButtonWorking(false);
-        
-        console.log(responseBody);
+        setOpenSnackbar(true);
     }
 
 
@@ -127,7 +130,6 @@ export default function ChangePasswordScreen(){
         <div>
             <Alert variant="filled" severity="error">
                 {!userPresent && statusCode===404 && "No such College ID"}
-                {userPresent && statusCode===401 && "Wrong Security Answer. Password not changed"}
             </Alert>
         </div>
         );
@@ -137,9 +139,7 @@ export default function ChangePasswordScreen(){
         return(
         <div>
             <Alert variant="filled" severity="warning">
-                {newPassword==="" && "Password fields blank"}
-                {newPassword!==confirmNewPassword && "Password fields do not match"}
-                {userPresent && statusCode===401 && "Wrong old password"}
+                {((newPassword!==confirmNewPassword || newPassword==='') || (userPresent && (statusCode===401 || oldPassword!==''))) && "Invalid/Wrong Password Field inputs"}
             </Alert>
         </div>
         );
@@ -159,10 +159,28 @@ export default function ChangePasswordScreen(){
         return (
             <div>
                 <Alert variant="filled" severity="success">
-                    Password change success. You will be redirected to login screen soon!
+                    Password change success. You will soon be redirected to login screen!
                 </Alert>
             </div>
         );
+    }
+
+    const getSnackbarContent=()=>{
+        if(!userPresent && statusCode===404){
+            return reqErrDiv();
+        }
+        if(userPresent && ((newPassword!==confirmNewPassword || newPassword==="") || statusCode===401)){
+            return passwordMatchErrDiv();
+        }
+        if(passwordChangeSuccess){
+            return passwordChangeSuccessDiv();
+        }
+    }
+
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setOpenSnackbar(false);
+        }
     }
 
     
@@ -205,12 +223,12 @@ export default function ChangePasswordScreen(){
 
                         </Button><br></br>
                         <Box height={8}/>
-                        {statusCode!==200 && reqErrDiv()}
-                        {userPresent && (newPassword!==confirmNewPassword || newPassword==="") && passwordMatchErrDiv()}
-                        {passwordChangeSuccess && passwordChangeSuccessDiv()}
                     </CardContent>
                 </Card>
             </Grid>
+            <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
+                {getSnackbarContent()}
+            </Snackbar>
         </div> 
     );
 }

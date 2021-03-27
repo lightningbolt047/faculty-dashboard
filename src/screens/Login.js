@@ -89,6 +89,7 @@ export default function LoginScreen(){
 
     useEffect(()=>{
         cookieSignInHandler();
+        sessionStorage.clear();
         //eslint-disable-next-line 
     },[]);
 
