@@ -6,7 +6,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 var studentsDetails=[];
 
 export default function MentorDiary(){
@@ -63,6 +64,9 @@ export default function MentorDiary(){
                 }
             }
         }
+        filteredResults.sort((a,b)=>{
+            return parseInt(a.personalDetails.studentID.clgID.slice(a.personalDetails.studentID.clgID.length-5))-parseInt(b.personalDetails.studentID.clgID.slice(b.personalDetails.studentID.clgID.length-5))
+        });
         setShownStudentsDetails(filteredResults);
         setMentoringTextArray(filteredResults);
     }
@@ -75,12 +79,6 @@ export default function MentorDiary(){
         setMentoringDiaries(mentoringDiariesText);
     }
 
-    const handleSnackbarClose=(event,reason)=>{
-        if (reason!=='clickaway'){
-            setOpenSnackbar(false);
-        }
-    }
-
 
     useEffect(()=>{
         async function fetchFromServer(){
@@ -88,6 +86,9 @@ export default function MentorDiary(){
             getSearchResults();
         }
         fetchFromServer();
+        AOS.init({
+            duration:1000
+        })
         //eslint-disable-next-line
     },[]);
 
@@ -122,7 +123,9 @@ export default function MentorDiary(){
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
                 <Box height={10}/>
                 {shownStudentsDetails.map((studentItem,index)=>(
-                <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
+                <div data-aos='zoom-out' data-aos-once={true}>
+                    <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
+                </div>
                 ))}
                 <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
                     {successDiv()}
@@ -139,6 +142,12 @@ export default function MentorDiary(){
                 </Alert>
             </div>
         );
+    }
+
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setOpenSnackbar(false);
+        }
     }
     
 

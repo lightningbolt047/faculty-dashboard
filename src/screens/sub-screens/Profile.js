@@ -26,6 +26,7 @@ export default function Profile(){
     const [sendingData,setSendingData]=useState(false);
     const [profileUpdateStatus,setProfileUpdateStatus]=useState(-1);
     const [enableSaveButton,setEnableSaveButton]=useState(true);
+    const [alertVisible,setAlertVisible]=useState(false);
     const history=useHistory();
     var imageUploadSuccess=false;
 
@@ -64,9 +65,11 @@ export default function Profile(){
 
         if(phNo==='' || email==='' || address==='' || securityQuestion==='' || securityAnswer==='' || email.split('@').length!==2){
             setProfileUpdateStatus(1000);
-            setTimeout(()=>{
-                getInfoFromBackend();
+            setAlertVisible(true);
+            setTimeout(async ()=>{
+                await getInfoFromBackend();
                 setProfileUpdateStatus(-1);
+                setAlertVisible(true);
             },2000);
             return;
         }
@@ -89,6 +92,10 @@ export default function Profile(){
         setProfileUpdateStatus(responseBody.statusCode);
         console.log(responseBody);
         setSendingData(false);
+        setAlertVisible(true);
+        setTimeout(()=>{
+            setAlertVisible(false);
+        },5000);
     }
 
     const handleEnableSaveButton=(index,value)=>{
@@ -110,7 +117,7 @@ export default function Profile(){
     const handlePhNoChange=(event)=>{
         let result=parseInt(event.target.value)
         
-        if(!isNaN(result) && result.toString().length===event.target.value.length){
+        if(event.target.value==='' || (!isNaN(result) && result.toString().length===event.target.value.length)){
             setPhNo(event.target.value);
         }
     }
@@ -229,18 +236,18 @@ export default function Profile(){
                     <Box height={8}/>
                     <Grid container spacing={3} alignContent="center" justify="center">
                         <Grid item>
-                            {profileUpdateStatus===200 &&
+                            {profileUpdateStatus===200 && alertVisible &&
                             <Alert variant="filled" severity="success">
                                 {"Successfully updated"}
                             </Alert>
                             }
-                            {(profileUpdateStatus!==200 && profileUpdateStatus!==-1 && profileUpdateStatus!==1000) &&
+                            {(profileUpdateStatus!==200 && alertVisible && profileUpdateStatus!==-1 && profileUpdateStatus!==1000) &&
                             <Alert variant="filled" severity="error">
                                 {`Something went wrong: Error ${profileUpdateStatus}`}
                             </Alert>
                             }
-                            {profileUpdateStatus===1000 &&
-                            <Alert variant="filled" severity="error">
+                            {profileUpdateStatus===1000 && alertVisible &&
+                            <Alert variant="filled" severity="warning">
                                 Enter Proper details
                             </Alert>
                             }
