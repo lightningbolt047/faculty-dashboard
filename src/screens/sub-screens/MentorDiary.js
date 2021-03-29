@@ -79,12 +79,6 @@ export default function MentorDiary(){
         setMentoringDiaries(mentoringDiariesText);
     }
 
-    const handleSnackbarClose=(event,reason)=>{
-        if (reason!=='clickaway'){
-            setOpenSnackbar(false);
-        }
-    }
-
 
     useEffect(()=>{
         async function fetchFromServer(){
@@ -148,6 +142,12 @@ export default function MentorDiary(){
                 </Alert>
             </div>
         );
+    }
+
+    const handleSnackbarClose=(event,reason)=>{
+        if (reason!=='clickaway'){
+            setOpenSnackbar(false);
+        }
     }
     
 
