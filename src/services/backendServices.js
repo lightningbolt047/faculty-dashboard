@@ -5,8 +5,8 @@ const backendQuery = async (reqType,endpoint,reqBody,authToken,dbID) => {
         headers:{'Content-Type':'application/json','authtoken':authToken,'dbid':dbID},
         body:reqType==='GET'?null:JSON.stringify(reqBody)
     }
-    var response= await fetch('http://localhost:4000'+endpoint,reqOptions);
-    var data=await response.json();
+    let response= await fetch('http://localhost:4000'+endpoint,reqOptions);
+    let data=await response.json();
     data.statusCode=response.status;
     return data;
 }
