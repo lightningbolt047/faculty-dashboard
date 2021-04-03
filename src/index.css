@@ -128,3 +128,51 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
+#approveGatePass {
+  background-color: #00a152;
+  color: white;
+}
+
+#denyGatePass {
+  background-color: #ff1744;
+  color: white;
+}
+
+#withholdGatePass {
+  background-color: #ffc107;
+  color: white;
+}
+
+
+.gatePassSegmentEmergency {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #ff1744;
+}
+
+#gatePassSegmentText {
+  padding-left: 20px;
+}
+
+.gatePassSegmentRegular {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #00a152;
+}
+
+.gatePassSegmentCancelled {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #f44336;
+}
+
+.gatePassSegmentWithheld {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #ffa000;
+}

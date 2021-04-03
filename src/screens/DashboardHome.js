@@ -22,6 +22,7 @@ import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
+import StudentGatePassOD from "./sub-screens/StudentGatePassOD";
 
 
 const sidebarWidth=240;
@@ -47,7 +48,7 @@ const styles=makeStyles((theme)=>({
         overflowX: 'hidden',
         width: theme.spacing(7) + 1,
         [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9) + 1,
+          width: theme.spacing(7) + 1,
         },
       }
 }));
@@ -61,7 +62,7 @@ export default function DashboardHome(){
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    var subScreenList=[<div/>,<Profile/>,<MentorDiary/>];
+    var subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
@@ -78,7 +79,7 @@ export default function DashboardHome(){
         if(sidebarOpen){
             return sidebarWidth;
         }
-        return sidebarWidth/3.5;
+        return sidebarWidth/4.5;
     }
 
     const getMainUIContent=()=>{
@@ -149,9 +150,9 @@ export default function DashboardHome(){
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass">
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" onClick={()=>handleSubScreenChange(3)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
-                        <ListItemText primary="Gate Pass"/>
+                        <ListItemText primary="Gate Pass/OD"/>
                     </ListItem>}
                     {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" onClick={()=>handleSubScreenChange(2)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
