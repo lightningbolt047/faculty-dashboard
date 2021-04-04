@@ -100,6 +100,17 @@ export default function MentoringStudentAccordion({accordionID, studentJSON}){
                                 <b>Current Semester</b>:   {studentJSON.personalDetails.studentID.curSem}
                                 <Box height={4}/>
                                 <b>Department</b>: {studentJSON.personalDetails.studentID.department}
+                                <Box height={8}/>
+                                <Divider />
+                                <Box height={8}/>
+                                <b>Personal Details</b>
+                                <Box height={10}/>
+                                <b>Blood Group</b>: A+ve
+                                <Box height={4}/>
+                                <b>Phone Number</b>: 9012384021
+                                <Box height={4}/>
+                                <b>Residence Address</b>: 9ddw, dwndwi, ei3uh2uh2ude23, 2ju2823e823hre23, dwud2387hrd23udn23
+
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />

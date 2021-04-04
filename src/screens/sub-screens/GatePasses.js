@@ -78,7 +78,7 @@ export default function GatePasses(){
         return (
             <div>
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
-                <Box height={10}/>
+                <Box height={18}/>
                 {shownStudentsDetails.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <WarningIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency Passes</Typography>
@@ -88,7 +88,7 @@ export default function GatePasses(){
                         <GatePassStudentAccordion key={index} accordionID={index} studentJSON={studentItem}/>
                     </div>
                 ))}
-                <Box height={10}/>
+                <Box height={18}/>
                 {shownStudentsDetails.length!==0 && <div className={'gatePassSegmentRegular'}>
                     <ExploreIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular Passes</Typography>
@@ -98,7 +98,7 @@ export default function GatePasses(){
                         <GatePassStudentAccordion key={index} accordionID={index} studentJSON={studentItem}/>
                     </div>
                 ))}
-                <Box height={10}/>
+                <Box height={18}/>
                 {shownStudentsDetails.length!==0 && <div className={'gatePassSegmentWithheld'}>
                     <LockIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Withheld Passes</Typography>
@@ -108,7 +108,7 @@ export default function GatePasses(){
                         <GatePassStudentAccordion key={index} accordionID={index} studentJSON={studentItem}/>
                     </div>
                 ))}
-                <Box height={10}/>
+                <Box height={18}/>
                 {shownStudentsDetails.length!==0 && <div className={'gatePassSegmentCancelled'}>
                     <CancelIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled Passes</Typography>

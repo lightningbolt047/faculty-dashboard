@@ -37,9 +37,10 @@ export default function MentorDiary(){
         setStatusCode(responseBody.statusCode);
     };
 
-    const sendMentoringTextToBackend=async (studentID,accordionID)=>{
+    const sendMentoringTextToBackend=async (studentID,accordionID,advisorAllocationID)=>{
         var responseBody=await backendQuery('POST',`/mentoring/`,
             {
+                advisorAllocationID:advisorAllocationID,
                 studentID:studentID,
                 mentorText:mentoringDiaries[accordionID]
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID

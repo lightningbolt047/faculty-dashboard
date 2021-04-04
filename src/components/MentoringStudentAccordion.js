@@ -73,7 +73,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                 <Box height={4}/>
                                 <b>Department</b>: {studentJSON.personalDetails.studentID.department}
                                 <Box height={8}/>
-                                <EditableTextArea key={accordionID} studentID={studentJSON.personalDetails.studentID._id} textAreaHelpText={"Enter student mentoring notes"} accordionID={accordionID} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange} handleSubmit={handleMentorTextSubmit}/>
+                                <EditableTextArea key={accordionID} studentID={studentJSON.personalDetails.studentID._id} textAreaHelpText={"Enter student mentoring notes"} accordionID={accordionID} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange} handleSubmit={handleMentorTextSubmit} advisorAllocationID={studentJSON.advisorAllocationID}/>
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />
