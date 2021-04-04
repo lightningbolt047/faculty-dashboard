@@ -5,7 +5,6 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Alert from '@material-ui/lab/Alert';
-import 'aos/dist/aos.css';
 import Typography from "@material-ui/core/Typography";
 import WarningIcon from "@material-ui/icons/Warning";
 import ExploreIcon from '@material-ui/icons/Explore';

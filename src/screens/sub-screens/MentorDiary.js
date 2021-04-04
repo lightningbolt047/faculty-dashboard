@@ -6,8 +6,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 var studentsDetails=[];
 
 export default function MentorDiary(){
@@ -87,9 +85,6 @@ export default function MentorDiary(){
             getSearchResults();
         }
         fetchFromServer();
-        AOS.init({
-            duration:1000
-        })
         //eslint-disable-next-line
     },[]);
 
@@ -124,7 +119,7 @@ export default function MentorDiary(){
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
                 <Box height={10}/>
                 {shownStudentsDetails.map((studentItem,index)=>(
-                <div data-aos='zoom-out' data-aos-once={true}>
+                <div>
                     <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
                 </div>
                 ))}
