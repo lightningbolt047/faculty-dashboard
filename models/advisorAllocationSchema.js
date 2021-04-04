@@ -9,7 +9,6 @@ const advisorAllocationSchema=new Schema({
     },
     advisorID:{
         type:String,
-        ref:'User',
         required:true
     },
     students:{
