@@ -90,6 +90,13 @@ mentoringRouter.route('/')
 
     AdvisorAllocation.findById(req.body.advisorAllocationID)
     .then((document)=>{
+        if(!document){
+            res.statusCode=404;
+            res.json({
+                status:"Not found"
+            });
+            return;
+        }
         for(let i=0;i<document.students.length;i++){
             if(document.students[i].studentID.toString()===req.body.studentID.toString()){
                 document.students[i].mentorText=req.body.mentorText;
@@ -106,6 +113,11 @@ mentoringRouter.route('/')
             res.json({
                 status:"Internal Server Error"
             });
+        });
+    },(err)=>{
+        res.statusCode=500;
+        res.json({
+            status:"Internal Server Error"
         });
     });
 });
