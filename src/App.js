@@ -1,4 +1,4 @@
-import './App.css';
+import './index.css';
 import LoginScreen from './screens/LoginScreen';
 import ForgotPwd from './screens/ForgotPassswordScreen';
 import DashboardHome from './screens/DashboardHome';

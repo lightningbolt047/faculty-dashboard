@@ -11,7 +11,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import LockIcon from '@material-ui/icons/Lock';
 import IconButton from "@material-ui/core/IconButton";
 
-export default function GatePassStudentAccordion({accordionID, studentJSON}){
+export default function MentoringStudentAccordion({accordionID, studentJSON}){
 
     const getCGPA=()=>{
         let sum=0;

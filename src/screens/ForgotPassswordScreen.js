@@ -24,7 +24,7 @@ const useStyles=makeStyles({
 
 
 
-export default function ForgotPassswordScreen(){
+export default function ForgotPasswordScreen(){
     const classes=useStyles();
     const history = useHistory()
 
@@ -222,7 +222,7 @@ export default function ForgotPassswordScreen(){
                             {!buttonWorking && passwordChangeSuccess && "Go back"}
                             {buttonWorking && <CircularProgress size={24} color="inherit"/>}
 
-                        </Button><br></br>
+                        </Button>
                         <Box height={8}/>
                     </CardContent>
                 </Card>
