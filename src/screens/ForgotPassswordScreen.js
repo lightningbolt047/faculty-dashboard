@@ -24,7 +24,7 @@ const useStyles=makeStyles({
 
 
 
-export default function ForgotPasswordScreen(){
+export default function ForgotPassswordScreen(){
     const classes=useStyles();
     const history = useHistory()
 
