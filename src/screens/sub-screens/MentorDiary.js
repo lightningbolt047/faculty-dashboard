@@ -19,7 +19,6 @@ export default function MentorDiary(){
     let searchText = '';
     const [openSnackbar,setOpenSnackbar]=useState(false);
     const [sendStatusCode,setSendStatusCode]=useState(0);
-    // const [studentsDetails,setStudentsDetails]=useState([]);
 
 
 
@@ -27,9 +26,6 @@ export default function MentorDiary(){
         const responseBody = await backendService('GET', `/mentoring/`,
             {}, sessionStorage.USER_AUTH_TOKEN, sessionStorage.USER_DB_ID
         );
-        // if(responseBody.statusCode===404){
-
-        // }
         if(responseBody.statusCode===200){
             studentsDetails=responseBody;
         }

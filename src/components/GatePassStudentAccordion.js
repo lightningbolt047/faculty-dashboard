@@ -24,12 +24,14 @@ export default function MentoringStudentAccordion({accordionID, studentJSON}){
 
     const getSGPAString=()=>{
         let sgpaString="";
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
+        let i=0;
+        for(const sgpa of studentJSON.personalDetails.studentID.sgpaList){
             if(i!==studentJSON.personalDetails.studentID.sgpaList.length-1){
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i]+" , ";
+                sgpaString+=sgpa+" , ";
             }else{
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i];
+                sgpaString+=sgpa;
             }
+            i++;
         }
         return sgpaString;
     }

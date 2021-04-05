@@ -69,7 +69,6 @@ export default function ChangePasswordScreen(){
             dbID=sessionStorage.USER_DB_ID;
             setUserPresent(true);
             setAlreadyLoggedIn(true);
-            return;
         }
     },[]);
 
@@ -217,7 +216,6 @@ export default function ChangePasswordScreen(){
                             }
                             if(userPresent){
                                 checkOldPasswordChangePassword();
-                                return;
                             }
                         }}>
                             {!buttonWorking && !userPresent && "Next"}

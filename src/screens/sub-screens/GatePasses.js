@@ -40,14 +40,12 @@ export default function GatePasses(){
     const getSearchResults=()=>{
         let filteredResults=[];
         if(searchText==='' || typeof searchText==='undefined'){
-            for(let i=0;i<studentsDetails.length;i++){
-                filteredResults.push(studentsDetails[i]);
-            }
+            filteredResults=studentsDetails;
         }
         else{
-            for(let i=0;i<studentsDetails.length;i++){
-                if(studentsDetails[i].personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentsDetails[i].personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
-                    filteredResults.push(studentsDetails[i]);
+            for(const studentDetailIteration of studentsDetails){
+                if(studentDetailIteration.personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentDetailIteration.personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
+                    filteredResults.push(studentDetailIteration);
                 }
             }
         }

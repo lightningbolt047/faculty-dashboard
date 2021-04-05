@@ -59,7 +59,7 @@ export default function DashboardHome(){
     
     const useStyles=styles();
     // eslint-disable-next-line
-    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
+    const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
     let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];

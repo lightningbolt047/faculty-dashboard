@@ -15,8 +15,8 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
 
     const getCGPA=()=>{
         let sum=0;
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
-            sum+=studentJSON.personalDetails.studentID.sgpaList[i];
+        for(let sgpaIter of studentJSON.personalDetails.studentID.sgpaList){
+            sum+=sgpaIter;
         }
          
         return (sum/studentJSON.personalDetails.studentID.sgpaList.length).toFixed(2);
