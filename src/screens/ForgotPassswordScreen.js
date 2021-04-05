@@ -6,9 +6,9 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import hashString from '../services/hashService';
+import hashString from '../services/hashString';
 import Alert from '@material-ui/lab/Alert';
-import backendQuery from '../services/backendServices';
+import backendService from '../services/backendService';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -43,7 +43,7 @@ export default function ForgotPasswordScreen(){
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        let responseBody=await backendService('POST','/recovery',
             {
                 reqType:"userPresenceCheck",
                 clgID:username
@@ -70,7 +70,7 @@ export default function ForgotPasswordScreen(){
         }
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        let responseBody=await backendService('POST','/recovery',
             {
                 reqType:"secAnswerChangePassword",
                 dbID:dbID,
@@ -141,7 +141,7 @@ export default function ForgotPasswordScreen(){
         );
     }
 
-    var timeoutObject;
+    let timeoutObject;
 
     const sendUserBackToLogin=async ()=>{
         timeoutObject=setTimeout(()=>{

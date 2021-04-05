@@ -1,6 +1,6 @@
 import GatePassStudentAccordion from '../../components/GatePassStudentAccordion';
 import SearchBar from '../../components/SearchBar';
-import backendQuery from '../../services/backendServices';
+import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
@@ -10,14 +10,14 @@ import WarningIcon from "@material-ui/icons/Warning";
 import ExploreIcon from '@material-ui/icons/Explore';
 import LockIcon from "@material-ui/icons/Lock";
 import CancelIcon from '@material-ui/icons/Cancel';
-var studentsDetails=[];
+let studentsDetails=[];
 
 export default function GatePasses(){
 
     const [statusCode,setStatusCode]=useState(0);
-    var [shownStudentsDetails,setShownStudentsDetails]=useState([]);
+    let [shownStudentsDetails,setShownStudentsDetails]=useState([]);
     const [showSearchText,setShowSearchText]=useState('');
-    var searchText='';
+    let searchText='';
     // const [openSnackbar,setOpenSnackbar]=useState(false);
     // const [sendStatusCode,setSendStatusCode]=useState(0);
     // const [studentsDetails,setStudentsDetails]=useState([]);
@@ -25,7 +25,7 @@ export default function GatePasses(){
 
 
     const getInfoFromBackend=async ()=>{
-        var responseBody=await backendQuery('GET',`/mentoring/`,
+        let responseBody=await backendService('GET',`/mentoring/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
@@ -38,7 +38,7 @@ export default function GatePasses(){
     };
 
     const getSearchResults=()=>{
-        var filteredResults=[];
+        let filteredResults=[];
         if(searchText==='' || typeof searchText==='undefined'){
             for(let i=0;i<studentsDetails.length;i++){
                 filteredResults.push(studentsDetails[i]);

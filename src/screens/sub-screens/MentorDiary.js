@@ -1,21 +1,22 @@
 import MentoringStudentAccordion from '../../components/MentoringStudentAccordion';
 import SearchBar from '../../components/SearchBar';
-import backendQuery from '../../services/backendServices';
+import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-var studentsDetails=[];
+
+let studentsDetails = [];
 
 export default function MentorDiary(){
 
     const [statusCode,setStatusCode]=useState(0);
-    var [shownStudentsDetails,setShownStudentsDetails]=useState([]);
+    let [shownStudentsDetails, setShownStudentsDetails] = useState([]);
 
     const [mentoringDiaries,setMentoringDiaries]=useState([]);
     const [showSearchText,setShowSearchText]=useState('');
-    var searchText='';
+    let searchText = '';
     const [openSnackbar,setOpenSnackbar]=useState(false);
     const [sendStatusCode,setSendStatusCode]=useState(0);
     // const [studentsDetails,setStudentsDetails]=useState([]);
@@ -23,8 +24,8 @@ export default function MentorDiary(){
 
 
     const getInfoFromBackend=async ()=>{
-        var responseBody=await backendQuery('GET',`/mentoring/`,
-            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        const responseBody = await backendService('GET', `/mentoring/`,
+            {}, sessionStorage.USER_AUTH_TOKEN, sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
 
@@ -36,12 +37,12 @@ export default function MentorDiary(){
     };
 
     const sendMentoringTextToBackend=async (studentID,accordionID,advisorAllocationID)=>{
-        var responseBody=await backendQuery('POST',`/mentoring/`,
+        const responseBody = await backendService('POST', `/mentoring/`,
             {
-                advisorAllocationID:advisorAllocationID,
-                studentID:studentID,
-                mentorText:mentoringDiaries[accordionID]
-            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+                advisorAllocationID: advisorAllocationID,
+                studentID: studentID,
+                mentorText: mentoringDiaries[accordionID]
+            }, sessionStorage.USER_AUTH_TOKEN, sessionStorage.USER_DB_ID
         );
         setSendStatusCode(responseBody.statusCode);
         if(responseBody.statusCode===200){
@@ -50,16 +51,14 @@ export default function MentorDiary(){
     }
 
     const getSearchResults=()=>{
-        var filteredResults=[];
+        let filteredResults=[];
         if(searchText==='' || typeof searchText==='undefined'){
-            for(let i=0;i<studentsDetails.length;i++){
-                filteredResults.push(studentsDetails[i]);
-            }
+            filteredResults=studentsDetails;
         }
         else{
-            for(let i=0;i<studentsDetails.length;i++){
-                if(studentsDetails[i].personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentsDetails[i].personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
-                    filteredResults.push(studentsDetails[i]);
+            for(const studentDetailIteration of studentsDetails){
+                if(studentDetailIteration.personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentDetailIteration.personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
+                    filteredResults.push(studentDetailIteration);
                 }
             }
         }
@@ -71,9 +70,9 @@ export default function MentorDiary(){
     }
 
     const setMentoringTextArray=(filteredResults)=>{
-        var mentoringDiariesText=[];
-        for(let i=0;i<filteredResults.length;i++){       
-            mentoringDiariesText.push(filteredResults[i].personalDetails.mentorText);
+        let mentoringDiariesText=[];
+        for(let filteredResultsIteration of filteredResults){
+            mentoringDiariesText.push(filteredResultsIteration.personalDetails.mentorText);
         }
         setMentoringDiaries(mentoringDiariesText);
     }
@@ -89,10 +88,10 @@ export default function MentorDiary(){
     },[]);
 
     const handleMentorTextChange=(accordionID,event)=>{
-        var mentorTexts=[];
+        let mentorTexts=[];
         mentoringDiaries[accordionID]=event.target.value;
-        for(let i=0;i<mentoringDiaries.length;i++){
-            mentorTexts.push(mentoringDiaries[i]);
+        for(let mentorText of mentoringDiaries){
+            mentorTexts.push(mentorText);
         }
         setMentoringDiaries(mentorTexts);
     }

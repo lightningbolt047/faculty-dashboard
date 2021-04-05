@@ -6,9 +6,9 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import hashString from '../services/hashService';
+import hashString from '../services/hashString';
 import Alert from '@material-ui/lab/Alert';
-import backendQuery from '../services/backendServices';
+import backendService from '../services/backendService';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useCookies } from 'react-cookie';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -22,7 +22,7 @@ const useStyles=makeStyles({
     },
   });
 
-  var dbID;
+  let dbID;
 
 
 
@@ -30,9 +30,9 @@ export default function ChangePasswordScreen(){
     const classes=useStyles();
     const history = useHistory();
     // eslint-disable-next-line
-    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
+    const removeCookie = useCookies(['faculty-dash-auth'])[2];
 
-    var [username,setUsername]=useState("");
+    let [username,setUsername]=useState("");
     const [oldPassword,setOldPassword]=useState("");
     const [newPassword,setNewPassword]=useState("");
     const [confirmNewPassword,setConfirmNewPassword] = useState("");
@@ -46,7 +46,7 @@ export default function ChangePasswordScreen(){
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        let responseBody=await backendService('POST','/recovery',
             {
                 reqType:"userPresenceCheck",
                 clgID:username
@@ -82,13 +82,13 @@ export default function ChangePasswordScreen(){
         setButtonWorking(true);
 
         if(typeof sessionStorage.USER_DB_ID!=='undefined'){
-            var usernameResponse=await backendQuery('GET',`/profile/getClgIDOnly/`,
+            let usernameResponse=await backendService('GET',`/profile/getClgIDOnly/`,
                 {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
             );
             username=usernameResponse.clgID;
         }
 
-        var responseBody=await backendQuery('POST',`/profile/`,
+        let responseBody=await backendService('POST',`/profile/`,
             {
                 updateType:"authTokenChange",
                 authToken:hashString(username,newPassword)
@@ -145,7 +145,7 @@ export default function ChangePasswordScreen(){
         );
     }
 
-    var timeoutObject;
+    let timeoutObject;
 
     const sendUserBackToLogin=async ()=>{
         timeoutObject=setTimeout(()=>{

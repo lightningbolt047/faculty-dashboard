@@ -24,12 +24,14 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
 
     const getSGPAString=()=>{
         let sgpaString="";
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
+        let i=0;
+        for(const sgpa of studentJSON.personalDetails.studentID.sgpaList){
             if(i!==studentJSON.personalDetails.studentID.sgpaList.length-1){
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i]+" , ";
+                sgpaString+=sgpa+" , ";
             }else{
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i];
+                sgpaString+=sgpa;
             }
+            i++;
         }
         return sgpaString;
     }
@@ -81,7 +83,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                             <div className='accordionDividerContent'>
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
-                                    {studentJSON.attendanceDetails.map((item,index)=>(
+                                    {studentJSON.attendanceDetails.map((item)=>(
                                         <div>
                                             <span>{item.courseName+" : "}</span>
                                             <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
@@ -96,7 +98,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                 <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
-                                    {studentJSON.personalDetails.studentID.disciplinaryActions.map((item,index)=>(
+                                    {studentJSON.personalDetails.studentID.disciplinaryActions.map((item)=>(
                                         <div className='disciplinaryActionText'>{item}
                                             <Box height={4}/>
                                         </div>

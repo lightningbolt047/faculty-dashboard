@@ -62,7 +62,7 @@ export default function DashboardHome(){
     const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    var subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 

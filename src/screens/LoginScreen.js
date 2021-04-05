@@ -9,8 +9,8 @@ import {useEffect, useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link,useHistory} from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-import backendQuery from '../services/backendServices';
-import hashString from '../services/hashService';
+import backendService from '../services/backendService';
+import hashString from '../services/hashString';
 import { useCookies } from 'react-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -41,7 +41,7 @@ export default function LoginScreen(){
     const [responseMessage,setResponseMessage]=useState("");
     const [signInWorking,setSignInWorking]=useState(false);
     const [snackbarOpen,setSnackbarOpen]=useState(true);
-    var dbID=null;
+    let dbID=null;
 
     sessionStorage.clear();
 
@@ -53,7 +53,7 @@ export default function LoginScreen(){
             return;
         }
         setSignInWorking(true);
-        var responseBody=await backendQuery('POST','/auth',
+        let responseBody=await backendService('POST','/auth',
                 {
                     loginType:"cookie",
                     dbID:cookies.dbID,
@@ -104,7 +104,7 @@ export default function LoginScreen(){
             setSignInWorking(false);
             return;
         }
-        var responseBody=await backendQuery('POST','/auth',
+        let responseBody=await backendService('POST','/auth',
             {
                 loginType:"user",
                 clgID:username,
@@ -184,7 +184,7 @@ export default function LoginScreen(){
                             }}/>
                             }
                             checked={keepSignedIn}
-                            onChange={(e)=>{setKeepSignedIn(!keepSignedIn)}}
+                            onChange={()=>{setKeepSignedIn(!keepSignedIn)}}
                             label="Keep me signed in"
                         />
                         <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>

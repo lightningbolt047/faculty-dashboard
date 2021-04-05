@@ -118,7 +118,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON}){
                             <div className='accordionDividerContent'>
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
-                                {studentJSON.attendanceDetails.map((item,index)=>(
+                                {studentJSON.attendanceDetails.map((item)=>(
                                     <div>
                                         <span>{item.courseName+" : "}</span>
                                         <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
@@ -129,7 +129,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON}){
                                 <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
-                                {studentJSON.personalDetails.studentID.disciplinaryActions.map((item,index)=>(
+                                {studentJSON.personalDetails.studentID.disciplinaryActions.map((item)=>(
                                     <div className='disciplinaryActionText'>{item}
                                         <Box height={4}/>
                                     </div>

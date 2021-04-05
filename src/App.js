@@ -1,9 +1,8 @@
 import './App.css';
-import './screens/Login';
-import LoginScreen from './screens/Login';
-import ForgotPwd from './screens/ForgotPwd';
+import LoginScreen from './screens/LoginScreen';
+import ForgotPwd from './screens/ForgotPassswordScreen';
 import DashboardHome from './screens/DashboardHome';
-import ChangePassword from './screens/ChangePassword';
+import ChangePassword from './screens/ChangePasswordScreen';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom';
 
 function App() {

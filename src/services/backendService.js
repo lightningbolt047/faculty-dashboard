@@ -1,5 +1,5 @@
 
-const backendQuery = async (reqType,endpoint,reqBody,authToken,dbID) => {
+const backendService = async (reqType, endpoint, reqBody, authToken, dbID) => {
     const reqOptions={
         method:reqType,
         headers:{'Content-Type':'application/json','authtoken':authToken,'dbid':dbID},
@@ -11,4 +11,4 @@ const backendQuery = async (reqType,endpoint,reqBody,authToken,dbID) => {
     return data;
 }
  
-export default backendQuery;
+export default backendService;
