@@ -79,6 +79,7 @@ export default function LoginScreen(){
                 sessionStorage.FACULTY_NAME=responseBody.name;
                 redirectToHome();
             }
+            setResponseMessage(responseBody.status);
             console.log(responseBody);
     }
 
