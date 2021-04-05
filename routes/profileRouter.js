@@ -1,6 +1,4 @@
 const express=require('express');
-const bodyParser=require('body-parser');
-const { post } = require('../app');
 const multer = require('multer');
 const fs=require('fs');
 
@@ -32,11 +30,11 @@ const uploader=multer({
 
 
 profileRouter.route('/:reqType')
-.get(checkCredentials,(req,res,next)=>{
+.get(checkCredentials,(req,res)=>{
     User.findById(req.headers['dbid'])
     .then((user)=>{
         if(req.params.reqType==='getFullProfile'){
-            var userData=user;
+            let userData=user;
             userData.__v=undefined;
             userData.authToken=undefined;
             res.statusCode=200;
@@ -48,7 +46,7 @@ profileRouter.route('/:reqType')
                 clgID:user.clgID
             });
         }
-    },(err)=>{
+    },()=>{
         res.statusCode=500;
         res.json({
             status:'Internal Server Error'
@@ -57,7 +55,7 @@ profileRouter.route('/:reqType')
 })
 
 profileRouter.route('/')
-.post(checkCredentials,(req,res,next)=>{
+.post(checkCredentials,(req,res)=>{
     if(typeof req.headers['dbid']==='undefined'){
         res.statusCode=404;
         res.json({
@@ -74,12 +72,12 @@ profileRouter.route('/')
                 "secAnswer":req.body.secAnswer,
                 "imagePath":req.body.imagePath
             }
-        }).then((user)=>{
+        }).then(()=>{
             res.statusCode=200;
             res.json({
                 'status':'Successfully updated details'
             });
-        },(err)=>{
+        },()=>{
             res.statusCode=500;
             res.json({
                status:'Internal server error' 
@@ -92,12 +90,12 @@ profileRouter.route('/')
                 "authToken":req.body.authToken,
             }
         })
-        .then((user)=>{
+        .then(()=>{
             res.statusCode=200;
             res.json({
                 'status':'Successfully updated password'
             });
-        },(err)=>{
+        },()=>{
             res.statusCode=500;
             res.json({
                status:'Internal server error' 
@@ -120,7 +118,7 @@ profileRouter.route('/uploadimg/')
         }).then((document)=>{
             res.statusCode=200;
             res.json(document);
-        },(err)=>{
+        },()=>{
             res.statusCode=500;
             res.end('An error occurred');
         })

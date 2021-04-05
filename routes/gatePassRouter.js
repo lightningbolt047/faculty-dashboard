@@ -1,28 +1,25 @@
 const express=require('express');
-const bodyParser=require('body-parser');
-const { post } = require('../app');
 
 const gatePassRouter=express.Router();
 
-const AdvisorAllocation=require('../models/advisorAllocationSchema');
-const SemesterProgression=require('../models/semesterProgressionSchema');
-const StudentAttendance=require('../models/studentAttendance');
-const Course=require('../models/courseSchema');
 const GatePass=require('../models/GatePassSchema');
+const getStudentAttendance=require('../services/getStudentAttendance');
 
 const checkCredentials=require('../services/checkCredentialsService');
 
 
 
 gatePassRouter.route('/')
-    .get((req,res,next)=>{
-        let curDate=Date.now();
-        GatePass.find({advisorID:req.headers['dbid'],arrivalTime:{$lte:curDate}})
+    .get(checkCredentials,(req,res)=>{
+        GatePass.find({advisorID:req.headers['dbid']})
             .populate('studentID')
             .then(async (passes)=>{
-                var studentAttendance;
-                var sendDocument=[];
-                for(let i=0;passes.length;i++){
+                let sendDocument=[];
+                let curDate=Date.now();
+                for(let i=0;i<passes.length;i++){
+                    if(curDate>Date.parse(passes[i].arrivalTime)){
+                        continue;
+                    }
                     sendDocument.push({
                         personalDetails:passes[i].studentID,
                         passDetails:{
@@ -32,30 +29,47 @@ gatePassRouter.route('/')
                             arrivalTime:passes[i].arrivalTime,
                             passID:passes[i]._id
                         },
-                        attendanceDetails:[]
+                        attendanceDetails:await getStudentAttendance(passes[i].studentID.curSem,passes[i].studentID._id)
                     });
-
-
-                    studentAttendance=await StudentAttendance.findOne({sem:passes[i].studentID.curSem,studentID:passes[i].studentID._id});
-                    for(let j=0;j<studentAttendance.courseDetails.length;j++){
-                        let course=await Course.findById(studentAttendance.courseDetails[j].courseID);
-                        let semesterProgression=await SemesterProgression.findById(studentAttendance.courseDetails[j].semesterProgressionID);
-                        let classesTaken=0;
-                        for(let k=0;k<semesterProgression.courseProgression.length;k++){
-                            if(studentAttendance.courseDetails[j].courseID.toString()===semesterProgression.courseProgression[k].courseID.toString()){
-                                classesTaken=semesterProgression.courseProgression[k].classesTaken;
-                                break;
-                            }
-                        }
-                        sendDocument[i].attendanceDetails.push({
-                            courseName:course.courseName,
-                            studentAttendance:studentAttendance.courseDetails[j].classesAttended,
-                            classesTaken:classesTaken
-                        });
-                    }
-
                 }
+                res.statusCode=200;
+                res.json(sendDocument);
+            },()=>{
+                res.statusCode=500;
+                res.json({
+                    'status':"Internal Server Error"
+                });
             });
+    })
+    .post(checkCredentials,(req,res)=>{
+        GatePass.findById(req.body.passID)
+            .then((document)=>{
+                if(!document){
+                    res.statusCode=404;
+                    res.json({
+                       status:'Invalid passID'
+                    });
+                    return;
+                }
+                document.passStatus=req.body.passStatus;
+                document.save()
+                    .then(()=>{
+                        res.statusCode=200;
+                        res.json({
+                            'status':'Pass status updated successfully'
+                        });
+                    },()=>{
+                        res.statusCode=400;
+                        res.json({
+                            'status':"Bad request"
+                        });
+                    })
+            },()=>{
+                res.statusCode=400;
+                res.json({
+                    'status':"Bad request"
+                })
+            })
     })
 
 

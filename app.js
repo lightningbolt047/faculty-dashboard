@@ -6,11 +6,12 @@ var logger = require('morgan');
 var cors=require('cors');
 
 
-var authRouter=require('./routes/authRouter');
-var recoveryRouter=require('./routes/recoveryRouter');
-var profileRouter=require('./routes/profileRouter');
-const checkCredentials=require('./services/checkCredentialsService');
+const authRouter=require('./routes/authRouter');
+const recoveryRouter=require('./routes/recoveryRouter');
+const profileRouter=require('./routes/profileRouter');
 const mentoringRouter = require('./routes/mentoringRouter');
+const gatePassRouter=require('./routes/gatePassRouter');
+const odFormRouter=require('./routes/odFormRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -19,8 +20,7 @@ mongoose.set('useFindAndModify', false);
 const User=require('./models/userSchema');
 
 
-const dbURL='mongodb://127.0.0.1:27017/'
-
+const dbURL='mongodb://127.0.0.1:27017/';
 const dbConnect=mongoose.connect(dbURL);
 dbConnect.then((db)=>{
   console.log("DB connection successful");
@@ -47,6 +47,8 @@ app.use('/auth',authRouter);
 app.use('/recovery',recoveryRouter);
 app.use('/profile',profileRouter);
 app.use('/mentoring',mentoringRouter);
+app.use('/gatepass',gatePassRouter);
+app.use('/odform',odFormRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{

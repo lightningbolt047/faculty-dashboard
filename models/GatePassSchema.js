@@ -14,7 +14,7 @@ const gatePassSchema=new Schema({
     },
     passStatus:{
         type: String,
-        enum: ['pending','approved','withheld'],
+        enum: ['pending','approved','withheld','cancelled'],
         default:'pending',
         required:true
     },

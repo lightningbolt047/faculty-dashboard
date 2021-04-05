@@ -14,7 +14,7 @@ const odFormSchema=new Schema({
     },
     odStatus:{
         type: String,
-        enum: ['pending','approved'],
+        enum: ['pending','approved','cancelled'],
         default:'pending',
         required:true
     },
