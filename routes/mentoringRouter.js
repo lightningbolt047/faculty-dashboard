@@ -100,9 +100,9 @@ mentoringRouter.route('/')
             });
         });
     },()=>{
-        res.statusCode=500;
+        res.statusCode=400;
         res.json({
-            status:"Internal Server Error"
+            status:"Bad request"
         });
     });
 });

@@ -1,3 +1,9 @@
 .dockerignore
 .vs
 node_modules
+test
+coverage/lcov-report
+
+routes/gatePassRouter.js
+routes/odFormRouter.js
+models/courseMentorSchema.js

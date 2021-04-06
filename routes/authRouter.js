@@ -83,20 +83,4 @@ authRouter.route('/')
     
 })
 
-.put((req,res)=>{
-    User.create(req.body)
-    .then((doc)=>{
-        res.statusCode=200;
-        res.json(doc);
-    })
-})
-
-.patch((req,res)=>{
-    User.findByIdAndUpdate(req.body.id,{
-        $set:{"wrongAttempts":0}
-    }).then(()=>{
-        res.end("Updated");
-    })
-})
-
 module.exports=authRouter;
