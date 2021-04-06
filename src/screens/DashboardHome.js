@@ -63,6 +63,7 @@ export default function DashboardHome(){
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
     let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
+    let subScreenNames=["Home","Profile","Mentoring","Student Gate Pass"]
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
@@ -108,7 +109,7 @@ export default function DashboardHome(){
                         <IconButton edge="start" color="inherit" onClick={()=>setSidebarOpen(!sidebarOpen)}>
                             <MenuIcon/>
                         </IconButton>
-                        <h2>Home</h2>
+                        <h2>{subScreenNames[curScreen]}</h2>
                     </Box>
                     {!isSmallWidth && <div>
                         <h2 id="userGreetMessage">Hello {sessionStorage.FACULTY_NAME} !</h2>
