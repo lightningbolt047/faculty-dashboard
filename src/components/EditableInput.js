@@ -4,13 +4,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import IconButton from '@material-ui/core/IconButton';
 import {useState} from 'react';
 
-export default function EditableInput({fieldLabel,textValue,inputSize,handleValueChange,handleSaveButtonStatus,fieldIndex}){
+export default function EditableInput({fieldID,fieldLabel,textValue,inputSize,handleValueChange,handleSaveButtonStatus,fieldIndex}){
 
     const [editing,setEditing]=useState(false);
 
     return (
         <div>
-            <TextField variant="outlined" disabled={!editing} label={fieldLabel} size={inputSize} value={textValue} onChange={(event)=>{handleValueChange(event)}} color="secondary"/>
+            <TextField id={fieldID} variant="outlined" disabled={!editing} label={fieldLabel} size={inputSize} value={textValue} onChange={(event)=>{handleValueChange(event)}} color="secondary"/>
             <IconButton onClick={()=>{
                 if(editing){
                     handleSaveButtonStatus(fieldIndex,true);

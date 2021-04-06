@@ -104,15 +104,15 @@ export default function ForgotPasswordScreen(){
             <div className="getSecQuestion">
                 <p id="secQuestion">{"Security Question: "+secQuestion}</p>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
+                    <TextField id={"forgotPasswordSecAnswer"} variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordPassword"} variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordNewPassword"} variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -197,7 +197,7 @@ export default function ForgotPasswordScreen(){
                         </Grid>
                         <div className="getUser">
                             <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
+                                <TextField id={"forgotPasswordClgID"} variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
                             </Grid>
                             <Box height={8}/>
                         </div>
