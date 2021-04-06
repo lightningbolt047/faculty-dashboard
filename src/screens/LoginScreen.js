@@ -171,11 +171,11 @@ export default function LoginScreen(){
                             </Typography>
                         </Grid>
                         <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" id={"loginUsernameField"} value={username} label="Username" onChange ={event => setUsername(event.target.value)}  fullWidth/>
+                            <TextField variant="outlined" color="secondary" id={"loginUsername"} value={username} label="Username" onChange ={event => setUsername(event.target.value)}  fullWidth/>
                         </Grid>
                         <Box height={8}/>
                         <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" id={"loginPasswordField"} value={password} label="Password" onChange={event => setPassword(event.target.value)} onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} type='password' fullWidth/>
+                            <TextField variant="outlined" color="secondary" id={"loginPassword"} value={password} label="Password" onChange={event => setPassword(event.target.value)} onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} type='password' fullWidth/>
                         </Grid>
                         <Box height={8}/>
                         <FormControlLabel
