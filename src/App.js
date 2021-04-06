@@ -1,6 +1,6 @@
 import './index.css';
 import LoginScreen from './screens/LoginScreen';
-import ForgotPwd from './screens/ForgotPassswordScreen';
+import ForgotPwd from './screens/ForgotPasswordScreen';
 import DashboardHome from './screens/DashboardHome';
 import ChangePassword from './screens/ChangePasswordScreen';
 import {BrowserRouter as Router,Route, Switch} from 'react-router-dom';
