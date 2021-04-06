@@ -73,10 +73,19 @@ mentoringRouter.route('/')
             });
             return;
         }
+        let studentExists=false;
         for(let i=0;i<document.students.length;i++){
             if(document.students[i].studentID.toString()===req.body.studentID.toString()){
                 document.students[i].mentorText=req.body.mentorText;
+                studentExists=true;
             }
+        }
+        if(!studentExists){
+            res.statusCode=404;
+            res.json({
+               'status':'No such student'
+            });
+            return;
         }
         document.save()
         .then(()=>{
