@@ -51,7 +51,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`mentoringAccordion${accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.studentID.clgID}</Typography>
                     </Box>

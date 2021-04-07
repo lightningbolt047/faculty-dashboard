@@ -194,34 +194,34 @@ export default function Profile(){
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldID={"profilePhoneNumber"} fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={0}/>
+                        <EditableInput fieldID={"profilePhoneNumber"} fieldButtonID={"profilePhoneNumberButton"} fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={0}/>
                     </Grid>
                     <Grid item>
-                        <EditableInput fieldID={"profileEmail"} fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={1}/>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} alignContent="center" justify="center">
-                    <Grid item>
-                        <EditableInput fieldID={"profileAddress"} fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={2}/>
+                        <EditableInput fieldID={"profileEmail"} fieldButtonID={"profileEmailButton"} fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={1}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldID={"profileSecQuestion"} fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={3}/>
-                    </Grid>
-                    <Grid item>
-                        <EditableInput fieldID={"profileSecAnswer"} fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={4}/>
+                        <EditableInput fieldID={"profileAddress"} fieldButtonID={"profileAddressButton"} fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={2}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <Button variant='contained' color='secondary' onClick={()=>history.push('/authChange')}>
+                        <EditableInput fieldID={"profileSecQuestion"} fieldButtonID={"profileSecQuestionButton"} fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={3}/>
+                    </Grid>
+                    <Grid item>
+                        <EditableInput fieldID={"profileSecAnswer"} fieldButtonID={"profileSecAnswerButton"} fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={4}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <Button id='profileChangePasswordBtn' variant='contained' color='secondary' onClick={()=>history.push('/authChange')}>
                                 Change Password
                         </Button>
                     </Grid>
                     
                     <Grid item>
-                        <Button variant='contained' color='secondary' disabled={!enableSaveButton} onClick={postInfoToBackend}>
+                        <Button id="profileSavebtn" variant='contained' color='secondary' disabled={!enableSaveButton} onClick={postInfoToBackend}>
                             {sendingData && <CircularProgress size={24} color="inherit"/>}
                             {!sendingData && "Save"}
                         </Button>

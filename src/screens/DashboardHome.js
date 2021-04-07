@@ -135,27 +135,27 @@ export default function DashboardHome(){
             }}
             >
                 <List>
-                <ListItem button key="Home" onClick={()=>handleSubScreenChange(0)}>
+                <ListItem button key="Home" id="dashboardHomeBtn" onClick={()=>handleSubScreenChange(0)}>
                         <ListItemIcon>{<HomeIcon/>}</ListItemIcon>
                         <ListItemText primary="Home"/>
                     </ListItem>
-                    <ListItem button key="Profile" onClick={()=>handleSubScreenChange(1)}>
+                    <ListItem button key="Profile" id="dashboardProfileBtn" onClick={()=>handleSubScreenChange(1)}>
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
-                    <ListItem button key="Attendance">
+                    <ListItem button key="Attendance" id="dashboardAttendanceBtn">
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
                         <ListItemText primary="Attendance"/>
                     </ListItem>
-                    <ListItem button key="Course Info">
+                    <ListItem button key="Course Info" id="dashboardCourseBtn">
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" onClick={()=>handleSubScreenChange(3)}>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(3)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
                         <ListItemText primary="Gate Pass/OD"/>
                     </ListItem>}
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" onClick={()=>handleSubScreenChange(2)}>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(2)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>
                     </ListItem>}

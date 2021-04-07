@@ -14,8 +14,8 @@ export default function EditableTextArea({accordionID,studentID,mentorDiaryText,
 
     return (
         <div>
-            <TextareaAutosize rowsMin={5} className="txtArea" placeholder={textAreaHelpText} disabled={!editing} value={mentorDiaryText} onChange={event=>handleTextChange(accordionID,event)} />
-            <IconButton onClick={async ()=>{
+            <TextareaAutosize id={`mentoringTextArea${accordionID}`} rowsMin={5} className="txtArea" placeholder={textAreaHelpText} disabled={!editing} value={mentorDiaryText} onChange={event=>handleTextChange(accordionID,event)} />
+            <IconButton id={`mentoringTextAreaBtn${accordionID}`} onClick={async ()=>{
                 if(editing){
                     setLoading(true);
                     await handleSubmit(studentID,accordionID,advisorAllocationID);
