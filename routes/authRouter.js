@@ -12,7 +12,7 @@ authRouter.route('/')
 .post((req,res)=>{
     if(req.body.loginType==="cookie"){
         User.findById(req.body.dbID)
-        .then((user)=>{
+        .then(async (user)=>{
             if(!user){
                 res.statusCode=404;
                 res.json({
@@ -21,9 +21,17 @@ authRouter.route('/')
                 return;
             }
 
-            if(resetLockTime(user,res)){
-                return;
+            try{
+                if(await resetLockTime(user,res)){
+                    return;
+                }
+            }catch(e){
+                res.statusCode=500;
+                res.json({
+                   'status':"Internal Server Error"
+                });
             }
+
             if(user.authToken===req.body.authToken){
                 User.findByIdAndUpdate(req.body.dbID,{
                     $set:{'lastSuccessfulLogin': new Date(Date.now())}
@@ -50,7 +58,7 @@ authRouter.route('/')
     }
     if(req.body.loginType==="user"){
         User.findOne({clgID:req.body.clgID})
-        .then((user)=>{ 
+        .then(async (user)=>{
             if(!user){
                 res.statusCode=404;
                 res.json({
@@ -58,8 +66,15 @@ authRouter.route('/')
                 });
                 return;
             }
-            if(resetLockTime(user,res)){
-                return;
+            try{
+                if(await resetLockTime(user,res)){
+                    return;
+                }
+            }catch(e){
+                res.statusCode=500;
+                res.json({
+                    'status':"Internal Server Error"
+                });
             }
             if(user.authToken===req.body.authToken){
                 User.findByIdAndUpdate(user._id,{

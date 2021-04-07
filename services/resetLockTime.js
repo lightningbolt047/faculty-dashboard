@@ -1,12 +1,14 @@
+const User=require('../models/userSchema');
 
-module.exports=(user,res)=>{
+
+module.exports=async (user,res)=>{
     if(user.wrongAttempts>=10){
         let timeDiff=Date.now()-user.accountLockTime;
         let responseSent=false;
         let timeRemaining=12-(((timeDiff)/(1000*60*60)).toFixed(2));
         let hoursRemaining=Math.floor(timeRemaining);
         let minutesRemaining=Math.floor((timeRemaining-Math.floor(timeRemaining))*60);
-        if(timeRemaining<12){
+        if(timeRemaining<=12){
             res.statusCode=401;
             res.json({
                 "status":"Account locked! Try after "+hoursRemaining+":"+minutesRemaining+" hours",
@@ -15,8 +17,11 @@ module.exports=(user,res)=>{
             responseSent=true;
             return responseSent;
         }
-        user.wrongAttempts=0;
-        user.save();
+        await User.findByIdAndUpdate(user._id,{
+            $set:{
+                'wrongAttempts':0
+            }
+        })
         return responseSent;
     }
 }
