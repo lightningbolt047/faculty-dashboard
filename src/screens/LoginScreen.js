@@ -188,15 +188,15 @@ export default function LoginScreen(){
                             onChange={()=>{setKeepSignedIn(!keepSignedIn)}}
                             label="Keep me signed in"
                         />
-                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>
+                        <Button variant='contained' id={"signInButton"} color='secondary' onClick={async ()=>signInHandler()}>
                             {!signInWorking && "Sign In"}
                             {signInWorking && <CircularProgress size={24} color="inherit"/>}
                         </Button>
                         
                         <Box height={8}/>
-                        <Link to="/recovery">Forgot Password?</Link>
+                        <Link to="/recovery" id={"loginForgotPasswordLink"}>Forgot Password?</Link>
                         <Box height={8}/>
-                        <Link to="/authChange">Change Password</Link>
+                        <Link to="/authChange" id={"loginChangePasswordLink"}>Change Password</Link>
                         <Box height={8}/>
                         {statusCode!==200 && <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={handleSnackbarClose}>
                             {errDiv()}

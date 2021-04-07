@@ -108,11 +108,11 @@ export default function ForgotPasswordScreen(){
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField id={"forgotPasswordPassword"} variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordNewPassword"} variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField id={"forgotPasswordNewPassword"} variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordConfirmNewPassword"} variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -204,7 +204,7 @@ export default function ForgotPasswordScreen(){
                         {userPresent && secQuestion==null && getNoSecurityQuestionDiv()}
                         {userPresent && secQuestion!=null && getRecoveryPasswordForm()}
 
-                        <Button variant='contained' color='secondary' onClick={async ()=>{
+                        <Button variant='contained' id={"forgotPasswordSubmitButton"} color='secondary' onClick={async ()=>{
                             if(!userPresent){
                                 checkUserPresence();
                                 return;

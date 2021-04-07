@@ -205,7 +205,7 @@ export default function ChangePasswordScreen(){
                         </div>}
                         {userPresent && changePasswordRequestForm()}
 
-                        <Button variant='contained' color='secondary' onClick={async ()=>{
+                        <Button id={"changePasswordSubmitButton"} variant='contained' color='secondary' onClick={async ()=>{
                             if(!userPresent){
                                 checkUserPresence();
                                 return;

@@ -114,10 +114,10 @@ export default function DashboardHome(){
                     {!isSmallWidth && <div>
                         <h2 id="userGreetMessage">Hello {sessionStorage.FACULTY_NAME} !</h2>
                     </div>}
-                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
+                    <IconButton color="inherit" id={"appBarProfile"} className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
                         <AccountCircleIcon/>
                     </IconButton>
-                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
+                    <IconButton color="inherit" id={"appBarLogout"} className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
                         <LogoutIcon/>
                     </IconButton>
                 </Toolbar>
