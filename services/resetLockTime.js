@@ -8,7 +8,7 @@ module.exports=async (user,res)=>{
         let timeRemaining=12-(((timeDiff)/(1000*60*60)).toFixed(2));
         let hoursRemaining=Math.floor(timeRemaining);
         let minutesRemaining=Math.floor((timeRemaining-Math.floor(timeRemaining))*60);
-        if(timeRemaining<=12){
+        if(timeRemaining>0){
             res.statusCode=401;
             res.json({
                 "status":"Account locked! Try after "+hoursRemaining+":"+minutesRemaining+" hours",
@@ -21,7 +21,7 @@ module.exports=async (user,res)=>{
             $set:{
                 'wrongAttempts':0
             }
-        })
+        });
         return responseSent;
     }
 }

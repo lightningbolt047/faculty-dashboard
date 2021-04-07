@@ -32,9 +32,45 @@ describe('Unit testing the /auth route login with username password', function()
     it('should return OK status', function() {
         return request(app)
             .post('/auth')
+            .send({"loginType":"user","authToken":"csuhdfsdf","clgID":"cb.en.cse05001"})
+            .then((response)=>{
+                expect(response.statusCode === 401).to.be.true;
+            })
+    })
+});
+
+describe('Unit testing the /auth route login with username password', function() {
+
+    it('should return OK status', function() {
+        return request(app)
+            .post('/auth')
+            .send({"loginType":"user","authToken":"csuhdfsdf","clgID":"cb.en.cse02001"})
+            .then((response)=>{
+                expect(response.statusCode === 401).to.be.true;
+            })
+    })
+});
+
+describe('Unit testing the /auth route login with username password', function() {
+
+    it('should return OK status', function() {
+        return request(app)
+            .post('/auth')
             .send({"loginType":"user","authToken":"c84c15cf188a1a18fe127241892afd145373f5ed7b4dbc0144d40ccdf5ca737e546db8d9273b43f49850388c3a1c3aacd6e5fa3557fc52fc7b362e591b965a68","clgID":"cb.en.cse05001"})
             .then((response)=>{
                 expect(response.statusCode === 401).to.be.true;
+            })
+    })
+});
+
+describe('Unit testing the /auth route login with username password', function() {
+
+    it('should return OK status', function() {
+        return request(app)
+            .post('/auth')
+            .send({"loginType":"user","authToken":"60a875be0cdd39f44292975ea625dab176edf536fa0d9e9d2483cc0ebb3ee896117bf9325859632de6817cb667ed01627bb615572d3dcd96889aa79dc5d6a6dd","clgID":"cb.en.cse01001"})
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
             })
     })
 });
@@ -339,4 +375,18 @@ describe('Unit testing the /mentoring route ', function() {
           expect(response.statusCode === 400).to.be.true;
         })
   })
+});
+
+describe('Unit testing the /mentoring route ', function() {
+
+    it('should return OK status', function() {
+        return request(app)
+            .post('/mentoring')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send({"studentID":"","mentorText":"We are facing internet issue","advisorAllocationID":"6055c0835691e12668d498b9"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
 });
