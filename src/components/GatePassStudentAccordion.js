@@ -15,18 +15,18 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
 
     const getCGPA=()=>{
         let sum=0;
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
-            sum+=studentJSON.personalDetails.studentID.sgpaList[i];
+        for(let i=0;i<studentJSON.personalDetails.sgpaList.length;i++){
+            sum+=studentJSON.personalDetails.sgpaList[i];
         }
 
-        return (sum/studentJSON.personalDetails.studentID.sgpaList.length).toFixed(2);
+        return (sum/studentJSON.personalDetails.sgpaList.length).toFixed(2);
     }
 
     const getSGPAString=()=>{
         let sgpaString="";
         let i=0;
-        for(const sgpa of studentJSON.personalDetails.studentID.sgpaList){
-            if(i!==studentJSON.personalDetails.studentID.sgpaList.length-1){
+        for(const sgpa of studentJSON.personalDetails.sgpaList){
+            if(i!==studentJSON.personalDetails.sgpaList.length-1){
                 sgpaString+=sgpa+" , ";
             }else{
                 sgpaString+=sgpa;
@@ -66,11 +66,11 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.studentID.clgID}</Typography>
+                        <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.clgID}</Typography>
                     </Box>
                     <Box width={8}/>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.studentID.name}</Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.name}</Typography>
                     </Box>
                     <Box width={8}/>
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}*/}
@@ -115,11 +115,11 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                                 </div>
 
                                 <div>
-                                    <span>Current Semester</span>:   {studentJSON.personalDetails.studentID.curSem}
+                                    <span>Current Semester</span>:   {studentJSON.personalDetails.curSem}
                                 </div>   
 
                                 <div>
-                                    <span>Department</span>: {studentJSON.personalDetails.studentID.department}
+                                    <span>Department</span>: {studentJSON.personalDetails.department}
                                 </div>
 
                                 <Box height={8}/>
@@ -159,12 +159,12 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                                 <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
-                                {studentJSON.personalDetails.studentID.disciplinaryActions.map((item)=>(
+                                {studentJSON.personalDetails.disciplinaryActions.map((item)=>(
                                     <div className='disciplinaryActionText'>{item}
                                         <Box height={4}/>
                                     </div>
                                 ))}
-                                {(typeof studentJSON.personalDetails.studentID.disciplinaryActions.length==='undefined' || studentJSON.personalDetails.studentID.disciplinaryActions.length===0) && <div className='noDisciplinaryActionText'>No disciplinary actions
+                                {(typeof studentJSON.personalDetails.disciplinaryActions.length==='undefined' || studentJSON.personalDetails.disciplinaryActions.length===0) && <div className='noDisciplinaryActionText'>No disciplinary actions
                                 </div>}
 
                             </div>

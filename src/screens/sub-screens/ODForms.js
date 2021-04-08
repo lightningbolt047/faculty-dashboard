@@ -1,4 +1,3 @@
-import MentoringStudentAccordion from '../../components/MentoringStudentAccordion';
 import SearchBar from '../../components/SearchBar';
 import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';

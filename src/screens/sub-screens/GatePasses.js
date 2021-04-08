@@ -25,7 +25,7 @@ export default function GatePasses(){
 
 
     const getInfoFromBackend=async ()=>{
-        let responseBody=await backendService('GET',`/mentoring/`,
+        let responseBody=await backendService('GET',`/gatepass/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
@@ -39,18 +39,19 @@ export default function GatePasses(){
 
     const getSearchResults=()=>{
         let filteredResults=[];
+        console.log(studentsDetails);
         if(searchText==='' || typeof searchText==='undefined'){
             filteredResults=studentsDetails;
         }
         else{
             for(const studentDetailIteration of studentsDetails){
-                if(studentDetailIteration.personalDetails.studentID.name.toLowerCase().includes(searchText.toLowerCase()) || studentDetailIteration.personalDetails.studentID.clgID.toLowerCase().includes(searchText.toLowerCase())){
+                if(studentDetailIteration.personalDetails.name.toLowerCase().includes(searchText.toLowerCase()) || studentDetailIteration.personalDetails.clgID.toLowerCase().includes(searchText.toLowerCase())){
                     filteredResults.push(studentDetailIteration);
                 }
             }
         }
         filteredResults.sort((a,b)=>{
-            return parseInt(a.personalDetails.studentID.clgID.slice(a.personalDetails.studentID.clgID.length-5))-parseInt(b.personalDetails.studentID.clgID.slice(b.personalDetails.studentID.clgID.length-5))
+            return parseInt(a.personalDetails.clgID.slice(a.personalDetails.clgID.length-5))-parseInt(b.personalDetails.clgID.slice(b.personalDetails.clgID.length-5))
         });
         setShownStudentsDetails(filteredResults);
     }
