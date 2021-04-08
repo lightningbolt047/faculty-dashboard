@@ -4,12 +4,13 @@ const odFormRouter=express.Router();
 
 const ODForm=require('../models/odFormSchema');
 const getStudentAttendance=require('../services/getStudentAttendance');
+const getStudentCourseAttendance=require('../services/getStudentCourseAttendance');
 
 const checkCredentials=require('../services/checkCredentialsService');
 
 odFormRouter.route('/')
     .get(checkCredentials,(req,res)=>{
-        ODForm.find({advisorID:req.headers['dbid']})
+        ODForm.find({"affectedClasses.facultyID":req.headers['dbid']})
             .populate('studentID')
             .then(async (forms)=>{
                 let sendDocument=[];
@@ -19,17 +20,24 @@ odFormRouter.route('/')
                         if (curDate > Date.parse(forms[i].arrivalTime)) {
                             continue;
                         }
-                        sendDocument.push({
-                            personalDetails: forms[i].studentID,
-                            attendanceDetails: await getStudentAttendance(forms[i].studentID.curSem,forms[i].studentID._id),
-                            odFormDetails: {
-                                odStatus: forms[i].passStatus,
-                                reason: forms[i].reason,
-                                departureTime: forms[i].departureTime,
-                                arrivalTime: forms[i].arrivalTime,
-                                odID: forms[i]._id
+                        let facultyCourseID;
+                        for(let j=0;j<forms[i].affectedClasses.length;j++){
+                            if(forms[i].affectedClasses[j].facultyID===req.headers['dbid']){
+                                facultyCourseID=forms[i].affectedClasses[j].courseID;
+                                break;
                             }
-                        });
+                        }
+                        try{
+                            sendDocument.push({
+                                personalDetails: forms[i].studentID,
+                                attendanceDetails: await getStudentCourseAttendance(forms[i].studentID.curSem,forms[i].studentID._id,req.headers['dbid'],facultyCourseID),
+                            });
+                        }catch(e){
+                            res.statusCode=404;
+                            res.json({
+                                'status':"Invalid data"
+                            });
+                        }
                     }
                 }catch(e){
                     res.statusCode=500;

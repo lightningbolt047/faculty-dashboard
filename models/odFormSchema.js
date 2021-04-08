@@ -8,16 +8,6 @@ const odFormSchema=new Schema({
         ref:'Student',
         required: true
     },
-    advisorID:{
-        type:String,
-        required:true
-    },
-    odStatus:{
-        type: String,
-        enum: ['pending','approved','cancelled'],
-        default:'pending',
-        required:true
-    },
     reason:{
         type:String,
         required:true
@@ -29,8 +19,30 @@ const odFormSchema=new Schema({
     arrivalTime:{
         type:Date,
         required:true
+    },
+    affectedClasses:{
+        type:[{
+            facultyID:{
+                type:String,
+                required:true
+            },
+            courseID:{
+                type:String,
+                required:true
+            },
+            numClasses:{
+                type:Number,
+                required:true,
+                range:[1-100]
+            },
+            approvalStatus:{
+                type:String,
+                enum:['pending','approved','cancelled']
+            }
+        }],
+        required:true
     }
 });
 
-var ODForm=mongoose.model('ODForm',odFormSchema);
-module.exports=ODForm;
+var ODFormSchema=mongoose.model('MedicalLeaveRequest',odFormSchema);
+module.exports=ODFormSchema;

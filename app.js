@@ -11,7 +11,7 @@ const recoveryRouter=require('./routes/recoveryRouter');
 const profileRouter=require('./routes/profileRouter');
 const mentoringRouter = require('./routes/mentoringRouter');
 const gatePassRouter=require('./routes/gatePassRouter');
-const odFormRouter=require('./routes/odFormRouter');
+const odFormRouter=require('./routes/medicalLeaveRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -48,7 +48,7 @@ app.use('/recovery',recoveryRouter);
 app.use('/profile',profileRouter);
 app.use('/mentoring',mentoringRouter);
 app.use('/gatepass',gatePassRouter);
-app.use('/odform',odFormRouter);
+app.use('/studentMedical',odFormRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{

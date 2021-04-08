@@ -5,5 +5,5 @@ test
 coverage/lcov-report
 
 routes/gatePassRouter.js
-routes/odFormRouter.js
+routes/medicalLeaveRouter.js
 models/courseMentorSchema.js
