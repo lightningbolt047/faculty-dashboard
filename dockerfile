@@ -22,4 +22,5 @@ RUN ls -list
 RUN sonar-scanner \
     -Dsonar.host.url="http://localhost:9000" \
     -Dsonar.projectKey="faculty-dash-frontend" \
-    -Dsonar.sources="src"
+    -Dsonar.sources="src" \
+        -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info"
