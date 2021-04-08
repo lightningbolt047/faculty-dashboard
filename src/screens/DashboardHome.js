@@ -20,9 +20,11 @@ import BookIcon from '@material-ui/icons/Book';
 import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import WorkOffIcon from '@material-ui/icons/WorkOff';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
 import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
+import ODForms from "./sub-screens/ODForms";
 
 
 const sidebarWidth=240;
@@ -62,8 +64,8 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>];
-    let subScreenNames=["Home","Profile","Mentoring","Student Gate Pass"]
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms/>];
+    let subScreenNames=["Home","Profile","Mentoring","Student Passes","OD Forms"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
@@ -155,8 +157,8 @@ export default function DashboardHome(){
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
                         <ListItemText primary="Student Passes"/>
                     </ListItem>}
-                    <ListItem button key="OD Forms" id="dashboardCourseBtn">
-                        <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
+                    <ListItem button key="OD Forms" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(4)}>
+                        <ListItemIcon>{<WorkOffIcon/>}</ListItemIcon>
                         <ListItemText primary="OD Forms"/>
                     </ListItem>
                     {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(2)}>
