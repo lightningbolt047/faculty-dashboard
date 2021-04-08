@@ -21,6 +21,6 @@ RUN ls -list
 # sonar.sources directory for sources of project
 RUN sonar-scanner \
     -Dsonar.host.url="http://localhost:9000" \
-    -Dsonar.projectKey="faculty-dash-backend" \
+    -Dsonar.projectKey="faculty-dashboard" \
     -Dsonar.sources="." \
         -Dsonar.javascript.lcov.reportPaths="coverage/lcov.info"
