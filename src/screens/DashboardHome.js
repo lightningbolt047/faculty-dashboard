@@ -22,7 +22,7 @@ import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
-import StudentGatePassOD from "./sub-screens/StudentGatePassOD";
+import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
 
 
 const sidebarWidth=240;
@@ -62,7 +62,7 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>];
     let subScreenNames=["Home","Profile","Mentoring","Student Gate Pass"]
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
@@ -153,8 +153,12 @@ export default function DashboardHome(){
                     </ListItem>
                     {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(3)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
-                        <ListItemText primary="Gate Pass/OD"/>
+                        <ListItemText primary="Student Passes"/>
                     </ListItem>}
+                    <ListItem button key="OD Forms" id="dashboardCourseBtn">
+                        <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
+                        <ListItemText primary="OD Forms"/>
+                    </ListItem>
                     {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(2)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>

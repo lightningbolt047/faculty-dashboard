@@ -16,7 +16,7 @@ function GetTabIndexUI({tabIndex}){
 }
 
 
-export default function StudentGatePassOD(){
+export default function StudentGatePassMedical(){
     const [tabIndex,setTabIndex]=useState(0);
 
     const handleTabIndexChange=(event,value)=>{
@@ -28,7 +28,7 @@ export default function StudentGatePassOD(){
             <Paper variant="outlined">
                 <Tabs value={tabIndex} onChange={handleTabIndexChange}>
                     <Tab label={"Gate Passes"}/>
-                    <Tab label={"OD approvals"}/>
+                    <Tab label={"Medical Leaves"}/>
                 </Tabs>
             </Paper>
             <GetTabIndexUI tabIndex={tabIndex}></GetTabIndexUI>
