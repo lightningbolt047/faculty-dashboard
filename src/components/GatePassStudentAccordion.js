@@ -69,13 +69,10 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                         <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.studentID.clgID}</Typography>
                     </Box>
                     <Box width={8}/>
-                    <Box flex={2}>
+                    <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.studentID.name}</Typography>
                     </Box>
                     <Box width={8}/>
-                    <Box flex={5} component={'div'}>
-                        <Typography className="accordionText" id="accordionTextSecondary">Reason: Want to go home, eat, sleep, more text here</Typography>
-                    </Box>
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
@@ -95,24 +92,55 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                     <Grid container>
                         <Box flex={1}>
                             <div className='accordionDividerContent'>
-                                <b>CGPA</b>:   {getCGPA()}
-                                <Box height={4}/>
-                                <b>SGPA</b>:   {getSGPAString()}
-                                <Box height={4}/>
-                                <b>Current Semester</b>:   {studentJSON.personalDetails.studentID.curSem}
-                                <Box height={4}/>
-                                <b>Department</b>: {studentJSON.personalDetails.studentID.department}
+                                <b>Personal Details</b>
+                                <Box height={10}/>
+                                <div>
+                                    <span>Blood Group</span>: A+ve
+                                </div>
+
+                                <div>
+                                    <span>Phone Number</span>: 9012384021
+                                </div>
+
+                                <div>
+                                    <span>Residence Address</span>: 5, Wall street, USA
+                                </div>
+
+                                <div>
+                                    <span>CGPA</span>:   {getCGPA()}
+                                </div>
+
+                                <div>
+                                    <span>SGPA</span>:   {getSGPAString()}
+                                </div>
+
+                                <div>
+                                    <span>Current Semester</span>:   {studentJSON.personalDetails.studentID.curSem}
+                                </div>   
+
+                                <div>
+                                    <span>Department</span>: {studentJSON.personalDetails.studentID.department}
+                                </div>
+
                                 <Box height={8}/>
                                 <Divider />
                                 <Box height={8}/>
-                                <b>Personal Details</b>
+                                <b>Pass Details</b>
                                 <Box height={10}/>
-                                <b>Blood Group</b>: A+ve
-                                <Box height={4}/>
-                                <b>Phone Number</b>: 9012384021
-                                <Box height={4}/>
-                                <b>Residence Address</b>: 9ddw, dwndwi, ei3uh2uh2ude23, 2ju2823e823hre23, dwud2387hrd23udn23
 
+                                <div>
+                                    <span>Reason</span>: <b>Going Home</b>
+                                </div>
+
+                                <div>
+                                    <span>Departure Date Time</span>: <b>16/10/2021 6:30 PM</b>
+                                </div>
+
+                                <div>
+                                    <span>Arrival Date Time</span>: <b>21/10/2021 6:00 AM</b>
+                                </div>
+                                
+                                
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />
