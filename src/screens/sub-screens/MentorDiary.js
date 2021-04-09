@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import FlipMove from 'react-flip-move';
 
 let studentsDetails = [];
 
@@ -113,11 +114,13 @@ export default function MentorDiary(){
             <div>
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
                 <Box height={10}/>
-                {shownStudentsDetails.map((studentItem,index)=>(
-                <div>
-                    <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
-                </div>
-                ))}
+                <FlipMove>
+                    {shownStudentsDetails.map((studentItem,index)=>(
+                        <div>
+                            <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
+                        </div>
+                    ))}
+                </FlipMove>
                 <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
                     {successDiv()}
                 </Snackbar>

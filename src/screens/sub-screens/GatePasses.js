@@ -11,6 +11,7 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import LockIcon from "@material-ui/icons/Lock";
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import FlipMove from 'react-flip-move';
 let allStudentPasses=[];
 
 export default function GatePasses({passRoute}){
@@ -272,11 +273,13 @@ export default function GatePasses({passRoute}){
                     <WarningIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency {getTypeName()}</Typography>
                 </div>}
-                {shownEmergencyPasses.map((studentItem,index)=>(
-                    <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
-                    </div>
-                ))}
+                <FlipMove>
+                    {shownEmergencyPasses.map((studentItem,index)=>(
+                        <div>
+                            <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                        </div>
+                    ))}
+                </FlipMove>
                 {shownRegularPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -284,11 +287,13 @@ export default function GatePasses({passRoute}){
                     <ExploreIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular {getTypeName()}</Typography>
                 </div>}
-                {shownRegularPasses.map((studentItem,index)=>(
-                    <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
-                    </div>
-                ))}
+                <FlipMove>
+                    {shownRegularPasses.map((studentItem,index)=>(
+                        <div>
+                            <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                        </div>
+                    ))}
+                </FlipMove>
                 {shownWithheldPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -296,11 +301,13 @@ export default function GatePasses({passRoute}){
                     <LockIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Withheld {getTypeName()}</Typography>
                 </div>}
-                {shownWithheldPasses.map((studentItem,index)=>(
-                    <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
-                    </div>
-                ))}
+                <FlipMove>
+                    {shownWithheldPasses.map((studentItem,index)=>(
+                        <div>
+                            <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                        </div>
+                    ))}
+                </FlipMove>
                 {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -308,11 +315,13 @@ export default function GatePasses({passRoute}){
                     <CancelIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled {getTypeName()}</Typography>
                 </div>}
-                {shownCancelledPasses.map((studentItem,index)=>(
-                    <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
-                    </div>
-                ))}
+                <FlipMove>
+                    {shownCancelledPasses.map((studentItem,index)=>(
+                        <div>
+                            <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                        </div>
+                    ))}
+                </FlipMove>
                 {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                     <Box height={18}/>
                 </div>}
@@ -320,11 +329,13 @@ export default function GatePasses({passRoute}){
                     <CheckCircleIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Approved {getTypeName()}</Typography>
                 </div>}
-                {shownApprovedPasses.map((studentItem,index)=>(
-                    <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
-                    </div>
-                ))}
+                <FlipMove>
+                    {shownApprovedPasses.map((studentItem,index)=>(
+                        <div>
+                            <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                        </div>
+                    ))}
+                </FlipMove>
             </div>
         );
     };
