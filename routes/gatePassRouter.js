@@ -25,6 +25,7 @@ gatePassRouter.route('/')
                         passDetails:{
                             passStatus:passes[i].passStatus,
                             reason:passes[i].reason,
+                            emergencyPass:passes[i].isEmergency,
                             departureTime:passes[i].departureTime,
                             arrivalTime:passes[i].arrivalTime,
                             passID:passes[i]._id
