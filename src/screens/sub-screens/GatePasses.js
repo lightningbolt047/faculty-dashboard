@@ -13,7 +13,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 let allStudentPasses=[];
 
-export default function GatePasses(){
+export default function GatePasses({passRoute}){
 
     const [statusCode,setStatusCode]=useState(0);
     let allShownPasses=[];
@@ -32,7 +32,7 @@ export default function GatePasses(){
 
 
     const getInfoFromBackend=async ()=>{
-        let responseBody=await backendService('GET',`/gatepass/`,
+        let responseBody=await backendService('GET',`/${passRoute}/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
@@ -45,7 +45,7 @@ export default function GatePasses(){
     };
 
     const sendPassStatusUpdateToBackend=async (passID,passStatusNewValue)=>{
-        let responseBody=await backendService('POST',`/gatepass/`,
+        let responseBody=await backendService('POST',`/${passRoute}/`,
             {
                 passID:passID,
                 passStatus:passStatusNewValue
@@ -102,7 +102,6 @@ export default function GatePasses(){
                 tempPassList.splice(curPassIndex,1);
                 setShownCancelledPasses(tempPassList);
             }
-            //TODO: Insert pass into appropriate array after change
             let tempPassList=[];
             if(passStatusNewValue==='approved'){
                 for(let i=0;i<shownApprovedPasses.length-1;i++){
@@ -185,30 +184,15 @@ export default function GatePasses(){
                 }
                 setShownCancelledPasses(tempPassList);
             }
-            // else if(passStatusNewValue==='pending' && pass.passDetails.emergencyPass){
-            //     for(let i=0;i<shownRegularPasses.length-1;i++){
-            //         let curIndexRollValue=parseInt(shownRegularPasses[i].personalDetails.clgID.slice(shownRegularPasses[i].personalDetails.clgID.length-5));
-            //         let nextIndexRollValue=parseInt(shownRegularPasses[i+1].personalDetails.clgID.slice(shownRegularPasses[i+1].personalDetails.clgID.length-5));
-            //         let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
-            //         tempPassList.push(shownRegularPasses[i]);
-            //         if(curIndexRollValue<passRollValue && passRollValue<nextIndexRollValue){
-            //             tempPassList.push(pass);
-            //         }
-            //     }
-            //     setShownRegularPasses(tempPassList);
-            // }
-            // else if(passStatusNewValue==='pending' && !pass.passDetails.emergencyPass){
-            //     for(let i=0;i<shownEmergencyPasses.length-1;i++){
-            //         let curIndexRollValue=parseInt(shownEmergencyPasses[i].personalDetails.clgID.slice(shownEmergencyPasses[i].personalDetails.clgID.length-5));
-            //         let nextIndexRollValue=parseInt(shownEmergencyPasses[i+1].personalDetails.clgID.slice(shownEmergencyPasses[i+1].personalDetails.clgID.length-5));
-            //         let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
-            //         tempPassList.push(shownEmergencyPasses[i]);
-            //         if(curIndexRollValue<passRollValue && passRollValue<nextIndexRollValue){
-            //             tempPassList.push(pass);
-            //         }
-            //     }
-            //     setShownEmergencyPasses(tempPassList);
-            // }
+        }
+    }
+
+    const getTypeName=()=>{
+        if(passRoute==='gatepass'){
+            return 'Passes';
+        }
+        else if(passRoute==='studentMedical'){
+            return 'Leaves';
         }
     }
 
@@ -252,7 +236,6 @@ export default function GatePasses(){
             }
             if(pass.passDetails.passStatus==='withheld'){
                 withheldPassList.push(pass);
-                continue;
             }
         }
         setShownEmergencyPasses(emergencyPassList);
@@ -287,11 +270,11 @@ export default function GatePasses(){
                 </div>}
                 {shownEmergencyPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <WarningIcon fontSize={'large'}/>
-                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency Passes</Typography>
+                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency {getTypeName()}</Typography>
                 </div>}
                 {shownEmergencyPasses.map((studentItem,index)=>(
                     <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange}/>
+                        <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                     </div>
                 ))}
                 {shownRegularPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -299,11 +282,11 @@ export default function GatePasses(){
                 </div>}
                 {shownRegularPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                     <ExploreIcon fontSize={'large'}/>
-                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular Passes</Typography>
+                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular {getTypeName()}</Typography>
                 </div>}
                 {shownRegularPasses.map((studentItem,index)=>(
                     <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange}/>
+                        <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                     </div>
                 ))}
                 {shownWithheldPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -311,11 +294,11 @@ export default function GatePasses(){
                 </div>}
                 {shownWithheldPasses.length!==0 && <div className={'gatePassSegmentWithheld'}>
                     <LockIcon fontSize={'large'}/>
-                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Withheld Passes</Typography>
+                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Withheld {getTypeName()}</Typography>
                 </div>}
                 {shownWithheldPasses.map((studentItem,index)=>(
                     <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange}/>
+                        <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                     </div>
                 ))}
                 {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -323,11 +306,11 @@ export default function GatePasses(){
                 </div>}
                 {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentCancelled'}>
                     <CancelIcon fontSize={'large'}/>
-                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled Passes</Typography>
+                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled {getTypeName()}</Typography>
                 </div>}
                 {shownCancelledPasses.map((studentItem,index)=>(
                     <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange}/>
+                        <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                     </div>
                 ))}
                 {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
@@ -335,16 +318,16 @@ export default function GatePasses(){
                 </div>}
                 {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                     <CheckCircleIcon fontSize={'large'}/>
-                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Approved Passes</Typography>
+                    <Typography variant={'h4'} id={'gatePassSegmentText'}>Approved {getTypeName()}</Typography>
                 </div>}
                 {shownApprovedPasses.map((studentItem,index)=>(
                     <div>
-                        <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange}/>
+                        <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                     </div>
                 ))}
             </div>
         );
-    }
+    };
 
     const errDiv=()=>{
         return (

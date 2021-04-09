@@ -11,7 +11,9 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import LockIcon from '@material-ui/icons/Lock';
 import IconButton from "@material-ui/core/IconButton";
 
-export default function GatePassStudentAccordion({accordionID, passType, passJSON, handlePassAction}){
+export default function GatePassStudentAccordion({accordionID, passType, passJSON, handlePassAction, passRoute}){
+    const departureTime=new Date(passJSON.passDetails.departureTime);
+    const arrivalTime=new Date(passJSON.passDetails.arrivalTime);
 
     const getCGPA=()=>{
         let sum=0;
@@ -60,6 +62,10 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
         handlePassAction(passJSON.passDetails.passID,accordionID,passType,'withheld');
     }
 
+    const getDateTimeAsString=(dateTime)=>{
+        return `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()} ${dateTime.getHours().toString().length<2?0+dateTime.getHours().toString():dateTime.getHours().toString()}:${dateTime.getMinutes().toString().length<2?0+dateTime.getMinutes().toString():dateTime.getMinutes().toString()}`
+    }
+
 
     return (
         <div className="accordionSpace">
@@ -83,9 +89,9 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                         <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'}>
                             <CancelIcon id={passType!=='cancelled' && 'warningColor'}/>
                         </IconButton>
-                        <IconButton size="small" onClick={withholdGatePassHandler} disabled={passType==='withheld'}>
-                            <LockIcon id={passType!=='withheld' && 'alertColor'}/>
-                        </IconButton>
+                    {passRoute==='gatepass' && <IconButton size="small" onClick={withholdGatePassHandler} disabled={passType === 'withheld'}>
+                        <LockIcon id={passType !== 'withheld' && 'alertColor'}/>
+                    </IconButton>}
                     <Box width={8}/>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -95,15 +101,15 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 <b>Personal Details</b>
                                 <Box height={10}/>
                                 <div>
-                                    <span>Blood Group</span>: A+ve
+                                    <span>Blood Group</span>: {passJSON.personalDetails.bloodGroup}
                                 </div>
 
                                 <div>
-                                    <span>Phone Number</span>: 9012384021
+                                    <span>Phone Number</span>: {passJSON.personalDetails.phoneNumber}
                                 </div>
 
                                 <div>
-                                    <span>Residence Address</span>: 5, Wall street, USA
+                                    <span>Residence Address</span>: {passJSON.personalDetails.address}
                                 </div>
 
                                 <div>
@@ -129,15 +135,15 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 <Box height={10}/>
 
                                 <div>
-                                    <span>Reason</span>: <b>Going Home</b>
+                                    <span>Reason</span>: <b>{passJSON.passDetails.reason}</b>
                                 </div>
 
                                 <div>
-                                    <span>Departure Date Time</span>: <b>16/10/2021 6:30 PM</b>
+                                    <span>Departure Date Time</span>: <b>{getDateTimeAsString(departureTime)}</b>
                                 </div>
 
                                 <div>
-                                    <span>Arrival Date Time</span>: <b>21/10/2021 6:00 AM</b>
+                                    <span>Arrival Date Time</span>: <b>{getDateTimeAsString(arrivalTime)}</b>
                                 </div>
                                 
                                 

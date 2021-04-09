@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import GatePasses from "./GatePasses";
-import MedicalLeaves from "./MedicalLeaves";
 import Paper from '@material-ui/core/Paper';
 import 'aos/dist/aos.css';
 import Tabs from '@material-ui/core/Tabs';
@@ -10,8 +9,8 @@ import Tab from '@material-ui/core/Tab';
 function GetTabIndexUI({tabIndex}){
     return (
         <div>
-            {tabIndex===0 && <GatePasses/>}
-            {tabIndex===1 && <MedicalLeaves/>}
+            {tabIndex===0 && <GatePasses passRoute={'gatepass'}/>}
+            {tabIndex===1 && <GatePasses passRoute={'studentMedical'}/>}
         </div>
     );
 }
