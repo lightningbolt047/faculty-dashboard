@@ -44,5 +44,5 @@ const odFormSchema=new Schema({
     }
 });
 
-var ODFormSchema=mongoose.model('MedicalLeaveRequest',odFormSchema);
+var ODFormSchema=mongoose.model('ODForm',odFormSchema);
 module.exports=ODFormSchema;

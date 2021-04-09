@@ -20,17 +20,23 @@ odFormRouter.route('/')
                         if (curDate > Date.parse(forms[i].arrivalTime)) {
                             continue;
                         }
-                        let facultyCourseID;
+                        let facultyCourseIDs=[];
                         for(let j=0;j<forms[i].affectedClasses.length;j++){
                             if(forms[i].affectedClasses[j].facultyID===req.headers['dbid']){
-                                facultyCourseID=forms[i].affectedClasses[j].courseID;
-                                break;
+                                facultyCourseIDs.push(forms[i].affectedClasses[j].courseID);
                             }
                         }
                         try{
                             sendDocument.push({
                                 personalDetails: forms[i].studentID,
-                                attendanceDetails: await getStudentCourseAttendance(forms[i].studentID.curSem,forms[i].studentID._id,req.headers['dbid'],facultyCourseID),
+                                attendanceDetails: await getStudentCourseAttendance(forms[i].studentID.curSem,forms[i].studentID._id,req.headers['dbid'],facultyCourseIDs),
+                                passDetails:{
+                                    reason:forms[i].reason,
+                                    affectedClasses:forms[i].affectedClasses,
+                                    departureTime:forms[i].departureTime,
+                                    arrivalTime:forms[i].arrivalTime,
+                                    passID:forms[i]._id
+                                }
                             });
                         }catch(e){
                             res.statusCode=404;
