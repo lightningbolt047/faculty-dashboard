@@ -47,6 +47,14 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
         }
     }
 
+    const getAttendancePercentage=(item)=>{
+        try{
+            return ((item.studentAttendance/item.classesTaken)*100).toFixed(2);
+        }catch (e){
+            return '0';
+        }
+    }
+
 
     return (
         <div className="accordionSpace">
@@ -86,7 +94,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                     {studentJSON.attendanceDetails.map((item)=>(
                                         <div>
                                             <span>{item.courseName+" : "}</span>
-                                            <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
+                                            <span id={getAttendancePercentageTextStyle(getAttendancePercentage(item))}>{getAttendancePercentage(item)+" %"}</span>
                                         </div>
 
                                         // <div>{item.courseName+" : "+((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}

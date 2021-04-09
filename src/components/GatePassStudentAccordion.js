@@ -49,6 +49,14 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
         }
     }
 
+    const getAttendancePercentage=(item)=>{
+        try{
+            return ((item.studentAttendance/item.classesTaken)*100).toFixed(2);
+        }catch (e){
+            return '0';
+        }
+    }
+
     const approveGatePassHandler=(event)=>{
         event.stopPropagation();
         handlePassAction(passJSON.passDetails.passID,accordionID,passType,'approved');
@@ -157,7 +165,7 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 {passJSON.attendanceDetails.map((item)=>(
                                     <div>
                                         <span>{item.courseName+" : "}</span>
-                                        <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
+                                        <span id={getAttendancePercentageTextStyle(getAttendancePercentage(item))}>{getAttendancePercentage(item)+" %"}</span>
                                     </div>
                                 ))}
                                 <Box height={8}/>
