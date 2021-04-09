@@ -43,7 +43,9 @@ gatePassRouter.route('/')
             });
     })
     .post(checkCredentials,(req,res)=>{
-        GatePass.findById(req.body.passID)
+        GatePass.findByIdAndUpdate(req.body.passID,{
+            $set:{'passStatus':req.body.passStatus}
+        })
             .then((document)=>{
                 if(!document){
                     res.statusCode=404;
@@ -52,24 +54,15 @@ gatePassRouter.route('/')
                     });
                     return;
                 }
-                document.passStatus=req.body.passStatus;
-                document.save()
-                    .then(()=>{
-                        res.statusCode=200;
-                        res.json({
-                            'status':'Pass status updated successfully'
-                        });
-                    },()=>{
-                        res.statusCode=400;
-                        res.json({
-                            'status':"Bad request"
-                        });
-                    })
+                res.statusCode=200;
+                res.json({
+                   status:'Pass Status updated successfully'
+                });
             },()=>{
                 res.statusCode=400;
                 res.json({
                     'status':"Bad request"
-                })
+                });
             })
     })
 

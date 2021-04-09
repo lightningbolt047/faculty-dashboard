@@ -22,12 +22,12 @@ medicalLeaveRouter.route('/')
                         sendDocument.push({
                             personalDetails: leaves[i].studentID,
                             attendanceDetails: await getStudentAttendance(leaves[i].studentID.curSem,leaves[i].studentID._id),
-                            leaveFormDetails: {
-                                medicalLeaveStatus: leaves[i].leaveStatus,
+                            passDetails: {
+                                passStatus: leaves[i].leaveStatus,
                                 reason: leaves[i].reason,
                                 departureTime: leaves[i].departureTime,
                                 arrivalTime: leaves[i].arrivalTime,
-                                leaveID: leaves[i]._id
+                                passID: leaves[i]._id
                             }
                         });
                     }
@@ -41,6 +41,29 @@ medicalLeaveRouter.route('/')
                 res.statusCode=200;
                 res.json(sendDocument);
             });
+    })
+    .post(checkCredentials,(req,res,next)=>{
+        MedicalLeaveRequest.findByIdAndUpdate(req.body.passID,{
+            $set:{'leaveStatus':req.body.passStatus}
+        })
+            .then((document)=>{
+                if(!document){
+                    res.statusCode=404;
+                    res.json({
+                        status:'Invalid passID'
+                    });
+                    return;
+                }
+                res.statusCode=200;
+                res.json({
+                    status:'Leave Status updated successfully'
+                });
+            },()=>{
+                res.statusCode=400;
+                res.json({
+                    'status':"Bad request"
+                });
+            })
     })
 
 

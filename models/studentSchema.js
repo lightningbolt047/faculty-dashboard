@@ -35,6 +35,14 @@ const studentSchema=new Schema({
         enum:['A+','A-','B+','B-','AB+','AB-','O+','O-','H/H','Unknown'],
         default:'Unknown',
         required:true,
+    },
+    phoneNumber:{
+        type:String,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
     }
 });
 
