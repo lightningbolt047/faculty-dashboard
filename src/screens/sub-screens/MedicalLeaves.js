@@ -68,7 +68,7 @@ export default function MedicalLeaves(){
                 <Box height={10}/>
                 {shownStudentsDetails.map((studentItem,index)=>(
                 <div>
-                    <GatePassStudentAccordion key={index} accordionID={index} studentJSON={studentItem}/>
+                    <GatePassStudentAccordion key={index} accordionID={index} passJSON={studentItem}/>
                 </div>
                 ))}
             </div>

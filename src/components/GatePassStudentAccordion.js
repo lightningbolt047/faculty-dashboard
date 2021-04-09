@@ -11,22 +11,22 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import LockIcon from '@material-ui/icons/Lock';
 import IconButton from "@material-ui/core/IconButton";
 
-export default function GatePassStudentAccordion({accordionID, studentJSON}){
+export default function GatePassStudentAccordion({accordionID, passType, passJSON, handlePassAction}){
 
     const getCGPA=()=>{
         let sum=0;
-        for(let i=0;i<studentJSON.personalDetails.sgpaList.length;i++){
-            sum+=studentJSON.personalDetails.sgpaList[i];
+        for(let i=0; i<passJSON.personalDetails.sgpaList.length; i++){
+            sum+=passJSON.personalDetails.sgpaList[i];
         }
 
-        return (sum/studentJSON.personalDetails.sgpaList.length).toFixed(2);
+        return (sum/passJSON.personalDetails.sgpaList.length).toFixed(2);
     }
 
     const getSGPAString=()=>{
         let sgpaString="";
         let i=0;
-        for(const sgpa of studentJSON.personalDetails.sgpaList){
-            if(i!==studentJSON.personalDetails.sgpaList.length-1){
+        for(const sgpa of passJSON.personalDetails.sgpaList){
+            if(i!==passJSON.personalDetails.sgpaList.length-1){
                 sgpaString+=sgpa+" , ";
             }else{
                 sgpaString+=sgpa;
@@ -49,15 +49,15 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
 
     const approveGatePassHandler=(event)=>{
         event.stopPropagation();
-        //Routine
+        handlePassAction(passJSON.passDetails.passID,accordionID,passType,'approved');
     }
     const cancelGatePassHandler=(event)=>{
         event.stopPropagation();
-        //Routine
+        handlePassAction(passJSON.passDetails.passID,accordionID,passType,'cancelled');
     }
     const withholdGatePassHandler=(event)=>{
         event.stopPropagation();
-        //Routine
+        handlePassAction(passJSON.passDetails.passID,accordionID,passType,'withheld');
     }
 
 
@@ -66,25 +66,25 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.clgID}</Typography>
+                        <Typography className="accordionText" id="accordionTextPrimary">{passJSON.personalDetails.clgID}</Typography>
                     </Box>
                     <Box width={8}/>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextSecondary">{studentJSON.personalDetails.name}</Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">{passJSON.personalDetails.name}</Typography>
                     </Box>
                     <Box width={8}/>
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
                     <Box width={12}/>
-                        <IconButton size="small" onClick={approveGatePassHandler}>
-                            <CheckIcon id={'okColor'}/>
+                        <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'}>
+                            <CheckIcon id={passType!=='approved' && 'okColor'}/>
                         </IconButton>
-                        <IconButton size="small" onClick={cancelGatePassHandler}>
-                            <CancelIcon id={'warningColor'}/>
+                        <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'}>
+                            <CancelIcon id={passType!=='cancelled' && 'warningColor'}/>
                         </IconButton>
-                        <IconButton size="small" onClick={withholdGatePassHandler}>
-                            <LockIcon id={'alertColor'}/>
+                        <IconButton size="small" onClick={withholdGatePassHandler} disabled={passType==='withheld'}>
+                            <LockIcon id={passType!=='withheld' && 'alertColor'}/>
                         </IconButton>
                     <Box width={8}/>
                 </AccordionSummary>
@@ -115,11 +115,11 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                                 </div>
 
                                 <div>
-                                    <span>Current Semester</span>:   {studentJSON.personalDetails.curSem}
+                                    <span>Current Semester</span>:   {passJSON.personalDetails.curSem}
                                 </div>   
 
                                 <div>
-                                    <span>Department</span>: {studentJSON.personalDetails.department}
+                                    <span>Department</span>: {passJSON.personalDetails.department}
                                 </div>
 
                                 <Box height={8}/>
@@ -148,7 +148,7 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                             <div className='accordionDividerContent'>
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
-                                {studentJSON.attendanceDetails.map((item)=>(
+                                {passJSON.attendanceDetails.map((item)=>(
                                     <div>
                                         <span>{item.courseName+" : "}</span>
                                         <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
@@ -159,12 +159,12 @@ export default function GatePassStudentAccordion({accordionID, studentJSON}){
                                 <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
-                                {studentJSON.personalDetails.disciplinaryActions.map((item)=>(
+                                {passJSON.personalDetails.disciplinaryActions.map((item)=>(
                                     <div className='disciplinaryActionText'>{item}
                                         <Box height={4}/>
                                     </div>
                                 ))}
-                                {(typeof studentJSON.personalDetails.disciplinaryActions.length==='undefined' || studentJSON.personalDetails.disciplinaryActions.length===0) && <div className='noDisciplinaryActionText'>No disciplinary actions
+                                {(typeof passJSON.personalDetails.disciplinaryActions.length==='undefined' || passJSON.personalDetails.disciplinaryActions.length===0) && <div className='noDisciplinaryActionText'>No disciplinary actions
                                 </div>}
 
                             </div>
