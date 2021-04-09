@@ -22,7 +22,6 @@ import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
-import StudentGatePassOD from "./sub-screens/StudentGatePassOD";
 
 
 const sidebarWidth=240;
@@ -62,7 +61,7 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassOD/>];
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<div/>];
     let subScreenNames=["Home","Profile","Mentoring","Student Gate Pass"]
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
