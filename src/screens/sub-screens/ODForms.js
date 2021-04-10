@@ -5,7 +5,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
 import Alert from '@material-ui/lab/Alert';
 import GatePassStudentAccordion from '../../components/GatePassStudentAccordion';
-import FlipMove from "react-flip-move";
 import Typography from "@material-ui/core/Typography";
 import ExploreIcon from "@material-ui/icons/Explore";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -158,6 +157,22 @@ export default function ODForms(){
                 }
                 setShownCancelledPasses(tempPassList);
             }
+            allShownPasses=[];
+            allStudentPasses=[];
+            for(const presentPass of shownRegularPasses){
+                allShownPasses.push(presentPass);
+                allStudentPasses.push(presentPass);
+            }
+            for(const presentPass of shownCancelledPasses){
+                allShownPasses.push(presentPass);
+                allStudentPasses.push(presentPass);
+            }
+            for(const presentPass of shownApprovedPasses){
+                allShownPasses.push(presentPass);
+                allStudentPasses.push(presentPass);
+            }
+
+
         }
     }
 
@@ -221,7 +236,6 @@ export default function ODForms(){
         return (
             <div>
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
-                <FlipMove>
                     {shownRegularPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                         <Box height={18}/>
                     </div>}
@@ -258,7 +272,6 @@ export default function ODForms(){
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute='odform'/>
                         </div>
                     ))}
-                </FlipMove>
             </div>
         );
     };

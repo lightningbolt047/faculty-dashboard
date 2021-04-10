@@ -11,7 +11,6 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import LockIcon from "@material-ui/icons/Lock";
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import FlipMove from 'react-flip-move';
 let allStudentPasses=[];
 
 export default function GatePasses({passRoute}){
@@ -307,7 +306,6 @@ export default function GatePasses({passRoute}){
                 {shownEmergencyPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
-                <FlipMove>
                 {shownEmergencyPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <WarningIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency {getTypeName()}</Typography>
@@ -365,7 +363,6 @@ export default function GatePasses({passRoute}){
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
-                </FlipMove>
             </div>
         );
     };
