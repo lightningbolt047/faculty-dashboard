@@ -42,6 +42,7 @@ export default function GatePasses({passRoute}){
         if(responseBody.statusCode===200){
             allStudentPasses=responseBody;
         }
+        console.log(responseBody);
         setStatusCode(responseBody.statusCode);
     };
 
@@ -104,14 +105,27 @@ export default function GatePasses({passRoute}){
                 setShownCancelledPasses(tempPassList);
             }
             let tempPassList=[];
+            let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
+            let added=false;
             if(passStatusNewValue==='approved'){
                 for(let i=0;i<shownApprovedPasses.length-1;i++){
                     let curIndexRollValue=parseInt(shownApprovedPasses[i].personalDetails.clgID.slice(shownApprovedPasses[i].personalDetails.clgID.length-5));
                     let nextIndexRollValue=parseInt(shownApprovedPasses[i+1].personalDetails.clgID.slice(shownApprovedPasses[i+1].personalDetails.clgID.length-5));
-                    let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
-                    tempPassList.push(shownApprovedPasses[i]);
-                    if(curIndexRollValue<passRollValue && passRollValue<nextIndexRollValue){
+                    if(passRollValue<curIndexRollValue && i===0){
                         tempPassList.push(pass);
+                        added=true;
+                    }
+                    tempPassList.push(shownApprovedPasses[i]);
+                    if(passRollValue>=curIndexRollValue && passRollValue<=nextIndexRollValue && !added){
+                        tempPassList.push(pass);
+                        added=true;
+                    }
+                    if(i===shownApprovedPasses.length-2){
+                        tempPassList.push(shownApprovedPasses[i+1]);
+                        if(!added){
+                            tempPassList.push(pass);
+                            added=true;
+                        }
                     }
                 }
                 if(shownApprovedPasses.length===0){
@@ -136,9 +150,21 @@ export default function GatePasses({passRoute}){
                     let curIndexRollValue=parseInt(shownWithheldPasses[i].personalDetails.clgID.slice(shownWithheldPasses[i].personalDetails.clgID.length-5));
                     let nextIndexRollValue=parseInt(shownWithheldPasses[i+1].personalDetails.clgID.slice(shownWithheldPasses[i+1].personalDetails.clgID.length-5));
                     let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
-                    tempPassList.push(shownWithheldPasses[i]);
-                    if(curIndexRollValue<passRollValue && passRollValue<nextIndexRollValue){
+                    if(passRollValue<curIndexRollValue && i===0){
                         tempPassList.push(pass);
+                        added=true;
+                    }
+                    tempPassList.push(shownWithheldPasses[i]);
+                    if(passRollValue>=curIndexRollValue && passRollValue<=nextIndexRollValue && !added){
+                        tempPassList.push(pass);
+                        added=true;
+                    }
+                    if(i===shownWithheldPasses.length-2){
+                        tempPassList.push(shownWithheldPasses[i+1]);
+                        if(!added){
+                            tempPassList.push(pass);
+                            added=true;
+                        }
                     }
                 }
                 if(shownWithheldPasses.length===0){
@@ -163,9 +189,21 @@ export default function GatePasses({passRoute}){
                     let curIndexRollValue=parseInt(shownCancelledPasses[i].personalDetails.clgID.slice(shownCancelledPasses[i].personalDetails.clgID.length-5));
                     let nextIndexRollValue=parseInt(shownCancelledPasses[i+1].personalDetails.clgID.slice(shownCancelledPasses[i+1].personalDetails.clgID.length-5));
                     let passRollValue=parseInt(pass.personalDetails.clgID.slice(pass.personalDetails.clgID.length-5));
-                    tempPassList.push(shownCancelledPasses[i]);
-                    if(curIndexRollValue<passRollValue && passRollValue<nextIndexRollValue){
+                    if(passRollValue<curIndexRollValue && i===0){
                         tempPassList.push(pass);
+                        added=true;
+                    }
+                    tempPassList.push(shownCancelledPasses[i]);
+                    if(passRollValue>=curIndexRollValue && passRollValue<=nextIndexRollValue && !added){
+                        tempPassList.push(pass);
+                        added=true;
+                    }
+                    if(i===shownCancelledPasses.length-2){
+                        tempPassList.push(shownCancelledPasses[i+1]);
+                        if(!added){
+                            tempPassList.push(pass);
+                            added=true;
+                        }
                     }
                 }
                 if(shownCancelledPasses.length===0){
@@ -269,17 +307,16 @@ export default function GatePasses({passRoute}){
                 {shownEmergencyPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
+                <FlipMove>
                 {shownEmergencyPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <WarningIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Emergency {getTypeName()}</Typography>
                 </div>}
-                <FlipMove>
                     {shownEmergencyPasses.map((studentItem,index)=>(
                         <div>
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
-                </FlipMove>
                 {shownRegularPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -287,13 +324,11 @@ export default function GatePasses({passRoute}){
                     <ExploreIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular {getTypeName()}</Typography>
                 </div>}
-                <FlipMove>
                     {shownRegularPasses.map((studentItem,index)=>(
                         <div>
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
-                </FlipMove>
                 {shownWithheldPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -301,13 +336,11 @@ export default function GatePasses({passRoute}){
                     <LockIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Withheld {getTypeName()}</Typography>
                 </div>}
-                <FlipMove>
                     {shownWithheldPasses.map((studentItem,index)=>(
                         <div>
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
-                </FlipMove>
                 {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
                     <Box height={18}/>
                 </div>}
@@ -315,13 +348,11 @@ export default function GatePasses({passRoute}){
                     <CancelIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled {getTypeName()}</Typography>
                 </div>}
-                <FlipMove>
                     {shownCancelledPasses.map((studentItem,index)=>(
                         <div>
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
-                </FlipMove>
                 {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                     <Box height={18}/>
                 </div>}
@@ -329,7 +360,6 @@ export default function GatePasses({passRoute}){
                     <CheckCircleIcon fontSize={'large'}/>
                     <Typography variant={'h4'} id={'gatePassSegmentText'}>Approved {getTypeName()}</Typography>
                 </div>}
-                <FlipMove>
                     {shownApprovedPasses.map((studentItem,index)=>(
                         <div>
                             <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>

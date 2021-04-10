@@ -24,6 +24,20 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
         return (sum/passJSON.personalDetails.sgpaList.length).toFixed(2);
     }
 
+    const getTimeStartName=()=>{
+        if(passRoute==='odform'){
+            return "Start Time";
+        }
+        return "Departure Time";
+    }
+
+    const getTimeEndName=()=>{
+        if(passRoute==='odform'){
+            return "End Time";
+        }
+        return "Arrival Time";
+    }
+
     const getSGPAString=()=>{
         let sgpaString="";
         let i=0;
@@ -147,11 +161,11 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 </div>
 
                                 <div>
-                                    <span>Departure Date Time</span>: <b>{getDateTimeAsString(departureTime)}</b>
+                                    <span>{getTimeStartName()}</span>: <b>{getDateTimeAsString(departureTime)}</b>
                                 </div>
 
                                 <div>
-                                    <span>Arrival Date Time</span>: <b>{getDateTimeAsString(arrivalTime)}</b>
+                                    <span>{getTimeEndName()}</span>: <b>{getDateTimeAsString(arrivalTime)}</b>
                                 </div>
                                 
                                 
