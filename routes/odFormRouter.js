@@ -56,6 +56,34 @@ odFormRouter.route('/')
                 res.json(sendDocument);
             });
     })
+    .post((req,res,next)=>{
+        ODForm.findById(req.body.passID)
+            .then((pass)=>{
+               for(let i=0;i<pass.affectedClasses.length;i++){
+                   if(pass.affectedClasses[i].facultyID===req.headers['dbid']){
+                       pass.affectedClasses[i].approvalStatus=req.body.passStatus;
+                   }
+                }
+               let newAffectedClasses=pass.affectedClasses;
+               ODForm.findByIdAndUpdate(req.body.passID,{$set:{'affectedClasses':newAffectedClasses}})
+                   .then(()=>{
+                       res.statusCode=200;
+                       res.json({
+                           status:"OD Form updated successfully"
+                       });
+                   },(err)=>{
+                       res.statusCode=500;
+                       res.json({
+                          status:"Internal Server Error"
+                       });
+                   })
+            },(err)=>{
+                res.statusCode=500;
+                res.json({
+                    status:"Internal Server Error"
+                });
+            });
+    })
 
 
 
