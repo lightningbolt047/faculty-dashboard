@@ -181,3 +181,9 @@ body {
   display: flex;
   color: #ffa000;
 }
+
+.attendanceCard {
+  margin: 60px;
+  width: 450px;
+  height: 325px;
+}

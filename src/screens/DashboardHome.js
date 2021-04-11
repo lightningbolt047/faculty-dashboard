@@ -25,6 +25,7 @@ import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
 import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
 import ODForms from "./sub-screens/ODForms";
+import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
 
 
 const sidebarWidth=240;
@@ -64,8 +65,8 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms/>];
-    let subScreenNames=["Home","Profile","Mentoring","Student Passes","OD Forms"];
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms/>,<FacultyLeaveApplication/>];
+    let subScreenNames=["Home","Profile","Mentoring","Student Passes","OD Forms","Leave Management"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
@@ -145,9 +146,9 @@ export default function DashboardHome(){
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
-                    <ListItem button key="Attendance" id="dashboardAttendanceBtn">
+                    <ListItem button key="Attendance" id="dashboardAttendanceBtn" onClick={()=>handleSubScreenChange(5)}>
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
-                        <ListItemText primary="Attendance"/>
+                        <ListItemText primary="Leave Management"/>
                     </ListItem>
                     <ListItem button key="Course Info" id="dashboardCourseBtn">
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
