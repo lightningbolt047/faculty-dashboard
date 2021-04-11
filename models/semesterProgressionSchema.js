@@ -23,6 +23,11 @@ const semesterProgressionSchema=new Schema({
             }
         }],
         required:true
+    },
+    sem:{
+        type:Number,
+        enum:[0,1],
+        required:true
     }
 });
 

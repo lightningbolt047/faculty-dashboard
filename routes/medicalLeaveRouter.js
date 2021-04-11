@@ -45,7 +45,7 @@ medicalLeaveRouter.route('/')
     .post(checkCredentials,(req,res,next)=>{
         MedicalLeaveRequest.findByIdAndUpdate(req.body.passID,{
             $set:{'leaveStatus':req.body.passStatus}
-        })
+        },{runValidators:true})
             .then((document)=>{
                 if(!document){
                     res.statusCode=404;

@@ -65,7 +65,7 @@ odFormRouter.route('/')
                    }
                 }
                let newAffectedClasses=pass.affectedClasses;
-               ODForm.findByIdAndUpdate(req.body.passID,{$set:{'affectedClasses':newAffectedClasses}})
+               ODForm.findByIdAndUpdate(req.body.passID,{$set:{'affectedClasses':newAffectedClasses}},{runValidators:true})
                    .then(()=>{
                        res.statusCode=200;
                        res.json({

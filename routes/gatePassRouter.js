@@ -2,7 +2,7 @@ const express=require('express');
 
 const gatePassRouter=express.Router();
 
-const GatePass=require('../models/GatePassSchema');
+const GatePass=require('../models/gatePassSchema');
 const getStudentAttendance=require('../services/getStudentAttendance');
 
 const checkCredentials=require('../services/checkCredentialsService');
@@ -44,8 +44,8 @@ gatePassRouter.route('/')
     })
     .post(checkCredentials,(req,res)=>{
         GatePass.findByIdAndUpdate(req.body.passID,{
-            $set:{'passStatus':req.body.passStatus}
-        })
+            $set:{'passStatus':req.body.passStatus},
+        },{runValidators:true})
             .then((document)=>{
                 if(!document){
                     res.statusCode=404;
