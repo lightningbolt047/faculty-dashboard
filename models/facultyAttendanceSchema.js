@@ -34,5 +34,5 @@ const facultyAttendanceSchema=new Schema({
     }
 });
 
-var facultyAttendanceSchema=mongoose.model('facultyAttendance',facultyAttendanceSchema);
-module.exports=facultyAttendanceSchema;
+var FacultyAttendance=mongoose.model('facultyAttendance',facultyAttendanceSchema);
+module.exports=FacultyAttendance;

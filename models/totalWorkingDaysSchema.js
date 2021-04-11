@@ -22,5 +22,5 @@ const totalWorkingDaysSchema=new Schema({
     }
 });
 
-var totalWorkingDaysSchema=mongoose.model('totalWorkingDays',totalWorkingDaysSchema);
-module.exports=totalWorkingDaysSchema;
+var TotalWorkingDays=mongoose.model('totalWorkingDays',totalWorkingDaysSchema);
+module.exports=TotalWorkingDays;

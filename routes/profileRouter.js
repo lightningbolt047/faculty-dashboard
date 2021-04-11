@@ -5,6 +5,7 @@ const fs=require('fs');
 const profileRouter=express.Router();
 const User=require('../models/userSchema');
 const checkCredentials=require('../services/checkCredentialsService');
+const getFacultyAttendance=require('../services/getFacultyAttendance');
 
 //This route handles authentication
 
@@ -30,7 +31,21 @@ const uploader=multer({
 
 
 profileRouter.route('/:reqType')
-.get(checkCredentials,(req,res)=>{
+.get(checkCredentials,async (req,res)=>{
+    try {
+        if(req.params.reqType==='getAttendance'){
+            let attendanceDetails=await getFacultyAttendance(req.headers['dbid']);
+            res.statusCode=200;
+            res.json(attendanceDetails);
+            return;
+        }
+    }catch(e){
+        res.statusCode=400;
+        res.json({
+            status:"Bad Request"
+        });
+    }
+
     User.findById(req.headers['dbid'])
     .then((user)=>{
         if(req.params.reqType==='getFullProfile'){

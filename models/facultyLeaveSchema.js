@@ -4,7 +4,7 @@ const Student=require('./studentSchema');
 
 const facultyLeaveSchema=new Schema({
     facultyID:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref:'User',
         required:true
     },
@@ -31,5 +31,5 @@ const facultyLeaveSchema=new Schema({
     }
 });
 
-var facultyLeaveSchema=mongoose.model('FacultyLeave',facultyLeaveSchema);
-module.exports=facultyLeaveSchema;
+var FacultyLeave=mongoose.model('FacultyLeave',facultyLeaveSchema);
+module.exports=FacultyLeave;

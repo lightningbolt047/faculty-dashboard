@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors=require('cors');
+require('dotenv').config();
 
 
 const authRouter=require('./routes/authRouter');
@@ -13,6 +14,8 @@ const mentoringRouter = require('./routes/mentoringRouter');
 const gatePassRouter=require('./routes/gatePassRouter');
 const medicalLeaveRouter=require('./routes/medicalLeaveRouter');
 const odFormRouter=require('./routes/odFormRouter');
+const facultyLeaveApplyRouter=require('./routes/facultyLeaveApplyRouter');
+const hodLeaveApproveRouter=require('./routes/hodLeaveApproveRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -51,6 +54,8 @@ app.use('/mentoring',mentoringRouter);
 app.use('/gatepass',gatePassRouter);
 app.use('/studentMedical',medicalLeaveRouter);
 app.use('/odform',odFormRouter);
+app.use('/facultyLeave',facultyLeaveApplyRouter);
+app.use('/hodLeaveApprove',hodLeaveApproveRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{
