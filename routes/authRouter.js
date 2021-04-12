@@ -42,6 +42,7 @@ authRouter.route('/')
                         "status": "Login Success",
                         "dbID": user._id,
                         "name":user.name,
+                        "hod":user.hod,
                         "facultyType":user.facultyType,
                         "remainingAttempts": 10
                     });
@@ -86,6 +87,7 @@ authRouter.route('/')
                         "dbID": user._id,
                         "name":user.name,
                         "facultyType":user.facultyType,
+                        "hod":user.hod,
                         "remainingAttempts": 10
                     });
                 });

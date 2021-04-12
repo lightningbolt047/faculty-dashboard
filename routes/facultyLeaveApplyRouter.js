@@ -56,22 +56,27 @@ facultyLeaveApplyRouter.route('/')
                 res.json({
                     status:"Bad Request!"
                 });
+                return;
             }
             let departureTime=new Date(req.body.departureTime);
             let arrivalTime=new Date(req.body.arrivalTime);
-            if(departureTime<=arrivalTime){
+            let curDate=new Date();
+            let curDateString=curDate.getFullYear()+'-'+(curDate.getMonth()+1)+"-"+curDate.getDate()+"T"+"00:00:00.000Z";
+            let curTime=Date.parse(curDateString);
+            if(departureTime>=arrivalTime || departureTime<curTime){
                 res.statusCode=400;
                 res.json({
                     status:"Bad Request!"
                 });
+                return;
             }
             let user=await User.findById(req.headers['dbid']);
-            await FacultyLeave.insertOne({
+            await FacultyLeave.create({
                facultyID:req.headers['dbid'],
                facultyDepartment:user.department,
                reason:req.body.reason,
-               departureTime:req.body.departureTime,
-               arrivalTime:req.body.arrivalTime
+               departureTime:departureTime,
+               arrivalTime:arrivalTime
             });
             res.statusCode=200;
             res.json({
