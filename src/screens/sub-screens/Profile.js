@@ -39,7 +39,6 @@ export default function Profile(){
         let responseBody=await backendService('GET',`/profile/getFullProfile/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
-        console.log(responseBody);
         if(responseBody.statusCode===200){
             setPhNo(responseBody.phoneNumber);
             setEmail(responseBody.email);
@@ -83,7 +82,6 @@ export default function Profile(){
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         setProfileUpdateStatus(responseBody.statusCode);
-        console.log(responseBody);
         setSendingData(false);
         setAlertVisible(true);
         setTimeout(()=>{
@@ -129,7 +127,6 @@ export default function Profile(){
     const handleFileSelection=(event)=>{
         if(!imageUploadSuccess){
             uploadImageFile=event.target.files[0];
-            console.log(uploadImageFile);
             handleSendImage();
         }
     }
@@ -155,7 +152,6 @@ export default function Profile(){
         .then(()=>{
             window.location.reload();
         });
-        console.log("Exec");
     }
 
     const getImagePath=()=>{

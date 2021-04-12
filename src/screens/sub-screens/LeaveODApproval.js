@@ -3,16 +3,16 @@ import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
-import Alert from '@material-ui/lab/Alert';
 import GatePassStudentAccordion from '../../components/GatePassStudentAccordion';
 import Typography from "@material-ui/core/Typography";
 import ExploreIcon from "@material-ui/icons/Explore";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import HodLeaveApproveAccordion from "../../components/HodLeaveApproveAccordion";
 
-let allStudentPasses = [];
+let allPasses = [];
 
-export default function ODForms({passRoute}){
+export default function LeaveODApproval({passRoute}){
     const [statusCode,setStatusCode]=useState(0);
     let allShownPasses=[];
     let [shownRegularPasses,setShownRegularPasses]=useState([]);
@@ -32,7 +32,7 @@ export default function ODForms({passRoute}){
 
         // }
         if(responseBody.statusCode===200){
-            allStudentPasses=responseBody;
+            allPasses=responseBody;
         }
         setStatusCode(responseBody.statusCode);
     };
@@ -77,8 +77,10 @@ export default function ODForms({passRoute}){
                 tempPassList.splice(curPassIndex,1);
                 setShownCancelledPasses(tempPassList);
             }
-            for(let i=0;i<pass.passDetails.affectedClasses.length;i++){
-                pass.passDetails.affectedClasses[i]=passStatusNewValue;
+            if(passRoute==='odform'){
+                for(let i=0;i<pass.passDetails.affectedClasses.length;i++){
+                    pass.passDetails.affectedClasses[i]=passStatusNewValue;
+                }
             }
             let tempPassList=[];
             let added=false;
@@ -158,18 +160,18 @@ export default function ODForms({passRoute}){
                 setShownCancelledPasses(tempPassList);
             }
             allShownPasses=[];
-            allStudentPasses=[];
+            allPasses=[];
             for(const presentPass of shownRegularPasses){
                 allShownPasses.push(presentPass);
-                allStudentPasses.push(presentPass);
+                allPasses.push(presentPass);
             }
             for(const presentPass of shownCancelledPasses){
                 allShownPasses.push(presentPass);
-                allStudentPasses.push(presentPass);
+                allPasses.push(presentPass);
             }
             for(const presentPass of shownApprovedPasses){
                 allShownPasses.push(presentPass);
-                allStudentPasses.push(presentPass);
+                allPasses.push(presentPass);
             }
         }
     }
@@ -185,10 +187,10 @@ export default function ODForms({passRoute}){
     const getSearchResults=()=>{
         let filteredResults=[];
         if(searchText==='' || typeof searchText==='undefined'){
-            filteredResults=allStudentPasses;
+            filteredResults=allPasses;
         }
         else{
-            for(const studentDetailIteration of allStudentPasses){
+            for(const studentDetailIteration of allPasses){
                 if(studentDetailIteration.personalDetails.name.toLowerCase().includes(searchText.toLowerCase()) || studentDetailIteration.personalDetails.clgID.toLowerCase().includes(searchText.toLowerCase())){
                     filteredResults.push(studentDetailIteration);
                 }
@@ -260,6 +262,25 @@ export default function ODForms({passRoute}){
         getSearchResults();
     }
 
+    const getSegmentTypeNameRegular=()=>{
+        if(passRoute==='odform'){
+            return "Regular OD Requests";
+        }
+        return "Pending Leave Approvals";
+    }
+    const getSegmentTypeNameCancelled=()=>{
+        if(passRoute==='odform'){
+            return "Cancelled OD Requests";
+        }
+        return "Cancelled Leaves";
+    }
+    const getSegmentTypeNameApproved=()=>{
+        if(passRoute==='odform'){
+            return "Approved OD Requests";
+        }
+        return "Approved Leaves";
+    }
+
     const getAccordionUI=()=>{
         return (
             <div>
@@ -269,13 +290,15 @@ export default function ODForms({passRoute}){
                     </div>}
                     {shownRegularPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                         <ExploreIcon fontSize={'large'}/>
-                        <Typography variant={'h4'} id={'gatePassSegmentText'}>Regular OD Requests</Typography>
+                        <Typography variant={'h4'} id={'gatePassSegmentText'}>{getSegmentTypeNameRegular()}</Typography>
                     </div>}
                     {shownRegularPasses.map((studentItem,index)=>(
                         <div>
                             {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'}
                                                        passJSON={studentItem} handlePassAction={handlePassStatusChange}
                                                        passRoute='odform'/>}
+                            {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'regular'}
+                                                                               passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>
                     ))}
                     {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -283,13 +306,15 @@ export default function ODForms({passRoute}){
                     </div>}
                     {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentCancelled'}>
                         <CancelIcon fontSize={'large'}/>
-                        <Typography variant={'h4'} id={'gatePassSegmentText'}>Cancelled OD Requests</Typography>
+                        <Typography variant={'h4'} id={'gatePassSegmentText'}>{getSegmentTypeNameCancelled()}</Typography>
                     </div>}
                     {shownCancelledPasses.map((studentItem,index)=>(
                         <div>
                             {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'}
                                                        passJSON={studentItem} handlePassAction={handlePassStatusChange}
                                                        passRoute='odform'/>}
+                            {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'cancelled'}
+                                                                                        passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>
                     ))}
                     {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
@@ -297,34 +322,20 @@ export default function ODForms({passRoute}){
                     </div>}
                     {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
                         <CheckCircleIcon fontSize={'large'}/>
-                        <Typography variant={'h4'} id={'gatePassSegmentText'}>Approved OD Requests</Typography>
+                        <Typography variant={'h4'} id={'gatePassSegmentText'}>{getSegmentTypeNameApproved()}</Typography>
                     </div>}
                     {shownApprovedPasses.map((studentItem,index)=>(
                         <div>
                             {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'}
                                                        passJSON={studentItem} handlePassAction={handlePassStatusChange}
                                                        passRoute='odform'/>}
+                            {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'approved'}
+                                                                                        passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>
                     ))}
             </div>
         );
     };
-
-    const errDiv=()=>{
-        return (
-            <div id='mentorNotAllocated'>
-                <Alert variant="filled" severity="error">
-                    You have not been assigned to a class
-                </Alert>
-            </div>
-        );
-    }
-
-    // const handleSnackbarClose=(event,reason)=>{
-    //     if (reason!=='clickaway'){
-    //         setOpenSnackbar(false);
-    //     }
-    // }
 
 
 
@@ -333,9 +344,6 @@ export default function ODForms({passRoute}){
             {statusCode===200 && getAccordionUI()}
             <Box height={12}/>
             {statusCode!==200 && statusCode!==404 && <CircularProgress size={24} color="secondary"/>}
-            {statusCode===404 && errDiv()}
         </div>
-
-
     );
 }

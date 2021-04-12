@@ -41,7 +41,6 @@ export default function GatePasses({passRoute}){
         if(responseBody.statusCode===200){
             allStudentPasses=responseBody;
         }
-        console.log(responseBody);
         setStatusCode(responseBody.statusCode);
     };
 

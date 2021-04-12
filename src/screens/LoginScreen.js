@@ -60,7 +60,6 @@ export default function LoginScreen(){
                     authToken:cookies.authToken
                 }
             );
-            console.log(responseBody.statusCode);
             if(responseBody.statusCode===401){
                 if(responseBody.status==="Account locked"){
                     setResponseMessage("Account Locked");
@@ -81,7 +80,6 @@ export default function LoginScreen(){
                 redirectToHome();
             }
             setResponseMessage(responseBody.status);
-            console.log(responseBody);
     }
 
     const redirectToHome=()=>{
@@ -135,7 +133,6 @@ export default function LoginScreen(){
             setSnackbarOpen(true);
         }
         setSignInWorking(false);
-        console.log(responseBody);
     }
 
 

@@ -24,7 +24,7 @@ import WorkOffIcon from '@material-ui/icons/WorkOff';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
 import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
-import ODForms from "./sub-screens/ODForms";
+import LeaveODApproval from "./sub-screens/LeaveODApproval";
 import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
@@ -59,19 +59,27 @@ const styles=makeStyles((theme)=>({
 
 
 
+let isHOD;
+
+if(sessionStorage.HOD==='true'){
+    isHOD=true;
+}else{
+    isHOD=false;
+}
+
+
+
 export default function DashboardHome(){
     
     const useStyles=styles();
-    // eslint-disable-next-line
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms passRoute={'odform'}/>,<FacultyLeaveApplication/>];
-    let subScreenNames=["Home","Profile","Mentoring","Student Passes","OD Forms","Leave Management"];
+    let subScreenList=[<div/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval passRoute={"hodLeaveApprove"}/>,<div/>,<StudentGatePassMedical/>,<LeaveODApproval passRoute={'odform'}/>,<MentorDiary/>];
+    let subScreenNames=["Home","Profile","Leave Management","Leave Approval","Course Info","Student Gate Passes","OD Forms","Mentoring Diary"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
-    console.log("sessionStorage "+sessionStorage.DASHBOARD_SUB_SCREEN_ID);
 
     const logoutRoutine=()=>{
         removeCookie("dbID");
@@ -90,7 +98,6 @@ export default function DashboardHome(){
     const getMainUIContent=()=>{
         return subScreenList[curScreen];
     }
-
     const handleSubScreenChange=(index)=>{
         sessionStorage.DASHBOARD_SUB_SCREEN_ID=index;
         setCurScreen(index);
@@ -100,6 +107,7 @@ export default function DashboardHome(){
     useEffect(()=>{
         if(typeof sessionStorage.USER_DB_ID==='undefined' || typeof sessionStorage.USER_AUTH_TOKEN==='undefined'){
             history.replace('/');
+            return;
         }
         // eslint-disable-next-line
     },[]);
@@ -147,28 +155,29 @@ export default function DashboardHome(){
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
-                    <ListItem button key="Attendance" id="dashboardAttendanceBtn" onClick={()=>handleSubScreenChange(5)}>
+                    {!isHOD && <ListItem button key="FacultyAttendance" id="dashboardAttendanceBtn"
+                               onClick={() => handleSubScreenChange(2)}>
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
                         <ListItemText primary="Leave Management"/>
-                    </ListItem>
-                    {sessionStorage.HOD && <ListItem button key="LeaveApproval" id="dashboardAttendanceBtn"
-                               onClick={() => handleSubScreenChange(5)}>
+                    </ListItem>}
+                    {isHOD && <ListItem button key="LeaveApproval" id="dashboardAttendanceBtn"
+                               onClick={() => handleSubScreenChange(3)}>
                         <ListItemIcon>{<LockOpenIcon/>}</ListItemIcon>
                         <ListItemText primary="Leave Approval"/>
                     </ListItem>}
-                    <ListItem button key="Course Info" id="dashboardCourseBtn">
+                    <ListItem button key="Course Info" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(4)}>
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(3)}>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(5)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
                         <ListItemText primary="Student Passes"/>
                     </ListItem>}
-                    <ListItem button key="OD Forms" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(4)}>
+                    <ListItem button key="OD Forms" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(6)}>
                         <ListItemIcon>{<WorkOffIcon/>}</ListItemIcon>
                         <ListItemText primary="OD Forms"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(2)}>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(7)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>
                     </ListItem>}
