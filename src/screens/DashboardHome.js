@@ -26,6 +26,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
 import ODForms from "./sub-screens/ODForms";
 import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 
 const sidebarWidth=240;
@@ -65,7 +66,7 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms/>,<FacultyLeaveApplication/>];
+    let subScreenList=[<div/>,<Profile/>,<MentorDiary/>,<StudentGatePassMedical/>,<ODForms passRoute={'odform'}/>,<FacultyLeaveApplication/>];
     let subScreenNames=["Home","Profile","Mentoring","Student Passes","OD Forms","Leave Management"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
@@ -150,6 +151,11 @@ export default function DashboardHome(){
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
                         <ListItemText primary="Leave Management"/>
                     </ListItem>
+                    {sessionStorage.HOD && <ListItem button key="LeaveApproval" id="dashboardAttendanceBtn"
+                               onClick={() => handleSubScreenChange(5)}>
+                        <ListItemIcon>{<LockOpenIcon/>}</ListItemIcon>
+                        <ListItemText primary="Leave Approval"/>
+                    </ListItem>}
                     <ListItem button key="Course Info" id="dashboardCourseBtn">
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>

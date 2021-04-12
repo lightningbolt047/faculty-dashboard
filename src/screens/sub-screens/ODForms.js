@@ -12,7 +12,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 let allStudentPasses = [];
 
-export default function ODForms(){
+export default function ODForms({passRoute}){
     const [statusCode,setStatusCode]=useState(0);
     let allShownPasses=[];
     let [shownRegularPasses,setShownRegularPasses]=useState([]);
@@ -25,7 +25,7 @@ export default function ODForms(){
 
 
     const getInfoFromBackend=async ()=>{
-        let responseBody=await backendService('GET',`/odform/`,
+        let responseBody=await backendService('GET',`/${passRoute}/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         // if(responseBody.statusCode===404){
@@ -38,7 +38,7 @@ export default function ODForms(){
     };
 
     const sendPassStatusUpdateToBackend=async (passID,passStatusNewValue)=>{
-        let responseBody=await backendService('POST',`/odform/`,
+        let responseBody=await backendService('POST',`/${passRoute}/`,
             {
                 passID:passID,
                 passStatus:passStatusNewValue
@@ -171,10 +171,16 @@ export default function ODForms(){
                 allShownPasses.push(presentPass);
                 allStudentPasses.push(presentPass);
             }
-
-
         }
     }
+
+    //TODO add new function to change pass status for faculty leave
+
+    // const handleFacultyLeavePassChange=(index,newLeaveStatus,leaveStatus)=>{
+    //     if(leaveStatus==='pending'){
+    //
+    //     }
+    // }
 
     const getSearchResults=()=>{
         let filteredResults=[];
@@ -192,7 +198,11 @@ export default function ODForms(){
             return parseInt(a.personalDetails.clgID.slice(a.personalDetails.clgID.length-5))-parseInt(b.personalDetails.clgID.slice(b.personalDetails.clgID.length-5))
         });
         allShownPasses=filteredResults;
-        splitPassesByType();
+        if(passRoute==='odform'){
+            splitPassesByType();
+        } else if(passRoute==='hodLeaveApprove'){
+            splitFacultyLeavesByType();
+        }
     }
 
     const splitPassesByType=()=>{
@@ -209,6 +219,24 @@ export default function ODForms(){
             }
             else if(pass.passDetails.affectedClasses[0].approvalStatus==='cancelled'){
                 cancelledPassList.push(pass);
+            }
+        }
+        setShownRegularPasses(regularPassList);
+        setShownCancelledPasses(cancelledPassList);
+        setShownApprovedPasses(approvedPassList);
+    }
+
+    const splitFacultyLeavesByType=()=>{
+        let regularPassList=[],cancelledPassList=[],approvedPassList=[];
+        for(let pass of allShownPasses){
+            if(pass.passDetails.passStatus==='pending'){
+                regularPassList.push(pass);
+            }
+            else if(pass.passDetails.passStatus==='cancelled'){
+                cancelledPassList.push(pass);
+            }
+            else if(pass.passDetails.passStatus==='approved'){
+                approvedPassList.push(pass);
             }
         }
         setShownRegularPasses(regularPassList);
@@ -245,7 +273,9 @@ export default function ODForms(){
                     </div>}
                     {shownRegularPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute='odform'/>
+                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'}
+                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                       passRoute='odform'/>}
                         </div>
                     ))}
                     {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -257,7 +287,9 @@ export default function ODForms(){
                     </div>}
                     {shownCancelledPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute='odform'/>
+                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'}
+                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                       passRoute='odform'/>}
                         </div>
                     ))}
                     {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
@@ -269,7 +301,9 @@ export default function ODForms(){
                     </div>}
                     {shownApprovedPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute='odform'/>
+                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'}
+                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                       passRoute='odform'/>}
                         </div>
                     ))}
             </div>

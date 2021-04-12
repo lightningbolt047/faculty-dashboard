@@ -77,6 +77,7 @@ export default function LoginScreen(){
                 sessionStorage.USER_AUTH_TOKEN=cookies.authToken;
                 sessionStorage.FACULTY_TYPE=responseBody.facultyType;
                 sessionStorage.FACULTY_NAME=responseBody.name;
+                sessionStorage.HOD=responseBody.hod;
                 redirectToHome();
             }
             setResponseMessage(responseBody.status);
@@ -119,6 +120,7 @@ export default function LoginScreen(){
             sessionStorage.DASHBOARD_SUB_SCREEN_ID=0;
             sessionStorage.FACULTY_TYPE=responseBody.facultyType;
             sessionStorage.FACULTY_NAME=responseBody.name;
+            sessionStorage.HOD=responseBody.hod;
             dbID=responseBody.dbID; 
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);

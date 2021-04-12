@@ -90,6 +90,10 @@ body {
   font-weight: 700;
 }
 
+#facultyLeaveAccordionTextPrimary {
+  font-weight: 100;
+}
+
 .accordionDividerContent{
   padding-left: 10px;
   padding-right: 10px;
@@ -183,7 +187,8 @@ body {
 }
 
 .attendanceCard {
-  margin: 60px;
+  margin: 50px;
   width: 450px;
   height: 325px;
+  padding: 10px;
 }

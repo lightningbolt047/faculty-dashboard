@@ -5,39 +5,62 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
 import CheckIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import LockIcon from '@material-ui/icons/Lock';
 import IconButton from "@material-ui/core/IconButton";
-import { CheckCircleOutlined } from '@material-ui/icons';
+import Button from "@material-ui/core/Button";
 
-export default function FacultyLeaveAccordion(){
+export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveChange}){
+
+    const getDateFormatFromISODate=(dateISO)=>{
+        const dateObject=new Date(dateISO);
+        return dateObject.getDate()+"/"+(dateObject.getMonth()+1)+"/"+(dateObject.getFullYear());
+    }
+
+    const approveLeaveHandler=(event)=>{
+        event.stopPropagation();
+        handleLeaveChange(accordionID,'pending');
+    }
+    const cancelLeaveHandler=(event)=>{
+        event.stopPropagation();
+        handleLeaveChange(accordionID,'facultyCancelled');
+    }
     
     return (
         <div className="accordionSpace">
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Faculty ID</Typography>
+                        <Typography className="accordionText" id="facultyLeaveAccordionTextPrimary">From: <b>{getDateFormatFromISODate(passJSON.departureTime)}</b></Typography>
                     </Box>
                     <Box width={8}/>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextSecondary">Faculty Name</Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">To: <b>{getDateFormatFromISODate(passJSON.arrivalTime)}</b></Typography>
                     </Box>
                     <Box width={8}/>
+                    <Box flex={1}>
+                        {passJSON.leaveStatus==='approved' && <Button variant={'outlined'} size={'small'} id={'okColor'}>
+                            Approved By HOD
+                        </Button>}
+                        {passJSON.leaveStatus==='pending' && <Button variant={'outlined'} size={'small'} id={'alertColor'}>
+                            Pending for Approval
+                        </Button>}
+                        {passJSON.leaveStatus==='cancelled' && <Button variant={'outlined'} size={'small'} id={'warningColor'}>
+                            Cancelled By HOD
+                        </Button>}
+                        {passJSON.leaveStatus==='facultyCancelled' && <Button variant={'outlined'} size={'small'} id={'warningColor'}>
+                            Withdrawn
+                        </Button>}
+                    </Box>
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
                     <Box width={12}/>
-                        <IconButton size="small">
-                            <CheckIcon/>
+                        <IconButton size="small" disabled={passJSON.leaveStatus==='approved' || passJSON.leaveStatus==='pending' || passJSON.leaveStatus==='cancelled'} onClick={approveLeaveHandler}>
+                            <CheckIcon id={passJSON.leaveStatus!=='approved' && passJSON.leaveStatus!=='pending' && passJSON.leaveStatus!=='cancelled' && 'okColor'}/>
                         </IconButton>
-                        <IconButton size="small">
-                            <CancelIcon/>
-                        </IconButton>
-                        <IconButton size="small">
-                        <LockIcon/>
+                        <IconButton size="small" disabled={passJSON.leaveStatus==='cancelled' || passJSON.leaveStatus==='facultyCancelled'} onClick={cancelLeaveHandler}>
+                            <CancelIcon id={(passJSON.leaveStatus!=='cancelled' && passJSON.leaveStatus!=='facultyCancelled') && 'warningColor'}/>
                         </IconButton>
                     <Box width={8}/>
                 </AccordionSummary>
@@ -48,19 +71,7 @@ export default function FacultyLeaveAccordion(){
                                 <b>Leave Details</b>
                                 <Box height={10}/>
                                 <div>
-                                    <span>Leave Reason</span>: Wedding
-                                </div>
-
-                                <div>
-                                    <span>From Date</span>: 12/04/2021
-                                </div>
-
-                                <div>
-                                    <span>To Date</span>: 20/04/2021
-                                </div>
-
-                                <div>
-                                    <span>Contact Details</span>:   8324324234
+                                    <span>Leave Reason</span>: <b>{passJSON.reason}</b>
                                 </div>
                             </div>
                         </Box>
