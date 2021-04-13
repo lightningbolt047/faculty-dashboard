@@ -192,3 +192,17 @@ body {
   height: 325px;
   padding: 10px;
 }
+
+.homeCard {
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 90%;
+  height: 325px;
+  padding: 15px;
+}
+
+.timetable {
+  min-width: 750px;
+}

@@ -27,6 +27,7 @@ import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
 import LeaveODApproval from "./sub-screens/LeaveODApproval";
 import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import HomeScreen from './sub-screens/HomeScreen';
 
 
 const sidebarWidth=240;
@@ -64,7 +65,7 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<div/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval passRoute={"hodLeaveApprove"}/>,<div/>,<StudentGatePassMedical/>,<LeaveODApproval passRoute={'odform'}/>,<MentorDiary/>];
+    let subScreenList=[<HomeScreen/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval passRoute={"hodLeaveApprove"}/>,<div/>,<StudentGatePassMedical/>,<LeaveODApproval passRoute={'odform'}/>,<MentorDiary/>];
     let subScreenNames=["Home","Profile","Leave Management","Leave Approval","Course Info","Student Gate Passes","OD Forms","Mentoring Diary"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const [isHOD,setIsHOD]=useState(false);
