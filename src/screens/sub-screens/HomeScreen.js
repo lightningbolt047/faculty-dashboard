@@ -40,7 +40,7 @@ const courseRows = [
 ];
 
 
-export default function FacultyLeaveApplication(){
+export default function HomeScreen(){
     
     return (
         <div>
