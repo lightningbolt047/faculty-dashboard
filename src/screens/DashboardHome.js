@@ -58,17 +58,6 @@ const styles=makeStyles((theme)=>({
 }));
 
 
-
-let isHOD;
-
-if(sessionStorage.HOD==='true'){
-    isHOD=true;
-}else{
-    isHOD=false;
-}
-
-
-
 export default function DashboardHome(){
     
     const useStyles=styles();
@@ -78,6 +67,7 @@ export default function DashboardHome(){
     let subScreenList=[<div/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval passRoute={"hodLeaveApprove"}/>,<div/>,<StudentGatePassMedical/>,<LeaveODApproval passRoute={'odform'}/>,<MentorDiary/>];
     let subScreenNames=["Home","Profile","Leave Management","Leave Approval","Course Info","Student Gate Passes","OD Forms","Mentoring Diary"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
+    const [isHOD,setIsHOD]=useState(false);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
 
@@ -109,6 +99,12 @@ export default function DashboardHome(){
             history.replace('/');
             return;
         }
+        if(sessionStorage.HOD==='true'){
+            setIsHOD(true);
+        }else{
+            setIsHOD(false);
+        }
+
         // eslint-disable-next-line
     },[]);
 
