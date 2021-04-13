@@ -16,6 +16,7 @@ const medicalLeaveRouter=require('./routes/medicalLeaveRouter');
 const odFormRouter=require('./routes/odFormRouter');
 const facultyLeaveApplyRouter=require('./routes/facultyLeaveApplyRouter');
 const hodLeaveApproveRouter=require('./routes/hodLeaveApproveRouter');
+const facultyTimetableRouter=require('./routes/facultyTimetableRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -56,6 +57,7 @@ app.use('/studentMedical',medicalLeaveRouter);
 app.use('/odform',odFormRouter);
 app.use('/facultyLeave',facultyLeaveApplyRouter);
 app.use('/hodLeaveApprove',hodLeaveApproveRouter);
+app.use('/timetable',facultyTimetableRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{
