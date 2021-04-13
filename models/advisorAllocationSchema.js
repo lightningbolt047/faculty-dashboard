@@ -24,6 +24,10 @@ const advisorAllocationSchema=new Schema({
             }
         ],
         required:true
+    },
+    section:{
+        type:String,
+        required:true
     }
 });
 
