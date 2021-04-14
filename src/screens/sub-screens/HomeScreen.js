@@ -84,7 +84,7 @@ export default function HomeScreen(){
             }
             dayIndex++;
         }
-        let daysOfWeek=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        let daysOfWeek=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         for(let i=0;i<daysOfWeek.length;i++){
             timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTable[i][0], timeTable[i][1], timeTable[i][2], timeTable[i][3],timeTable[i][4],timeTable[i][5],timeTable[i][6]));
         }
