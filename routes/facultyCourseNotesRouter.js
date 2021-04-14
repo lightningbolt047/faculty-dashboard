@@ -63,7 +63,7 @@ facultyCourseNotesRouter.route('/')
 
 facultyCourseNotesRouter.route('/:courseID')
     .get(checkCredentials,async (req,res,next)=>{
-        FacultyCourseNotes.find({facultyID:req.headers['dbid'],year:process.env.CUR_ACADEMIC_YEAR,courseID:req.params.courseID,sem:process.env.CUR_SEM_TYPE})
+        FacultyCourseNotes.findOne({facultyID:req.headers['dbid'],year:process.env.CUR_ACADEMIC_YEAR,courseID:req.params.courseID,sem:process.env.CUR_SEM_TYPE})
             .then((noteDocument)=>{
                 if(typeof noteDocument==='undefined'){
                     res.statusCode=404;

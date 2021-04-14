@@ -37,5 +37,5 @@ const facultyCourseNotesSchema=new Schema({
     }
 });
 
-var FacultyCourseNotesSchema=mongoose.model('FacultyCourseNotesSchema',facultyCourseNotesSchema);
+var FacultyCourseNotesSchema=mongoose.model('FacultyCourseNotes',facultyCourseNotesSchema);
 module.exports=FacultyCourseNotesSchema;

@@ -20,7 +20,6 @@ const semesterProgressionSchema=new Schema({
             courseID:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'Course',
-                unique:true
             },
             classesTaken:{
                 type:Number,
