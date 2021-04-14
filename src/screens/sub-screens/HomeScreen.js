@@ -80,7 +80,7 @@ export default function HomeScreen(){
         let dayIndex=0;
         for(const day of receivedTimetable){
             for(const hour of day){
-                timeTable[dayIndex][hour.hour]=hour.courseName;
+                timeTable[dayIndex][hour.hour]=hour.section;
             }
             dayIndex++;
         }
