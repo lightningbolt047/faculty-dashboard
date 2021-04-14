@@ -4,12 +4,62 @@ const facultyCourseNotesRouter=express.Router();
 
 const User=require('../models/userSchema');
 const FacultyCourseNotes=require('../models/facultyCourseNotesSchema');
+const SemesterProgression=require('../models/semesterProgressionSchema');
 
 const getSectionsFromAdvisorAllocationIDs=require('../services/getSectionsFromAdvisorAllocationIDs');
 const getCourseNameFromCourseID=require('../services/getCourseNameFromCourseID');
 const getFacultyNameFromFacultyID=require('../services/getFacultyNameFromFacultyID');
 const checkCoursePresentForFaculty=require('../services/checkCoursePresentForFaculty');
 const checkCredentials=require('../services/checkCredentialsService');
+
+
+facultyCourseNotesRouter.route('/')
+    .get(checkCredentials,(req,res,next)=>{
+        SemesterProgression.find({facultyID:req.headers['dbid'],sem:process.env.CUR_SEM_TYPE})
+            .then(async (semesterProgressions)=>{
+                if(!semesterProgressions || semesterProgressions.length===0){
+                    res.statusCode=404;
+                    res.json({
+                        status:"Resource not found"
+                    });
+                    return;
+                }
+                let maxYear=semesterProgressions[0].year;
+                let latestSemesterProgression=semesterProgressions[0];
+                for(let semesterProgression of semesterProgressions){
+                    if(semesterProgression.year>=maxYear){
+                        maxYear=semesterProgression.year;
+                        latestSemesterProgression=semesterProgression;
+                    }
+                }
+
+
+                let sendDocument=[];
+                try{
+                    for(const courseProgression of latestSemesterProgression.courseProgression){
+                        let courseDetails={
+                            courseName:await getCourseNameFromCourseID(courseProgression.courseID,'courseName'),
+                            courseCode:await getCourseNameFromCourseID(courseProgression.courseID,'courseCode'),
+                            courseCredits:await getCourseNameFromCourseID(courseProgression.courseID,'courseCredits'),
+                            courseType:await getCourseNameFromCourseID(courseProgression.courseID,'courseType')
+                        };
+                        sendDocument.push(courseDetails);
+                    }
+                    res.statusCode=200;
+                    res.json(sendDocument);
+                }catch(e){
+                    res.statusCode=500;
+                    res.json({
+                        status:"Internal Server Error"
+                    });
+                }
+            },(err)=>{
+                res.statusCode=500;
+                res.json({
+                    status:"Internal Server Error"
+                });
+            })
+    });
 
 facultyCourseNotesRouter.route('/:courseID')
     .get(checkCredentials,async (req,res,next)=>{

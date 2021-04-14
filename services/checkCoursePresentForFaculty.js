@@ -1,5 +1,5 @@
 
-SemesterProgression=require('../models/semesterProgressionSchema');
+const SemesterProgression=require('../models/semesterProgressionSchema');
 
 module.exports=async (facultyID,courseID)=>{
     if(typeof courseID==='undefined'){

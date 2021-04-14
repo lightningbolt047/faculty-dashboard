@@ -13,5 +13,11 @@ module.exports=async (courseID,attribute)=>{
     else if(attribute==='courseCode'){
         return courseDocument.courseCode;
     }
+    else if(attribute==='courseCredits'){
+        return courseDocument.credits;
+    }
+    else if(attribute==='courseType'){
+        return courseDocument.courseType;
+    }
     return '0';
 }
