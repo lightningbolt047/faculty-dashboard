@@ -1,6 +1,6 @@
 import Box from '@material-ui/core/Box';
 // import CircularProgress from '@material-ui/core/CircularProgress';
-// import {useState,useEffect} from 'react';
+import {useState,useEffect} from 'react';
 // import Snackbar from '@material-ui/core/Snackbar';
 // import Alert from '@material-ui/lab/Alert';
 import Card from '@material-ui/core/Card';
@@ -14,39 +14,97 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import backendService from "../../services/backendService";
+// import FacultyAttendanceCard from "../../components/FacultyAttendanceCard";
 
 function createTimeTable(weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7) {
     return { weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7 };
 }
-  
-const timetableRows = [
-createTimeTable('Monday', 'POML', 'Free', 'CN', 'CD','CD Lab','CD Lab','SE'),
-createTimeTable('Tuesday', 'CD', 'CN', 'Free', 'SE','SE Lab','SE Lab','POML'),
-createTimeTable('Wednesday', 'Elective', 'SE', 'CN', 'CD','EVS','EVS','CD'),
-createTimeTable('Thursday', 'EVS', 'CD', 'Free', 'SE','POML Lab','POML Lab','CN'),
-createTimeTable('Friday', 'Elective', 'POML', 'SE', 'Free','CN Lab','CN Lab','Elective'),
-];
 
 function createCourseInfo(courseName, courseCode, courseCredits, courseType) {
     return { courseName, courseCode, courseCredits, courseType };
 }
-  
-const courseRows = [
-    createCourseInfo('Compiler Design', '15CSE311', 4, 'Core'),
-    createCourseInfo('Compiler Design Lab', '15CSE385', 1, 'Core'),
-    createCourseInfo('Principles of Machine Learning', '15CSE432', 2, 'Elective'),
-    createCourseInfo('Computer Networks', '15CSE312', 3, 'Core'),
-    createCourseInfo('Software Engineering', '15CSE313', 3, 'Core'),
-];
-
 
 export default function HomeScreen(){
+
+    const [timetableRows,setTimetableRows]=useState([]);
+    const [courseRows,setCourseRows]=useState([]);
+    // const [totalWorkingDays,setTotalWorkingDays]=useState(0);
+    // const [totalLeaveDays,setTotalLeaveDays]=useState(0);
+    // const [attendedDays,setAttendedDays]=useState(0);
+
+    const getTimetableFromServer=async ()=>{
+        let responseBody=await backendService('GET','/timetable',
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+            );
+        if(responseBody.statusCode===200){
+            setTimetableInTable(responseBody)
+        }
+    }
+
+    const getEnrolledCoursesFromServer=async ()=>{
+        let responseBody=await backendService('GET','/courseNotes',
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        if(responseBody.statusCode===200){
+            setEnrolledCoursesInTable(responseBody);
+        }
+    }
+
+    // const getAttendanceDetails=async ()=>{
+    //     let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
+    //     if(responseBody.statusCode===200){
+    //         setTotalWorkingDays(responseBody.totalWorkingDays);
+    //         setTotalLeaveDays(responseBody.totalLeaveDays);
+    //         setAttendedDays(responseBody.attendedDays);
+    //     }
+    // }
+
+    const setEnrolledCoursesInTable=(receivedCourses)=>{
+        let courseRowsTemp=[];
+        for(const course of receivedCourses){
+            courseRowsTemp.push(createCourseInfo(course.courseName,course.courseCode,course.courseCredits,course.courseType));
+        }
+        setCourseRows(courseRowsTemp);
+    }
+
+    const setTimetableInTable=(receivedTimetable)=>{
+        let timeTable=[];
+        let timeTableRowsTemp=[];
+        for(let i=0;i<7;i++){
+            timeTable.push([]);
+            for(let j=0;j<7;j++){
+                timeTable[i].push("Free");
+            }
+        }
+        let dayIndex=0;
+        for(const day of receivedTimetable){
+            for(const hour of day){
+                timeTable[dayIndex][hour.hour]=hour.courseName;
+            }
+            dayIndex++;
+        }
+        let daysOfWeek=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        for(let i=0;i<daysOfWeek.length;i++){
+            timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTable[i][0], timeTable[i][1], timeTable[i][2], timeTable[i][3],timeTable[i][4],timeTable[i][5],timeTable[i][6]));
+        }
+        setTimetableRows(timeTableRowsTemp);
+    }
+
+
+    useEffect(()=>{
+       getTimetableFromServer();
+       getEnrolledCoursesFromServer();
+       // getAttendanceDetails();
+       // eslint-disable-next-line
+    },[]);
+
     
     return (
         <div>
-            <Grid container spacing={3} alignContent="center" justify="center">
+            <Grid container spacing={3} direction={'row'} alignContent="center" justify="center">
                 <Grid item>
-                    <Card className='homeCard' variant="outlined">
+                    <Card className='homeEnrolledCoursesCard' variant="outlined">
                         <CardContent>
                             <Box flex={1}/>
                             <Typography  variant="h5" component="h2">
@@ -57,21 +115,21 @@ export default function HomeScreen(){
                                 <Table className='timetable' size="small">
                                     <TableHead>
                                     <TableRow>
-                                        <TableCell align="right">Course Name</TableCell>
-                                        <TableCell align="right">Course Code</TableCell>
-                                        <TableCell align="right">Course Credits</TableCell>
-                                        <TableCell align="right">Course Type</TableCell>
+                                        <TableCell align="center">Course Name</TableCell>
+                                        <TableCell align="center">Course Code</TableCell>
+                                        <TableCell align="center">Course Credits</TableCell>
+                                        <TableCell align="center">Course Type</TableCell>
                                     </TableRow>
                                     </TableHead>
                                     <TableBody>
                                     {courseRows.map((row) => (
                                         <TableRow key={row.name}>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell component="th" align="center" scope="row">
                                             {row.courseName}
                                         </TableCell>
-                                        <TableCell align="right">{row.courseCode}</TableCell>
-                                        <TableCell align="right">{row.courseCredits}</TableCell>
-                                        <TableCell align="right">{row.courseType}</TableCell>
+                                        <TableCell align="center">{row.courseCode}</TableCell>
+                                        <TableCell align="center">{row.courseCredits}</TableCell>
+                                        <TableCell align="center">{row.courseType}</TableCell>
                                         </TableRow>
                                     ))}
                                     </TableBody>
@@ -81,6 +139,9 @@ export default function HomeScreen(){
                         </CardContent>
                     </Card>
                 </Grid>
+                {/*<Grid item>*/}
+                {/*    <FacultyAttendanceCard totalWorkingDays={totalWorkingDays} attendedDays={attendedDays} totalLeaveDays={totalLeaveDays}/>*/}
+                {/*</Grid>*/}
             </Grid>
 
             <Grid container spacing={3} alignContent="center" justify="center">

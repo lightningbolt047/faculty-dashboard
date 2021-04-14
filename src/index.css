@@ -193,16 +193,23 @@ body {
   padding: 10px;
 }
 
-.homeCard {
-  margin-left: 50px;
-  margin-right: 50px;
+.homeEnrolledCoursesCard{
   margin-top: 25px;
   margin-bottom: 25px;
-  width: 90%;
-  height: 325px;
-  padding: 15px;
+  height: auto;
+  width: 100%;
+  padding: 5px;
 }
 
+.homeCard {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 100%;
+  height: auto;
+  padding: 5px;
+}
 .timetable {
   min-width: 750px;
 }
