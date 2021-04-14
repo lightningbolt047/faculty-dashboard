@@ -18,7 +18,7 @@ const semesterProgressionSchema=new Schema({
                 ref:'AdvisorAllocation'
             },
             courseID:{
-                type:mongoose.Schema.Types.ObjectId,
+                type:String,
                 ref:'Course',
             },
             classesTaken:{

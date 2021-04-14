@@ -18,6 +18,7 @@ const facultyLeaveApplyRouter=require('./routes/facultyLeaveApplyRouter');
 const hodLeaveApproveRouter=require('./routes/hodLeaveApproveRouter');
 const facultyTimetableRouter=require('./routes/facultyTimetableRouter');
 const facultyCourseNotesRouter=require('./routes/facultyCourseNotesRouter');
+const forumPostRouter=require('./routes/forumPostRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -60,6 +61,7 @@ app.use('/facultyLeave',facultyLeaveApplyRouter);
 app.use('/hodLeaveApprove',hodLeaveApproveRouter);
 app.use('/timetable',facultyTimetableRouter);
 app.use('/courseNotes',facultyCourseNotesRouter);
+app.use('/forum',forumPostRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{

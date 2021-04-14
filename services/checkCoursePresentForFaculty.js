@@ -9,10 +9,10 @@ module.exports=async (facultyID,courseID)=>{
     if(typeof allFacultySemProgression==='undefined' || allFacultySemProgression.length===0){
         return false;
     }
-    let semProgressionDocument;
-    let maxYear=allFacultySemProgression[0];
+    let semProgressionDocument=allFacultySemProgression[0];
+    let maxYear=allFacultySemProgression[0].year;
     for(const semProgression of allFacultySemProgression){
-        if(maxYear<semProgression.year){
+        if(maxYear<=semProgression.year){
             maxYear=semProgression.year;
             semProgressionDocument=semProgression;
         }

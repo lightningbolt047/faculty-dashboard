@@ -16,11 +16,11 @@ const forumPostSchema=new Schema({
         type:String,
         required:true
     },
-    upVotes:{
+    upvotes:{
         type:[String],
         ref:'User'
     },
-    downVotes:{
+    downvotes:{
         type:[String],
         ref:'User'
     },

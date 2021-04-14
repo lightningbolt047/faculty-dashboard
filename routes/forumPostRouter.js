@@ -40,14 +40,15 @@ forumPostRouter.route('/:courseID')
                 forumPosts.sort((a,b)=>{
                     return Date.parse(b.postDateTime)-Date.parse(a.postDateTime);
                 });
-                let sendForumPosts=forumPosts;
+                let sendForumPosts=[];
+                for(const post of forumPosts){
+                    sendForumPosts.push(post);
+                }
                 try{
                     for(let i=0;i<sendForumPosts.length;i++){
                         sendForumPosts[i].facultyName=await getFacultyNameFromFacultyID(sendForumPosts[i].facultyID);
                         sendForumPosts[i].facultyID=undefined;
-                        sendForumPosts[i].upVotes=sendForumPosts[i].upVotes.length;
-                        sendForumPosts[i].downVotes=sendForumPosts[i].downVotes.length;
-                        for(let j=0;j<sendForumPosts.comments.length;j++){
+                        for(let j=0;j<sendForumPosts[i].comments.length;j++){
                             sendForumPosts[i].comments[j].facultyName=await getFacultyNameFromFacultyID(sendForumPosts[i].comments[j].facultyID);
                             sendForumPosts[i].comments[j].facultyID=undefined;
                         }
@@ -101,8 +102,8 @@ forumPostRouter.route('/:courseID')
                 courseID:req.body.courseID,
                 postText:req.body.postText,
                 postDateTime:curDate.toISOString(),
-                upVotes:[],
-                downVotes:[],
+                upvotes:[],
+                downvotes:[],
                 comments:[]
             };
             ForumPost.create(insertDocument)
@@ -136,33 +137,85 @@ forumPostRouter.route('/')
             });
             return;
         }
-        if(req.body.reqType==='upVote'){
-            ForumPost.findByIdAndUpdate(req.body.postID,{$push:{'upVotes':req.headers['dbid']}})
-                .then(()=>{
-                    res.statusCode=200;
-                    res.json({
-                        status:"Post upVoted successfully"
-                    });
+        if(req.body.reqType==='upvote'){
+            ForumPost.findById(req.body.postID)
+                .then(async (document)=>{
+                    try{
+                        if(req.headers['dbid'] in document.downvotes){
+                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
+                        }
+                        if(req.headers['dbid'] in document.upvotes){
+                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
+                            res.statusCode=200;
+                            res.json({
+                               status:"Upvote removed successfully"
+                            });
+                            return;
+                        }
+                    }catch(e){
+                        res.statusCode=500;
+                        res.json({
+                            status:"Internal Server Error"
+                        });
+                    }
+                    ForumPost.findByIdAndUpdate(req.body.postID,{$push:{'upvotes':req.headers['dbid']}})
+                        .then(()=>{
+                            res.statusCode=200;
+                            res.json({
+                                status:"Post upvoted successfully"
+                            });
+                        },(err)=>{
+                            res.statusCode=500;
+                            res.json({
+                                status:"Internal Server Error"
+                            });
+                        });
                 },(err)=>{
                     res.statusCode=500;
                     res.json({
                         status:"Internal Server Error"
                     });
-                });
+                })
         }
-        else if(req.body.reqType==='downVote'){
-            ForumPost.findByIdAndUpdate(req.body.postID,{$push:{'downVotes':req.headers['dbid']}})
-                .then(()=>{
-                    res.statusCode=200;
-                    res.json({
-                        status:"Post downVoted successfully"
-                    });
+        else if(req.body.reqType==='downvote'){
+            ForumPost.findById(req.body.postID)
+                .then(async (document)=>{
+                    try{
+                        if(req.headers['dbid'] in document.upvotes){
+                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'upvotes':req.headers['dbid']}});
+                        }
+                        if(req.headers['dbid'] in document.downvotes){
+                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
+                            res.statusCode=200;
+                            res.json({
+                                status:"Downvote removed successfully"
+                            });
+                            return;
+                        }
+                    }catch(e){
+                        res.statusCode=500;
+                        res.json({
+                            status:"Internal Server Error"
+                        });
+                    }
+                    ForumPost.findByIdAndUpdate(req.body.postID,{$push:{'downvotes':req.headers['dbid']}})
+                        .then(()=>{
+                            res.statusCode=200;
+                            res.json({
+                                status:"Post downvoted successfully"
+                            });
+                        },(err)=>{
+                            res.statusCode=500;
+                            res.json({
+                                status:"Internal Server Error"
+                            });
+                        });
                 },(err)=>{
                     res.statusCode=500;
                     res.json({
                         status:"Internal Server Error"
                     });
-                });
+                })
         }
     });
 
