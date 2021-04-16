@@ -27,7 +27,7 @@ export default function FacultyAttendanceCard({totalWorkingDays,attendedDays,tot
         <Card className='attendanceCard' variant="outlined">
             <CardContent>
                 <Box flex={1}/>
-                <Typography  variant="h5" component="h2">
+                <Typography  variant="h5" color={"secondary"} component="h2">
                     Faculty Attendance Details
                 </Typography>
                 <Box height={10}/>

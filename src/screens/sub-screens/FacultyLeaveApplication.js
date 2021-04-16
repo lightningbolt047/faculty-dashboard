@@ -171,7 +171,7 @@ export default function FacultyLeaveApplication(){
                 <Grid item>
                     <Card className='attendanceCard' variant="outlined">
                         <CardContent>
-                            <Typography  variant="h5" component="h2">
+                            <Typography  variant="h5" color={"secondary"} component="h2">
                             Apply Leave
                             </Typography>
                             <Box height={10}/>

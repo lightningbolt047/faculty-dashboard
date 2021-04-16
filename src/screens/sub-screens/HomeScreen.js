@@ -74,7 +74,7 @@ export default function HomeScreen(){
         for(let i=0;i<7;i++){
             timeTable.push([]);
             for(let j=0;j<7;j++){
-                timeTable[i].push("Free");
+                timeTable[i].push(" ");
             }
         }
         let dayIndex=0;
@@ -107,8 +107,8 @@ export default function HomeScreen(){
                     <Card className='homeEnrolledCoursesCard' variant="outlined">
                         <CardContent>
                             <Box flex={1}/>
-                            <Typography  variant="h5" component="h2">
-                            Your Enrolled Courses
+                            <Typography  variant="h5" color={"secondary"} component="h2">
+                                Your Enrolled Courses
                             </Typography>
                             <Box height={8}/>
                             <TableContainer component={Paper}>
@@ -149,7 +149,7 @@ export default function HomeScreen(){
                     <Card className='homeCard' variant="outlined">
                         <CardContent>
                             <Box flex={1}/>
-                            <Typography  variant="h5" component="h2">
+                            <Typography  variant="h5" color={"secondary"} component="h2">
                             Your Timetable
                             </Typography>
                             <Box height={8}/>
