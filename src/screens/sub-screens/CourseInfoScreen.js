@@ -5,52 +5,55 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import backendService from "../../services/backendService";
 import CourseTabScreen from "./CourseTabScreen";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
-function GetTabIndexUI({tabIndex}){
-    return (
-        <div>
-            {<CourseTabScreen passRoute={coursesRedirection[tabIndex]}/>}
-        </div>
-    );
-}
-
-let coursesRedirection=[];
-
-
-export default function StudentGatePassMedical(){
+let key=1;
+export default function CourseInfoScreen(){
     const [tabIndex,setTabIndex]=useState(0);
     const [courses,setCourses]=useState([]);
+    const [dataAvailable,setDataAvailable]=useState(false);
 
 
     const getCoursesFromBackend=async ()=>{
+        setDataAvailable(false);
         let responseBody=await backendService('GET','/courseNotes',
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         if(responseBody.statusCode===200){
             setCourses(responseBody);
-            coursesRedirection=responseBody;
+            setDataAvailable(true);
         }
     }
 
     const handleTabIndexChange=(event,value)=>{
         setTabIndex(value);
+        key+=1;
     }
 
     useEffect(()=>{
         getCoursesFromBackend();
     },[]);
 
+    const getMainUI=()=>{
+        return (
+            <div>
+                <Paper variant="outlined">
+                    <Tabs value={tabIndex} onChange={handleTabIndexChange}>
+                        {courses.map((item,index)=>(
+                            <Tab label={item.courseName}/>
+                        ))}
+                    </Tabs>
+                </Paper>
+                <CourseTabScreen key={key} course={courses[tabIndex]}/>
+            </div>
+        );
+    }
+
     return (
         <div>
-            <Paper variant="outlined">
-                <Tabs value={tabIndex} onChange={handleTabIndexChange}>
-                    {courses.map((item,index)=>(
-                        <Tab label={item.courseName}/>
-                    ))}
-                </Tabs>
-            </Paper>
-            <GetTabIndexUI tabIndex={tabIndex}></GetTabIndexUI>
+            {!dataAvailable && <CircularProgress size={24} color="secondary"/>}
+            {dataAvailable && getMainUI()}
         </div>
 
     );

@@ -13,12 +13,35 @@ import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
 
 
-export default function ForumPostAccordion(){
-    const upvoteClick = () => {
+export default function ForumPostAccordion({postIndex,post,voteClickHandler}){
+
+    const getUpvoteButtonVariant=()=>{
+        for(const facultyID of post.upvotes){
+            if(facultyID===sessionStorage.USER_DB_ID){
+                return "default";
+            }
+        }
+        return "outlined";
+    }
+
+    const getDownvoteButtonVariant=()=>{
+        for(const facultyID of post.downvotes){
+            if(facultyID===sessionStorage.USER_DB_ID){
+                return "default";
+            }
+        }
+        return "outlined";
+    }
+
+    const upvoteClick = (event) => {
+        event.stopPropagation();
+        voteClickHandler(postIndex,'upvote');
         console.info('You Upvoted.');
     };
     
-    const downvoteClick = () => {
+    const downvoteClick = (event) => {
+        event.stopPropagation();
+        voteClickHandler(postIndex,'downvote');
         console.info('You Downvoted.');
     };
 
@@ -27,24 +50,28 @@ export default function ForumPostAccordion(){
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Sri Devi</Typography>
+                        <Typography className="accordionText" id="accordionTextPrimary">{post.facultyName}</Typography>
                     </Box>
                     <Box width={8}/>
                     <Box flex={2}>
-                        <Typography className="accordionText" id="accordionTextSecondary">Can we give next hour free Can we give next hour free Can we give next hour free Can we give next hour free</Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">{post.postText}</Typography>
                     </Box>
                     <Box width={8}/>
-                    <Chip icon={<ThumbUpIcon/>} label="1" clickable color="primary" onClick={upvoteClick} variant="default"/>
+                    <Chip icon={<ThumbUpIcon/>} label={post.upvotes.length} clickable color="primary" onClick={upvoteClick} variant={getUpvoteButtonVariant()}/>
                     <Box width={8}/>
-                    <Chip icon={<ThumbDownIcon/>} label="1" clickable color="secondary" onClick={downvoteClick} variant="outlined"/>
+                    <Chip icon={<ThumbDownIcon/>} label={post.downvotes.length} clickable color="secondary" onClick={downvoteClick} variant={getDownvoteButtonVariant()}/>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container>
                         <Box flex={1}>
                             <div className='accordionDividerContent'>
-                                <b>VJK</b>:    Yes mam.  
-                                <Box height={4}/>
-                                <b>Rick Raaj</b>:    No mam, I need one more hour.   
+                                {post.comments.map((comment,index)=>(
+                                    <div>
+                                        <span><b>{comment.facultyName+" : "}</b></span>
+                                        <span>{comment.commentText}</span>
+                                        <Box height={4}/>
+                                    </div>
+                                ))}
                                 <Box height={8}/>
                                 <TextField variant="outlined" color="secondary" label="Your Comment" size="small"/>
                                 <IconButton>

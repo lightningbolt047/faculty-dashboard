@@ -7,20 +7,25 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 
-export default function CourseNotesAccordion(){
+export default function CourseNotesAccordion({note}){
+
+    const noteDate=new Date(note.date);
+    const dateString=noteDate.getDate()+"/"+(noteDate.getMonth()+1)+"/"+noteDate.getFullYear();
+
+
     return (
         <div className="accordionSpace">
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Date: 12/04/2021</Typography>
+                        <Typography className="accordionText" id="accordionTextPrimary">Date: {dateString}</Typography>
                     </Box>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container>
                         <Box flex={1}>
                             <div className='accordionDividerContent'>
-                                <b>Portions Covered</b>:    3 Address Codes, SSA, Triples, Quadruples and Indirect Triples   
+                                <b>Note</b>: {note.notes}
                                 <Box height={4}/>
                             </div>
                         </Box>
