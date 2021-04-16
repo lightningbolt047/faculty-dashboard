@@ -1,9 +1,10 @@
-
 body {
   margin: 0;
   padding: 0;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #333;
+  height: 100vh;
+  width: 100vw;
 }
 
 .App {
@@ -213,3 +214,8 @@ body {
 .timetable {
   min-width: 750px;
 }
+
+#courseTabsDiv {
+  height: 80vh;
+}
+
