@@ -29,6 +29,7 @@ forumPostRouter.route('/:courseID')
             return;
         }
         ForumPost.find({courseID:req.params.courseID})
+            .lean()
             .then(async (forumPosts)=>{
                 if(typeof forumPosts==='undefined' || forumPosts.length===0){
                     res.statusCode=404;
@@ -40,17 +41,12 @@ forumPostRouter.route('/:courseID')
                 forumPosts.sort((a,b)=>{
                     return Date.parse(b.postDateTime)-Date.parse(a.postDateTime);
                 });
-                let sendForumPosts=[];
-                for(const post of forumPosts){
-                    sendForumPosts.push(post);
-                }
+                let sendForumPosts=forumPosts;
                 try{
                     for(let i=0;i<sendForumPosts.length;i++){
                         sendForumPosts[i].facultyName=await getFacultyNameFromFacultyID(sendForumPosts[i].facultyID);
-                        sendForumPosts[i].facultyID=undefined;
                         for(let j=0;j<sendForumPosts[i].comments.length;j++){
                             sendForumPosts[i].comments[j].facultyName=await getFacultyNameFromFacultyID(sendForumPosts[i].comments[j].facultyID);
-                            sendForumPosts[i].comments[j].facultyID=undefined;
                         }
                     }
                     res.statusCode=200;

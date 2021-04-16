@@ -41,7 +41,8 @@ facultyCourseNotesRouter.route('/')
                             courseName:await getCourseNameFromCourseID(courseProgression.courseID,'courseName'),
                             courseCode:await getCourseNameFromCourseID(courseProgression.courseID,'courseCode'),
                             courseCredits:await getCourseNameFromCourseID(courseProgression.courseID,'courseCredits'),
-                            courseType:await getCourseNameFromCourseID(courseProgression.courseID,'courseType')
+                            courseType:await getCourseNameFromCourseID(courseProgression.courseID,'courseType'),
+                            courseID:courseProgression.courseID
                         };
                         sendDocument.push(courseDetails);
                     }
