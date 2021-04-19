@@ -15,18 +15,41 @@ import Button from '@material-ui/core/Button';
 
 
 let courseNotesFromServer=[];
-
+let dateISO;
 export default function CourseNotes({course}){
     const [open, setOpen] = useState(false);
     const [courseNotes,setCourseNotes]=useState([]);
+    const [noteDate,setNoteDate]=useState();
+    const [note,setNote]=useState("");
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleNewNoteAdd = () => {
         setOpen(false);
     };
+
+    const handleNewNoteCancel=()=>{
+        setOpen(false);
+    }
+
+    const handleDateChange=(e)=>{
+        setNoteDate(e.target.value);
+        dateISO=dateToISO(e.target.value);
+        console.log(dateISO);
+    }
+
+    const handleNoteChange=(e)=>{
+        setNote(e.target.value);
+        console.log(e.target.value);
+    }
+
+    const dateToISO=(inputDate)=>{
+        if(inputDate!=='' && typeof inputDate!=='undefined'){
+            return new Date(inputDate).toISOString();
+        }
+    }
 
 
     const getCourseNotesFromServer=async ()=>{
@@ -62,7 +85,7 @@ export default function CourseNotes({course}){
             <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
                 <AddIcon/>
             </Fab>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={handleNewNoteCancel} aria-labelledby="form-dialog-title">
             <DialogTitle>
                 <Typography variant="h5" color="secondary">Add New Note</Typography>
             </DialogTitle>
@@ -70,15 +93,15 @@ export default function CourseNotes({course}){
                 <DialogContentText>
                     Enter date and corresponding notes to maintain your daily progress.
                 </DialogContentText>
-                <TextField variant="outlined" color="secondary" label="Date" InputLabelProps={{ shrink: true }} type="date" fullWidth/>
+                <TextField variant="outlined" color="secondary" value={noteDate} onChange={handleDateChange} label="Date" InputLabelProps={{ shrink: true }} type="date" fullWidth/>
                 <Box height={10}/>
-                <TextField variant="outlined" color="secondary" label="Notes" type="text" fullWidth/>
+                <TextField variant="outlined" color="secondary" value={note} onChange={handleNoteChange} label="Notes" type="text" fullWidth/>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleNewNoteCancel} color="primary">
                 Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleNewNoteAdd} color="primary">
                 Add Note
             </Button>
             </DialogActions>
