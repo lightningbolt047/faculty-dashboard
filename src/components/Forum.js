@@ -17,14 +17,7 @@ import Button from '@material-ui/core/Button';
 export default function Forum({course}){
     const [open, setOpen] = useState(false);
     const [forumPosts,setForumPosts]=useState([]);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const [postText,setPostText]=useState("");
 
     const getForumPostsFromServer=async ()=>{
         let responseBody=await backendService('GET',`/forum/${course.courseID}`,
@@ -83,6 +76,18 @@ export default function Forum({course}){
         // eslint-disable-next-line
     },[]);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handlePostTextChange=(e)=>{
+        setPostText(e.target.value);
+    }
+
     return (
         <div>
             <Typography variant="h5" color="secondary">Forum</Typography>
@@ -101,7 +106,7 @@ export default function Forum({course}){
                     <DialogContentText>
                         Type out your post here so that same course handling faculties can interact.
                     </DialogContentText>
-                    <TextField variant="outlined" color="secondary" label="Post" type="text" fullWidth/>
+                    <TextField variant="outlined" value={postText} onChange={handlePostTextChange} color="secondary" label="Post" type="text" fullWidth/>
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary">
