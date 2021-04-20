@@ -21,35 +21,8 @@ export default function CourseNotes({course}){
     const [courseNotes,setCourseNotes]=useState([]);
     const [noteDate,setNoteDate]=useState();
     const [note,setNote]=useState("");
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleNewNoteAdd = () => {
-        setOpen(false);
-    };
-
-    const handleNewNoteCancel=()=>{
-        setOpen(false);
-    }
-
-    const handleDateChange=(e)=>{
-        setNoteDate(e.target.value);
-        dateISO=dateToISO(e.target.value);
-        console.log(dateISO);
-    }
-
-    const handleNoteChange=(e)=>{
-        setNote(e.target.value);
-        console.log(e.target.value);
-    }
-
-    const dateToISO=(inputDate)=>{
-        if(inputDate!=='' && typeof inputDate!=='undefined'){
-            return new Date(inputDate).toISOString();
-        }
-    }
+    const [courseNotesID,setCourseNotesID]=useState();
+    // const [courseNotesID,setCourseNotesID]=useState();
 
 
     const getCourseNotesFromServer=async ()=>{
@@ -58,7 +31,37 @@ export default function CourseNotes({course}){
         );
         if(responseBody.statusCode===200){
             courseNotesFromServer=responseBody.notes;
+            setCourseNotesID(responseBody._id);
             getSortedOrder();
+        }
+    }
+
+    const sendNewCourseNoteToServer=async ()=>{
+
+        let responseBody=await backendService('PUT',`/courseNotes/${course.courseID}`,
+            {
+                facultyCourseNotesID:courseNotesID,
+                noteDate:dateISO,
+                noteText:note
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        return responseBody.statusCode;
+    }
+
+    const handleNewNoteAddition=async ()=>{
+        if(await sendNewCourseNoteToServer()===200){
+            let tempCourseNotes=[];
+            tempCourseNotes.push({
+                date:new Date(dateISO).toString(),
+                notes:note
+            });
+            for(const note of courseNotes){
+                tempCourseNotes.push(note);
+            }
+            setCourseNotes(tempCourseNotes);
+            setNote(undefined);
+            setNoteDate(undefined);
+            setOpen(false);
         }
     }
 
@@ -74,6 +77,29 @@ export default function CourseNotes({course}){
         getCourseNotesFromServer();
         // eslint-disable-next-line
     },[]);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleNewNoteCancel=()=>{
+        setOpen(false);
+    }
+
+    const handleDateChange=(e)=>{
+        setNoteDate(e.target.value);
+        dateISO=dateToISO(e.target.value);
+    }
+
+    const handleNoteChange=(e)=>{
+        setNote(e.target.value);
+    }
+
+    const dateToISO=(inputDate)=>{
+        if(inputDate!=='' && typeof inputDate!=='undefined'){
+            return new Date(inputDate).toISOString();
+        }
+    }
 
     return (
         <div>
@@ -101,7 +127,7 @@ export default function CourseNotes({course}){
             <Button onClick={handleNewNoteCancel} color="primary">
                 Cancel
             </Button>
-            <Button onClick={handleNewNoteAdd} color="primary">
+            <Button onClick={handleNewNoteAddition} color="primary">
                 Add Note
             </Button>
             </DialogActions>
