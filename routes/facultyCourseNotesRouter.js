@@ -87,41 +87,50 @@ facultyCourseNotesRouter.route('/:courseID')
                 });
             });
     })
-    .put((req,res,next)=>{
-        if(typeof req.body.facultyCourseNotesID==='undefined'){
+    .put(checkCredentials,async (req,res,next)=>{
+
+        const exists=await FacultyCourseNotes.exists({_id:req.body.facultyCourseNotesID});
+        if(!exists){
+            console.log(
+                {
+                    facultyID:req.headers['dbid'],
+                    year:process.env.CUR_ACADEMIC_YEAR,
+                    sem:process.env.CUR_SEM_TYPE,
+                    courseID:req.params.courseID,
+                    notes:[{
+                        date: new Date(req.body.noteDate),
+                        notes:req.body.noteText
+                    }]
+                }
+            );
             FacultyCourseNotes.create({
                 facultyID:req.headers['dbid'],
                 year:process.env.CUR_ACADEMIC_YEAR,
                 sem:process.env.CUR_SEM_TYPE,
                 courseID:req.params.courseID,
                 notes:[{
-                    date: new Date().toISOString(),
+                    date: new Date(req.body.noteDate),
                     notes:req.body.noteText
                 }]
             })
+            .then(()=>{
+                res.statusCode=200;
+                res.json({
+                   status:"Successfully added new course notes document"
+                });
+            },(err)=>{
+                res.statusCode=500;
+                res.json({
+                   status:"Internal Server Error"
+                });
+            });
         }else{
-            FacultyCourseNotes.findById(req.body.facultyCourseNotesID)
-                .then((document)=>{
-                    let notes=[];
-                    for(const note in document.notes){
-                        notes.push(note);
-                    }
-                    notes.push({
-                        date:new Date().toISOString(),
-                        notes:req.body.noteText
+            FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$push: {'notes': {date:new Date(req.body.noteDate),notes:req.body.noteText}}})
+                .then(()=>{
+                    res.statusCode=200;
+                    res.json({
+                        status:"Added new note successfully"
                     });
-                   FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$set: {'notes': notes}})
-                       .then(()=>{
-                           res.statusCode=200;
-                           res.json({
-                               status:"Added new note successfully"
-                           });
-                       },(err)=>{
-                           res.statusCode=500;
-                           res.json({
-                               status:"Internal Server Error"
-                           });
-                       })
                 },(err)=>{
                     res.statusCode=500;
                     res.json({
