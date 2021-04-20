@@ -66,7 +66,7 @@ facultyCourseNotesRouter.route('/:courseID')
     .get(checkCredentials,async (req,res,next)=>{
         FacultyCourseNotes.findOne({facultyID:req.headers['dbid'],year:process.env.CUR_ACADEMIC_YEAR,courseID:req.params.courseID,sem:process.env.CUR_SEM_TYPE})
             .then((noteDocument)=>{
-                if(typeof noteDocument==='undefined'){
+                if(typeof noteDocument==='undefined' || noteDocument==null){
                     res.statusCode=404;
                     res.json([]);
                     return;
