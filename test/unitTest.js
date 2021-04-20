@@ -56,7 +56,7 @@ describe('Unit testing the /auth route login with username password', function()
     it('should return 401 status', function() {
         return request(app)
             .post('/auth')
-            .send({"loginType":"user","authToken":"c84c15cf188a1a18fe127241892afd145373f5ed7b4dbc0144d40ccdf5ca737e546db8d9273b43f49850388c3a1c3aacd6e5fa3557fc52fc7b362e591b965a68","clgID":"cb.en.cse05001"})
+            .send({"loginType":"user","authToken":"c84c15cf188a1a18fe127241892afd145373f5ed7b4dbc0144d40ccdf5ca737e546db8d9273b43f49850388c3a1c3aacd6e5fa3557fc52fc7b362e591b965a6","clgID":"cb.en.cse05001"})
             .then((response)=>{
                 expect(response.statusCode === 401).to.be.true;
             })
