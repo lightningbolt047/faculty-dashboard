@@ -18,6 +18,8 @@ export default function Forum({course}){
     const [open, setOpen] = useState(false);
     const [forumPosts,setForumPosts]=useState([]);
     const [postText,setPostText]=useState("");
+    const [commentText,setCommentText]=useState("");
+    const [facultyName,setFacultyName]=useState();
 
     const getForumPostsFromServer=async ()=>{
         let responseBody=await backendService('GET',`/forum/${course.courseID}`,
@@ -25,6 +27,62 @@ export default function Forum({course}){
         );
         if(responseBody.statusCode===200){
             setForumPosts(responseBody);
+        }
+        responseBody=await backendService('GET',`/profile/getFacultyNameOnly`,
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        setFacultyName(responseBody.name);
+    }
+
+    const sendNewForumPostToServer=async ()=>{
+
+        let responseBody=await backendService('PUT',`/forum/${course.courseID}`,
+            {
+                reqType:'postPost',
+                postText:postText
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        return responseBody.statusCode;
+    }
+
+    const sendNewCommentToServer=async (postIndex)=>{
+        let responseBody=await backendService('PUT',`/forum/${course.courseID}`,
+            {
+                postID:forumPosts[postIndex]._id,
+                reqType:'postComment',
+                commentText:commentText
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        return responseBody.statusCode;
+    }
+
+    const addNewComment=async (postIndex)=>{
+        if(typeof commentText==='undefined' || commentText===""){
+            return;
+        }
+        if(await sendNewCommentToServer(postIndex)===200){
+            let tempPosts=[];
+            for(const post of forumPosts){
+                tempPosts.push(post);
+            }
+            tempPosts[postIndex].comments.push({
+                facultyID:sessionStorage.USER_DB_ID,
+                commentText:commentText,
+                facultyName:facultyName
+            });
+            setForumPosts(tempPosts);
+            setCommentText("");
+        }
+    }
+
+    const handleAddNewForumPost=async ()=>{
+        if(typeof postText==='undefined' || postText===""){
+            return;
+        }
+        if(await sendNewForumPostToServer()===200){
+            getForumPostsFromServer();
+            setOpen(false);
+            setPostText("");
         }
     }
 
@@ -80,11 +138,21 @@ export default function Forum({course}){
         setOpen(true);
     };
 
+    const handleCommentTextChange=(e)=>{
+        if(commentText==="" && e.target.value===" "){
+            return;
+        }
+        setCommentText(e.target.value);
+    }
+
     const handleClose = () => {
         setOpen(false);
     };
 
     const handlePostTextChange=(e)=>{
+        if(postText==="" && e.target.value===" "){
+            return;
+        }
         setPostText(e.target.value);
     }
 
@@ -92,7 +160,7 @@ export default function Forum({course}){
         <div>
             <Typography variant="h5" color="secondary">Forum</Typography>
             {forumPosts.map((item,index)=>(
-                <ForumPostAccordion postIndex={index} post={item} voteClickHandler={voteClickHandler}/>
+                <ForumPostAccordion key={index} postIndex={index} commentText={commentText} onCommentTextChangeHandler={handleCommentTextChange} postCommentHandler={addNewComment} post={item} voteClickHandler={voteClickHandler}/>
             ))}
             <Box height={10}/>
             <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
@@ -112,7 +180,7 @@ export default function Forum({course}){
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleAddNewForumPost} color="primary">
                     Post
                 </Button>
                 </DialogActions>

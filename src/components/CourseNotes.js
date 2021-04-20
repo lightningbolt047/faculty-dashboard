@@ -49,6 +49,9 @@ export default function CourseNotes({course}){
     }
 
     const handleNewNoteAddition=async ()=>{
+        if(typeof note==='undefined' || note===""){
+            return
+        }
         if(await sendNewCourseNoteToServer()===200){
             let tempCourseNotes=[];
             tempCourseNotes.push({
@@ -92,6 +95,9 @@ export default function CourseNotes({course}){
     }
 
     const handleNoteChange=(e)=>{
+        if(note==="" && e.target.value===" "){
+            return;
+        }
         setNote(e.target.value);
     }
 

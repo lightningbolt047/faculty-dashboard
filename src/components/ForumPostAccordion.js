@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
 
 
-export default function ForumPostAccordion({postIndex,post,voteClickHandler}){
+export default function ForumPostAccordion({postIndex,post,commentText,onCommentTextChangeHandler,postCommentHandler,voteClickHandler}){
 
     const getUpvoteButtonVariant=()=>{
         for(const facultyID of post.upvotes){
@@ -45,6 +45,7 @@ export default function ForumPostAccordion({postIndex,post,voteClickHandler}){
         console.info('You Downvoted.');
     };
 
+
     return (
         <div className="accordionSpace">
             <Accordion>
@@ -73,8 +74,8 @@ export default function ForumPostAccordion({postIndex,post,voteClickHandler}){
                                     </div>
                                 ))}
                                 <Box height={8}/>
-                                <TextField variant="outlined" color="secondary" label="Your Comment" size="small"/>
-                                <IconButton>
+                                <TextField variant="outlined" value={commentText} onChange={onCommentTextChangeHandler} color="secondary" label="Your Comment" size="small"/>
+                                <IconButton onClick={()=>postCommentHandler(postIndex)}>
                                     <SendIcon id="warningColor"/>
                                 </IconButton>
                             </div>
