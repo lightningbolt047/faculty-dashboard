@@ -92,12 +92,11 @@ forumPostRouter.route('/:courseID')
                 })
         }
         else if(req.body.reqType==='postPost'){
-            let curDate=new Date();
             let insertDocument={
                 facultyID:req.headers['dbid'],
-                courseID:req.body.courseID,
+                courseID:req.params.courseID,
                 postText:req.body.postText,
-                postDateTime:curDate.toISOString(),
+                postDateTime:new Date().toISOString(),
                 upvotes:[],
                 downvotes:[],
                 comments:[]

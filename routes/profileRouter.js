@@ -61,6 +61,12 @@ profileRouter.route('/:reqType')
                 clgID:user.clgID
             });
         }
+        else if(req.params.reqType==='getFacultyNameOnly'){
+            res.statusCode=200;
+            res.json({
+                name:user.name
+            });
+        }
     },()=>{
         res.statusCode=500;
         res.json({
