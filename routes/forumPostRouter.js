@@ -114,8 +114,7 @@ forumPostRouter.route('/:courseID')
                     });
                 });
         }
-    });
-forumPostRouter.route('/')
+    })
     .post(checkCredentials,async (req,res,next)=>{
         try{
             if(!await checkCoursePresentForFaculty(req.headers['dbid'],req.params.courseID)){
@@ -136,11 +135,11 @@ forumPostRouter.route('/')
             ForumPost.findById(req.body.postID)
                 .then(async (document)=>{
                     try{
-                        if(req.headers['dbid'] in document.downvotes){
+                        if(document.downvotes.includes(req.headers['dbid'])){
                             await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
                         }
-                        if(req.headers['dbid'] in document.upvotes){
-                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
+                        if(document.upvotes.includes(req.headers['dbid'])){
+                            await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'upvotes':req.headers['dbid']}});
                             res.statusCode=200;
                             res.json({
                                status:"Upvote removed successfully"
@@ -176,10 +175,10 @@ forumPostRouter.route('/')
             ForumPost.findById(req.body.postID)
                 .then(async (document)=>{
                     try{
-                        if(req.headers['dbid'] in document.upvotes){
+                        if(document.upvotes.includes(req.headers['dbid'])){
                             await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'upvotes':req.headers['dbid']}});
                         }
-                        if(req.headers['dbid'] in document.downvotes){
+                        if(document.downvotes.includes(req.headers['dbid'])){
                             await ForumPost.findByIdAndUpdate(req.body.postID,{$pull:{'downvotes':req.headers['dbid']}});
                             res.statusCode=200;
                             res.json({
