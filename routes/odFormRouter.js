@@ -3,7 +3,6 @@ const express=require('express');
 const odFormRouter=express.Router();
 
 const ODForm=require('../models/odFormSchema');
-const getStudentAttendance=require('../services/getStudentAttendance');
 const getStudentCourseAttendance=require('../services/getStudentCourseAttendance');
 
 const checkCredentials=require('../services/checkCredentialsService');

@@ -2,14 +2,10 @@ const express=require('express');
 
 const facultyCourseNotesRouter=express.Router();
 
-const User=require('../models/userSchema');
 const FacultyCourseNotes=require('../models/facultyCourseNotesSchema');
 const SemesterProgression=require('../models/semesterProgressionSchema');
 
-const getSectionsFromAdvisorAllocationIDs=require('../services/getSectionsFromAdvisorAllocationIDs');
 const getCourseNameFromCourseID=require('../services/getCourseNameFromCourseID');
-const getFacultyNameFromFacultyID=require('../services/getFacultyNameFromFacultyID');
-const checkCoursePresentForFaculty=require('../services/checkCoursePresentForFaculty');
 const checkCredentials=require('../services/checkCredentialsService');
 
 

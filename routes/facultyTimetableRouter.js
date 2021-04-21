@@ -2,7 +2,6 @@ const express=require('express');
 
 const facultyTimetableRouter=express.Router();
 
-const User=require('../models/userSchema');
 const FacultyTimetable=require('../models/facultyTimetableSchema');
 
 const getSectionsFromAdvisorAllocationIDs=require('../services/getSectionsFromAdvisorAllocationIDs');

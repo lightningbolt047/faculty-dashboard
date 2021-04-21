@@ -2,11 +2,8 @@ const express=require('express');
 
 const forumPostRouter=express.Router();
 
-const User=require('../models/userSchema');
 const ForumPost=require('../models/forumPostsSchema');
 
-const getSectionsFromAdvisorAllocationIDs=require('../services/getSectionsFromAdvisorAllocationIDs');
-const getCourseNameFromCourseID=require('../services/getCourseNameFromCourseID');
 const getFacultyNameFromFacultyID=require('../services/getFacultyNameFromFacultyID');
 const checkCoursePresentForFaculty=require('../services/checkCoursePresentForFaculty');
 const checkCredentials=require('../services/checkCredentialsService');
