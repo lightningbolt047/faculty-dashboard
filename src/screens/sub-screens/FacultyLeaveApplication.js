@@ -1,8 +1,4 @@
 import Box from '@material-ui/core/Box';
-// import CircularProgress from '@material-ui/core/CircularProgress';
-// import {useState,useEffect} from 'react';
-// import Snackbar from '@material-ui/core/Snackbar';
-// import Alert from '@material-ui/lab/Alert';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +12,7 @@ import EmojiTransportationIcon from '@material-ui/icons/EmojiTransportation';
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import FacultyAttendanceCard from '../../components/FacultyAttendanceCard';
+import DateServices from "../../services/DateServices";
 
 let allPassDetails=[];
 let fromDateISO,toDateISO;
@@ -113,17 +110,11 @@ export default function FacultyLeaveApplication(){
     }
     const handleFromDateChange=(e)=>{
         setFromDate(e.target.value);
-        fromDateISO=dateToISO(e.target.value);
+        fromDateISO=DateServices.dateToISO(e.target.value);
     }
     const handleToDateChange=(e)=>{
         setToDate(e.target.value);
-        toDateISO=dateToISO(e.target.value);
-    }
-
-    const dateToISO=(inputDate)=>{
-        if(inputDate!=='' && typeof inputDate!=='undefined'){
-            return new Date(inputDate).toISOString();
-        }
+        toDateISO=DateServices.dateToISO(e.target.value);
     }
 
     const handleSnackbarClose=(event,reason)=>{

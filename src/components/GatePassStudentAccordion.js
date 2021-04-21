@@ -10,6 +10,8 @@ import CheckIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LockIcon from '@material-ui/icons/Lock';
 import IconButton from "@material-ui/core/IconButton";
+import DateServices from "../services/DateServices";
+import AttendanceServices from "../services/AttendanceServices";
 
 export default function GatePassStudentAccordion({accordionID, passType, passJSON, handlePassAction, passRoute}){
     const departureTime=new Date(passJSON.passDetails.departureTime);
@@ -52,25 +54,6 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
         return sgpaString;
     }
 
-    const getAttendancePercentageTextStyle=(percentage)=>{
-        if(percentage<75){
-            return 'warningColor';
-        }else if(percentage>=75 && percentage<=85){
-            return 'alertColor';
-        }
-        else{
-            return 'okColor';
-        }
-    }
-
-    const getAttendancePercentage=(item)=>{
-        try{
-            return ((item.studentAttendance/item.classesTaken)*100).toFixed(2);
-        }catch (e){
-            return '0';
-        }
-    }
-
     const approveGatePassHandler=(event)=>{
         event.stopPropagation();
         handlePassAction(passJSON.passDetails.passID,accordionID,passType,'approved');
@@ -82,10 +65,6 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
     const withholdGatePassHandler=(event)=>{
         event.stopPropagation();
         handlePassAction(passJSON.passDetails.passID,accordionID,passType,'withheld');
-    }
-
-    const getDateTimeAsString=(dateTime)=>{
-        return `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()} ${dateTime.getHours().toString().length<2?0+dateTime.getHours().toString():dateTime.getHours().toString()}:${dateTime.getMinutes().toString().length<2?0+dateTime.getMinutes().toString():dateTime.getMinutes().toString()}`
     }
 
 
@@ -161,11 +140,11 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 </div>
 
                                 <div>
-                                    <span>{getTimeStartName()}</span>: <b>{getDateTimeAsString(departureTime)}</b>
+                                    <span>{getTimeStartName()}</span>: <b>{DateServices.getDateTimeAsString(departureTime)}</b>
                                 </div>
 
                                 <div>
-                                    <span>{getTimeEndName()}</span>: <b>{getDateTimeAsString(arrivalTime)}</b>
+                                    <span>{getTimeEndName()}</span>: <b>{DateServices.getDateTimeAsString(arrivalTime)}</b>
                                 </div>
                                 
                                 
@@ -179,7 +158,7 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                                 {passJSON.attendanceDetails.map((item)=>(
                                     <div>
                                         <span>{item.courseName+" : "}</span>
-                                        <span id={getAttendancePercentageTextStyle(getAttendancePercentage(item))}>{getAttendancePercentage(item)+" %"}</span>
+                                        <span id={AttendanceServices.getAttendancePercentageTextStyle(AttendanceServices.getAttendancePercentage(item))}>{AttendanceServices.getAttendancePercentage(item)+" %"}</span>
                                     </div>
                                 ))}
                                 <Box height={8}/>

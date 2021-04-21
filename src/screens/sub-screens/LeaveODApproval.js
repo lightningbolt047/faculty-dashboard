@@ -28,9 +28,6 @@ export default function LeaveODApproval({passRoute}){
         let responseBody=await backendService('GET',`/${passRoute}/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
-        // if(responseBody.statusCode===404){
-
-        // }
         if(responseBody.statusCode===200){
             allPasses=responseBody;
         }
@@ -176,14 +173,6 @@ export default function LeaveODApproval({passRoute}){
         }
     }
 
-    //TODO add new function to change pass status for faculty leave
-
-    // const handleFacultyLeavePassChange=(index,newLeaveStatus,leaveStatus)=>{
-    //     if(leaveStatus==='pending'){
-    //
-    //     }
-    // }
-
     const getSearchResults=()=>{
         let filteredResults=[];
         if(searchText==='' || typeof searchText==='undefined'){
@@ -210,17 +199,16 @@ export default function LeaveODApproval({passRoute}){
     const splitPassesByType=()=>{
         let regularPassList=[],cancelledPassList=[],approvedPassList=[];
         for(let pass of allShownPasses){
-            if(pass.passDetails.affectedClasses.length===0){
-                continue;
-            }
-            else if(pass.passDetails.affectedClasses[0].approvalStatus==='approved'){
-                approvedPassList.push(pass);
-            }
-            else if(pass.passDetails.affectedClasses[0].approvalStatus==='pending'){
-                regularPassList.push(pass);
-            }
-            else if(pass.passDetails.affectedClasses[0].approvalStatus==='cancelled'){
-                cancelledPassList.push(pass);
+            if(pass.passDetails.affectedClasses.length!==0){
+                if(pass.passDetails.affectedClasses[0].approvalStatus==='approved'){
+                    approvedPassList.push(pass);
+                }
+                else if(pass.passDetails.affectedClasses[0].approvalStatus==='pending'){
+                    regularPassList.push(pass);
+                }
+                else if(pass.passDetails.affectedClasses[0].approvalStatus==='cancelled'){
+                    cancelledPassList.push(pass);
+                }
             }
         }
         setShownRegularPasses(regularPassList);

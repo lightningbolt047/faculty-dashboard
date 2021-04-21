@@ -10,6 +10,7 @@ import EditableTextArea from './EditableTextArea';
 import CheckIcon from '@material-ui/icons/CheckCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import AlertIcon from '@material-ui/icons/Error';
+import AttendanceServices from "../services/AttendanceServices";
 
 export default function MentoringStudentAccordion({accordionID, studentJSON, mentorDairyText, handleMentorTextChange,handleMentorTextSubmit}){
 
@@ -34,25 +35,6 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
             i++;
         }
         return sgpaString;
-    }
-
-    const getAttendancePercentageTextStyle=(percentage)=>{
-        if(percentage<75){
-            return 'warningColor';
-        }else if(percentage>=75 && percentage<=85){
-            return 'alertColor';
-        }
-        else{
-            return 'okColor';
-        }
-    }
-
-    const getAttendancePercentage=(item)=>{
-        try{
-            return ((item.studentAttendance/item.classesTaken)*100).toFixed(2);
-        }catch (e){
-            return '0';
-        }
     }
 
 
@@ -94,7 +76,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                     {studentJSON.attendanceDetails.map((item)=>(
                                         <div>
                                             <span>{item.courseName+" : "}</span>
-                                            <span id={getAttendancePercentageTextStyle(getAttendancePercentage(item))}>{getAttendancePercentage(item)+" %"}</span>
+                                            <span id={AttendanceServices.getAttendancePercentageTextStyle(AttendanceServices.getAttendancePercentage(item))}>{AttendanceServices.getAttendancePercentage(item)+" %"}</span>
                                         </div>
 
                                         // <div>{item.courseName+" : "+((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}

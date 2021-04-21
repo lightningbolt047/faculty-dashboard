@@ -1,7 +1,6 @@
 import {useState} from 'react';
 import GatePasses from "./GatePasses";
 import Paper from '@material-ui/core/Paper';
-import 'aos/dist/aos.css';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 

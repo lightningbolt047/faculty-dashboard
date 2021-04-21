@@ -69,24 +69,28 @@ export default function HomeScreen(){
     }
 
     const setTimetableInTable=(receivedTimetable)=>{
-        let timeTable=[];
+        let timeTableClass=[];
+        let timeTableCourseCodes=[];
         let timeTableRowsTemp=[];
         for(let i=0;i<7;i++){
-            timeTable.push([]);
+            timeTableClass.push([]);
+            timeTableCourseCodes.push([]);
             for(let j=0;j<7;j++){
-                timeTable[i].push(" ");
+                timeTableClass[i].push(" ");
+                timeTableCourseCodes[i].push(" ");
             }
         }
         let dayIndex=0;
         for(const day of receivedTimetable){
             for(const hour of day){
-                timeTable[dayIndex][hour.hour]=hour.section;
+                timeTableClass[dayIndex][hour.hour]=hour.section;
+                timeTableCourseCodes[dayIndex][hour.hour]=hour.courseCode;
             }
             dayIndex++;
         }
         let daysOfWeek=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         for(let i=0;i<daysOfWeek.length;i++){
-            timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTable[i][0], timeTable[i][1], timeTable[i][2], timeTable[i][3],timeTable[i][4],timeTable[i][5],timeTable[i][6]));
+            timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTableCourseCodes[i][0]+" "+timeTableClass[i][0], timeTableCourseCodes[i][1]+" "+timeTableClass[i][1], timeTableCourseCodes[i][2]+" "+timeTableClass[i][2], timeTableCourseCodes[i][3]+" "+timeTableClass[i][3],timeTableCourseCodes[i][4]+" "+timeTableClass[i][4],timeTableCourseCodes[i][5]+" "+timeTableClass[i][5],timeTableCourseCodes[i][6]+" "+timeTableClass[i][6]));
         }
         setTimetableRows(timeTableRowsTemp);
     }
@@ -173,13 +177,13 @@ export default function HomeScreen(){
                                         <TableCell component="th" scope="row">
                                             {row.weekDay}
                                         </TableCell>
-                                        <TableCell align="right">{row.hr1}</TableCell>
-                                        <TableCell align="right">{row.hr2}</TableCell>
-                                        <TableCell align="right">{row.hr3}</TableCell>
-                                        <TableCell align="right">{row.hr4}</TableCell>
-                                        <TableCell align="right">{row.hr5}</TableCell>
-                                        <TableCell align="right">{row.hr6}</TableCell>
-                                        <TableCell align="right">{row.hr7}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr1}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr2}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr3}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr4}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr5}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr6}</TableCell>
+                                        <TableCell size={"medium"} align="center">{row.hr7}</TableCell>
                                         </TableRow>
                                     ))}
                                     </TableBody>

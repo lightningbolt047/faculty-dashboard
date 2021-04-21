@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import DateServices from '../services/DateServices';
 
 
 let courseNotesFromServer=[];
@@ -22,7 +23,6 @@ export default function CourseNotes({course}){
     const [noteDate,setNoteDate]=useState();
     const [note,setNote]=useState("");
     const [courseNotesID,setCourseNotesID]=useState();
-    // const [courseNotesID,setCourseNotesID]=useState();
 
 
     const getCourseNotesFromServer=async ()=>{
@@ -91,7 +91,7 @@ export default function CourseNotes({course}){
 
     const handleDateChange=(e)=>{
         setNoteDate(e.target.value);
-        dateISO=dateToISO(e.target.value);
+        dateISO=DateServices.dateToISO(e.target.value);
     }
 
     const handleNoteChange=(e)=>{
@@ -99,12 +99,6 @@ export default function CourseNotes({course}){
             return;
         }
         setNote(e.target.value);
-    }
-
-    const dateToISO=(inputDate)=>{
-        if(inputDate!=='' && typeof inputDate!=='undefined'){
-            return new Date(inputDate).toISOString();
-        }
     }
 
     return (

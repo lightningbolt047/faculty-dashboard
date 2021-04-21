@@ -17,32 +17,14 @@ export default function GatePasses({passRoute}){
 
     const [statusCode,setStatusCode]=useState(0);
     let allShownPasses=[];
+    const [showSearchText,setShowSearchText]=useState('');
     let [shownEmergencyPasses,setShownEmergencyPasses]=useState([]);
     let [shownRegularPasses,setShownRegularPasses]=useState([]);
     let [shownWithheldPasses,setShownWithheldPasses]=useState([]);
-    let [shownCancelledPasses,setShownCancelledPasses]=useState([]);
     let [shownApprovedPasses,setShownApprovedPasses]=useState([]);
-
-    const [showSearchText,setShowSearchText]=useState('');
+    let [shownCancelledPasses,setShownCancelledPasses]=useState([]);
     let searchText='';
-    // const [openSnackbar,setOpenSnackbar]=useState(false);
-    // const [sendStatusCode,setSendStatusCode]=useState(0);
-    // const [studentsDetails,setStudentsDetails]=useState([]);
 
-
-
-    const getInfoFromBackend=async ()=>{
-        let responseBody=await backendService('GET',`/${passRoute}/`,
-            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
-        );
-        // if(responseBody.statusCode===404){
-
-        // }
-        if(responseBody.statusCode===200){
-            allStudentPasses=responseBody;
-        }
-        setStatusCode(responseBody.statusCode);
-    };
 
     const sendPassStatusUpdateToBackend=async (passID,passStatusNewValue)=>{
         let responseBody=await backendService('POST',`/${passRoute}/`,
@@ -53,6 +35,16 @@ export default function GatePasses({passRoute}){
         );
         return responseBody.statusCode;
     }
+
+    const getInfoFromBackend=async ()=>{
+        let responseBody=await backendService('GET',`/${passRoute}/`,
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        if(responseBody.statusCode===200){
+            allStudentPasses=responseBody;
+        }
+        setStatusCode(responseBody.statusCode);
+    };
 
     const handlePassStatusChange=async (passID,curPassIndex,curPassType,passStatusNewValue)=>{
         if(await sendPassStatusUpdateToBackend(passID,passStatusNewValue)===200){
