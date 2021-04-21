@@ -56,6 +56,16 @@ export default function Forum({course}){
         return responseBody.statusCode;
     }
 
+    const sendVoteToServer=async (postIndex,voteType)=>{
+        let responseBody=await backendService('POST',`/forum/${course.courseID}`,
+            {
+                postID:forumPosts[postIndex]._id,
+                reqType:voteType
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        return responseBody.statusCode;
+    }
+
     const addNewComment=async (postIndex)=>{
         if(typeof commentText==='undefined' || commentText===""){
             return;
@@ -86,46 +96,48 @@ export default function Forum({course}){
         }
     }
 
-    const voteClickHandler=(postIndex,voteType)=>{
-        let tempPosts=[];
-        for(let post of forumPosts){
-            tempPosts.push(post);
-        }
-        let upvoteAlreadyPresent=false;
-        for(let i=0;i<tempPosts[postIndex].upvotes.length;i++){
-            if(tempPosts[postIndex].upvotes[i]===sessionStorage.USER_DB_ID){
-                upvoteAlreadyPresent=true;
-                tempPosts[postIndex].upvotes=tempPosts[postIndex].upvotes.filter((item)=>item!==sessionStorage.USER_DB_ID);
+    const voteClickHandler=async (postIndex,voteType)=>{
+        if(await sendVoteToServer(postIndex,voteType)===200){
+            let tempPosts=[];
+            for(let post of forumPosts){
+                tempPosts.push(post);
+            }
+            let upvoteAlreadyPresent=false;
+            for(let i=0;i<tempPosts[postIndex].upvotes.length;i++){
+                if(tempPosts[postIndex].upvotes[i]===sessionStorage.USER_DB_ID){
+                    upvoteAlreadyPresent=true;
+                    tempPosts[postIndex].upvotes=tempPosts[postIndex].upvotes.filter((item)=>item!==sessionStorage.USER_DB_ID);
+                    if(voteType==='upvote'){
+                        setForumPosts(tempPosts);
+                        return;
+                    }
+                    break;
+                }
+            }
+
+            let downvoteAlreadyPresent=false;
+            for(let i=0;i<tempPosts[postIndex].downvotes.length;i++){
+                if(tempPosts[postIndex].downvotes[i]===sessionStorage.USER_DB_ID){
+                    downvoteAlreadyPresent=true;
+                    tempPosts[postIndex].downvotes=tempPosts[postIndex].downvotes.filter((item)=>item!==sessionStorage.USER_DB_ID);
+                    if(voteType==='downvote'){
+                        setForumPosts(tempPosts);
+                        return;
+                    }
+                    break;
+                }
+            }
+
+            if(!upvoteAlreadyPresent || !downvoteAlreadyPresent){
                 if(voteType==='upvote'){
-                    setForumPosts(tempPosts);
-                    return;
+                    tempPosts[postIndex].upvotes.push(sessionStorage.USER_DB_ID);
+                }else{
+                    tempPosts[postIndex].downvotes.push(sessionStorage.USER_DB_ID);
                 }
-                break;
             }
-        }
 
-        let downvoteAlreadyPresent=false;
-        for(let i=0;i<tempPosts[postIndex].downvotes.length;i++){
-            if(tempPosts[postIndex].downvotes[i]===sessionStorage.USER_DB_ID){
-                downvoteAlreadyPresent=true;
-                tempPosts[postIndex].downvotes=tempPosts[postIndex].downvotes.filter((item)=>item!==sessionStorage.USER_DB_ID);
-                if(voteType==='downvote'){
-                    setForumPosts(tempPosts);
-                    return;
-                }
-                break;
-            }
+            setForumPosts(tempPosts);
         }
-
-        if(!upvoteAlreadyPresent || !downvoteAlreadyPresent){
-            if(voteType==='upvote'){
-                tempPosts[postIndex].upvotes.push(sessionStorage.USER_DB_ID);
-            }else{
-                tempPosts[postIndex].downvotes.push(sessionStorage.USER_DB_ID);
-            }
-        }
-
-        setForumPosts(tempPosts);
 
     }
 
