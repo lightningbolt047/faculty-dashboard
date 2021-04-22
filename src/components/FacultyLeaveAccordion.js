@@ -29,7 +29,7 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary  id={`facultyLeaveAccordion${passJSON.leaveStatus+accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="facultyLeaveAccordionTextPrimary">From: <b>{getDateFormatFromISODate(passJSON.departureTime)}</b></Typography>
                     </Box>
@@ -56,10 +56,10 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
                     <Box width={12}/>
-                        <IconButton size="small" disabled={passJSON.leaveStatus==='approved' || passJSON.leaveStatus==='pending' || passJSON.leaveStatus==='cancelled'} onClick={approveLeaveHandler}>
+                        <IconButton size="small" disabled={passJSON.leaveStatus==='approved' || passJSON.leaveStatus==='pending' || passJSON.leaveStatus==='cancelled'} onClick={approveLeaveHandler} id={`facultyLeaveAccordionPending${passJSON.leaveStatus+accordionID}`}>
                             <CheckIcon id={passJSON.leaveStatus!=='approved' && passJSON.leaveStatus!=='pending' && passJSON.leaveStatus!=='cancelled' && 'okColor'}/>
                         </IconButton>
-                        <IconButton size="small" disabled={passJSON.leaveStatus==='cancelled' || passJSON.leaveStatus==='facultyCancelled'} onClick={cancelLeaveHandler}>
+                        <IconButton size="small" disabled={passJSON.leaveStatus==='cancelled' || passJSON.leaveStatus==='facultyCancelled'} onClick={cancelLeaveHandler} id={`facultyLeaveAccordionWithdraw${passJSON.leaveStatus+accordionID}`}>
                             <CancelIcon id={(passJSON.leaveStatus!=='cancelled' && passJSON.leaveStatus!=='facultyCancelled') && 'warningColor'}/>
                         </IconButton>
                     <Box width={8}/>

@@ -40,7 +40,7 @@ export default function CourseInfoScreen(){
                 <Paper variant="outlined">
                     <Tabs value={tabIndex} onChange={handleTabIndexChange}>
                         {courses.map((item,index)=>(
-                            <Tab label={item.courseName}/>
+                            <Tab label={item.courseName} id={`courseTab${index}`}/>
                         ))}
                     </Tabs>
                 </Paper>

@@ -105,7 +105,7 @@ export default function CourseNotes({course}){
         <div>
             <Typography variant="h5" color="secondary">Daily Course Progress</Typography>
             {courseNotes.map((item,index)=>(
-                <CourseNotesAccordion note={item}/>
+                <CourseNotesAccordion accordionID={index} note={item}/>
             ))}
             <Box height={10}/>
             <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
@@ -119,15 +119,15 @@ export default function CourseNotes({course}){
                 <DialogContentText>
                     Enter date and corresponding notes to maintain your daily progress.
                 </DialogContentText>
-                <TextField variant="outlined" color="secondary" value={noteDate} onChange={handleDateChange} label="Date" InputLabelProps={{ shrink: true }} type="date" fullWidth/>
+                <TextField variant="outlined" color="secondary" value={noteDate} onChange={handleDateChange} label="Date" InputLabelProps={{ shrink: true }} type="date" fullWidth id={`courseNotesAddNewNoteDateTextField`}/>
                 <Box height={10}/>
-                <TextField variant="outlined" color="secondary" value={note} onChange={handleNoteChange} label="Notes" type="text" fullWidth/>
+                <TextField variant="outlined" color="secondary" value={note} onChange={handleNoteChange} label="Notes" type="text" fullWidth id={`courseNotesAddNewNoteTextTextField`}/>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleNewNoteCancel} color="primary">
+            <Button onClick={handleNewNoteCancel} color="primary" id={`courseNotesAddNewNoteDiscardButton`}>
                 Cancel
             </Button>
-            <Button onClick={handleNewNoteAddition} color="primary">
+            <Button onClick={handleNewNoteAddition} color="primary" id={`courseNotesAddNewNoteButton`}>
                 Add Note
             </Button>
             </DialogActions>

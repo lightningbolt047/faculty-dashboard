@@ -50,7 +50,7 @@ export default function HodLeaveApproveAccordion({accordionID, passType, passJSO
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`hodLeaveApproveAccordion${passType+accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">{passJSON.personalDetails.clgID}</Typography>
                     </Box>
@@ -59,14 +59,11 @@ export default function HodLeaveApproveAccordion({accordionID, passType, passJSO
                         <Typography className="accordionText" id="accordionTextSecondary">{passJSON.personalDetails.name}</Typography>
                     </Box>
                     <Box width={8}/>
-                    {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length===0 && <CheckIcon id='okColor'/>}*/}
-                    {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
-                    {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
                     <Box width={12}/>
-                    <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'}>
+                    <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'} id={`hodLeaveApproveAccordionApprove${passType+accordionID}`}>
                         <CheckIcon id={passType!=='approved' && 'okColor'}/>
                     </IconButton>
-                    <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'}>
+                    <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'} id={`hodLeaveApproveAccordionCancel${passType+accordionID}`}>
                         <CancelIcon id={passType!=='cancelled' && 'warningColor'}/>
                     </IconButton>
                     <Box width={8}/>

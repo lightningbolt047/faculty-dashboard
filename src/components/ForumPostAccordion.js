@@ -36,20 +36,18 @@ export default function ForumPostAccordion({postIndex,post,commentText,onComment
     const upvoteClick = (event) => {
         event.stopPropagation();
         voteClickHandler(postIndex,'upvote');
-        console.info('You Upvoted.');
     };
     
     const downvoteClick = (event) => {
         event.stopPropagation();
         voteClickHandler(postIndex,'downvote');
-        console.info('You Downvoted.');
     };
 
 
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`forumPostAccordion${postIndex}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">{post.facultyName}</Typography>
                     </Box>
@@ -58,9 +56,9 @@ export default function ForumPostAccordion({postIndex,post,commentText,onComment
                         <Typography className="accordionText" id="accordionTextSecondary">{post.postText}</Typography>
                     </Box>
                     <Box width={8}/>
-                    <Chip icon={<ThumbUpIcon/>} label={post.upvotes.length} clickable color="primary" onClick={upvoteClick} variant={getUpvoteButtonVariant()}/>
+                    <Chip icon={<ThumbUpIcon/>} label={post.upvotes.length} clickable color="primary" onClick={upvoteClick} variant={getUpvoteButtonVariant()} id={`forumPostAccordionUpvote${postIndex}`}/>
                     <Box width={8}/>
-                    <Chip icon={<ThumbDownIcon/>} label={post.downvotes.length} clickable color="secondary" onClick={downvoteClick} variant={getDownvoteButtonVariant()}/>
+                    <Chip icon={<ThumbDownIcon/>} label={post.downvotes.length} clickable color="secondary" onClick={downvoteClick} variant={getDownvoteButtonVariant()} id={`forumPostAccordionDownvote${postIndex}`}/>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container>
@@ -74,8 +72,8 @@ export default function ForumPostAccordion({postIndex,post,commentText,onComment
                                     </div>
                                 ))}
                                 <Box height={8}/>
-                                <TextField variant="outlined" value={commentText} onChange={onCommentTextChangeHandler} color="secondary" label="Your Comment" size="small"/>
-                                <IconButton onClick={()=>postCommentHandler(postIndex)}>
+                                <TextField variant="outlined" value={commentText} id={`forumPostAccordionCommentTextField${postIndex}`} onChange={onCommentTextChangeHandler} color="secondary" label="Your Comment" size="small"/>
+                                <IconButton onClick={()=>postCommentHandler(postIndex)} id={`forumPostAccordionCommentSendButton${postIndex}`}>
                                     <SendIcon id="warningColor"/>
                                 </IconButton>
                             </div>

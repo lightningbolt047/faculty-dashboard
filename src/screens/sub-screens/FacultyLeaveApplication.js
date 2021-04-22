@@ -167,18 +167,18 @@ export default function FacultyLeaveApplication(){
                             </Typography>
                             <Box height={10}/>
                             <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" label="Reason" value={leaveReason} onChange={handleLeaveReasonChange} fullWidth/>
+                            <TextField variant="outlined" color="secondary" label="Reason" value={leaveReason} onChange={handleLeaveReasonChange} fullWidth id={`facultyLeaveApplicationReasonTextField`}/>
                             </Grid>
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" InputLabelProps={{ shrink: true }} type="date" label="From Date" value={fromDate} onChange={handleFromDateChange} fullWidth/>
+                                <TextField variant="outlined" color="secondary" InputLabelProps={{ shrink: true }} type="date" label="From Date" value={fromDate} onChange={handleFromDateChange} fullWidth id={`facultyLeaveApplicationFromDateTextField`}/>
                             </Grid>
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" InputLabelProps={{ shrink: true }} type="date" label="To Date" value={toDate} onChange={handleToDateChange} fullWidth/>
+                                <TextField variant="outlined" color="secondary" InputLabelProps={{ shrink: true }} type="date" label="To Date" value={toDate} onChange={handleToDateChange} fullWidth id={`facultyLeaveApplicationToDateTextField`}/>
                             </Grid>
                             <Box height={8}/>
-                            <Button variant='contained' color='secondary' onClick={sendNewLeave}>Apply</Button>
+                            <Button variant='contained' color='secondary' onClick={sendNewLeave} id={`facultyLeaveApplyButton`}>Apply</Button>
                         </CardContent>
                     </Card>
                 </Grid>
