@@ -15,7 +15,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import backendService from "../../services/backendService";
-// import FacultyAttendanceCard from "../../components/FacultyAttendanceCard";
+import HodLeaveStatusCard from '../../components/HodLeaveStatusCard';
+import FacultyAttendanceCard from "../../components/FacultyAttendanceCard";
 
 function createTimeTable(weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7) {
     return { weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7 };
@@ -119,7 +120,7 @@ export default function HomeScreen(){
         <div>
             <Grid container spacing={3} direction={'row'} alignContent="center" justify="center">
                 <Grid item>
-                    <Card className='homeEnrolledCoursesCard' variant="outlined">
+                    <Card className='homeRowcard' variant="outlined">
                         <CardContent>
                             <Box flex={1}/>
                             <Typography  variant="h5" color={"secondary"} component="h2">
@@ -152,9 +153,10 @@ export default function HomeScreen(){
                         </CardContent>
                     </Card>
                 </Grid>
-                {/*<Grid item>*/}
-                {/*    <FacultyAttendanceCard totalWorkingDays={totalWorkingDays} attendedDays={attendedDays} totalLeaveDays={totalLeaveDays}/>*/}
-                {/*</Grid>*/}
+                <Grid item>
+                    {/* <FacultyAttendanceCard fieldID="homeRowcard"/> */}
+                    <HodLeaveStatusCard />
+                </Grid>
             </Grid>
 
             <Grid container spacing={3} alignContent="center" justify="center">
@@ -171,13 +173,13 @@ export default function HomeScreen(){
                                     <TableHead>
                                     <TableRow>
                                         <TableCell>Weekday</TableCell>
-                                        <TableCell align="right">8:50 to 9:40</TableCell>
-                                        <TableCell align="right">9:50 to 10:40</TableCell>
-                                        <TableCell align="right">11:00 to 11:50</TableCell>
-                                        <TableCell align="right">12:00 to 12:50</TableCell>
-                                        <TableCell align="right">2:00 to 3:00</TableCell>
-                                        <TableCell align="right">3:00 to 4:00</TableCell>
-                                        <TableCell align="right">4:00 to 5:00</TableCell>
+                                        <TableCell align="center">8:50 to 9:40</TableCell>
+                                        <TableCell align="center">9:50 to 10:40</TableCell>
+                                        <TableCell align="center">11:00 to 11:50</TableCell>
+                                        <TableCell align="center">12:00 to 12:50</TableCell>
+                                        <TableCell align="center">2:00 to 3:00</TableCell>
+                                        <TableCell align="center">3:00 to 4:00</TableCell>
+                                        <TableCell align="center">4:00 to 5:00</TableCell>
                                     </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -186,13 +188,13 @@ export default function HomeScreen(){
                                         <TableCell component="th" scope="row">
                                             {row.weekDay}
                                         </TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr1}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr2}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr3}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr4}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr5}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr6}</TableCell>
-                                        <TableCell size={"medium"} align="center">{row.hr7}</TableCell>
+                                        <TableCell  align="center">{row.hr1}</TableCell>
+                                        <TableCell  align="center">{row.hr2}</TableCell>
+                                        <TableCell  align="center">{row.hr3}</TableCell>
+                                        <TableCell  align="center">{row.hr4}</TableCell>
+                                        <TableCell  align="center">{row.hr5}</TableCell>
+                                        <TableCell  align="center">{row.hr6}</TableCell>
+                                        <TableCell  align="center">{row.hr7}</TableCell>
                                         </TableRow>
                                     ))}
                                     </TableBody>

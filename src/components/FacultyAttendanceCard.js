@@ -5,7 +5,7 @@ import Card from "@material-ui/core/Card";
 import AttendanceServices from "../services/AttendanceServices";
 
 
-export default function FacultyAttendanceCard({totalWorkingDays,attendedDays,totalLeaveDays}){
+export default function FacultyAttendanceCard({fieldID,attendedDays,totalLeaveDays}){
 
 
     const getAttendancePercentageString=()=>{
@@ -25,21 +25,13 @@ export default function FacultyAttendanceCard({totalWorkingDays,attendedDays,tot
     }
 
     return (
-        <Card className='attendanceCard' variant="outlined">
+        <Card className={fieldID} variant="outlined">
             <CardContent>
                 <Box flex={1}/>
                 <Typography  variant="h5" color={"secondary"} component="h2">
-                    Faculty Attendance Details
+                    Your Attendance Summary
                 </Typography>
                 <Box height={10}/>
-                {/* <Typography color="textSecondary" gutterBottom>
-                    Total Working Days: {totalWorkingDays}<br/>
-                    Total Working Days Crossed: {totalLeaveDays+attendedDays}<br/>
-                    Total Days Attended: {attendedDays}<br/>
-                    Total Leaves Taken: {totalLeaveDays}<br/>
-                    Faculty Attendance Percentage: {getAttendancePercentageString()}<br/>
-                    You can take <b>{findRemainingBunkableDays()}</b> more days leaves.<br/>
-                </Typography> */}
                 <Typography>Your Attendance Percentage Is</Typography>
                 <Typography variant="h2" id={AttendanceServices.getAttendancePercentageTextStyle(((attendedDays/(attendedDays+totalLeaveDays))*100))}>{getAttendancePercentageString()}</Typography>
                 <Box height={20}/>
