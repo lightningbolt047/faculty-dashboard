@@ -156,7 +156,7 @@ export default function FacultyLeaveApplication(){
         <div>
             <Grid container spacing={3} alignContent="center" justify="center">
                 <Grid item>
-                    <FacultyAttendanceCard totalWorkingDays={totalWorkingDays} attendedDays={attendedDays} totalLeaveDays={totalLeaveDays}/>
+                    <FacultyAttendanceCard fieldID="attendanceCard" attendedDays={attendedDays} totalLeaveDays={totalLeaveDays}/>
                 </Grid>
 
                 <Grid item>

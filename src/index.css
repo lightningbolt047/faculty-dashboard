@@ -194,10 +194,10 @@ body {
   padding: 10px;
 }
 
-.homeEnrolledCoursesCard{
-  margin-top: 25px;
-  margin-bottom: 25px;
-  height: auto;
+.homeRowcard{
+  margin-top: 20px;
+  margin-bottom: 7.5px;
+  height: 300px;
   width: 100%;
   padding: 5px;
 }
@@ -205,11 +205,11 @@ body {
 .homeCard {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25px;
-  margin-bottom: 25px;
+  margin-top: 7.5px;
+  margin-bottom: 10px;
   width: 100%;
   height: auto;
-  padding: 5px;
+  padding: 2.5px;
 }
 .timetable {
   min-width: 750px;
