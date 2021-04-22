@@ -20,7 +20,6 @@ export default function FacultyLeaveApplication(){
     const [leaveReason,setLeaveReason]=useState("");
     const [fromDate,setFromDate]=useState('');
     const [toDate,setToDate]=useState('');
-    const [totalWorkingDays,setTotalWorkingDays]=useState(0);
     const [totalLeaveDays,setTotalLeaveDays]=useState(0);
     const [attendedDays,setAttendedDays]=useState(0);
     const [snackbarOpen,setSnackbarOpen]=useState(false);
@@ -30,7 +29,6 @@ export default function FacultyLeaveApplication(){
     const getAttendanceDetails=async ()=>{
         let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
         if(responseBody.statusCode===200){
-            setTotalWorkingDays(responseBody.totalWorkingDays);
             setTotalLeaveDays(responseBody.totalLeaveDays);
             setAttendedDays(responseBody.attendedDays);
         }
@@ -192,6 +190,7 @@ export default function FacultyLeaveApplication(){
                     <FacultyLeaveAccordion key={index} accordionID={index} passJSON={item} handleLeaveChange={handleFacultyLeaveChange} />
                 </div>
             ))}
+            <Box height={16}/>
 
             <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose}>
                 {getAlertDiv()}

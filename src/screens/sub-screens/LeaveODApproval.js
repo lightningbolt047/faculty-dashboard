@@ -25,11 +25,20 @@ export default function LeaveODApproval({passRoute}){
 
 
     const getInfoFromBackend=async ()=>{
-        let responseBody=await backendService('GET',`/${passRoute}/`,
+
+        let route;
+        if(passRoute==='odform'){
+            route='/odform/';
+        }else if(passRoute==='hodLeaveApprove'){
+            route='/hodLeaveApprove/getAllLeaves';
+        }
+
+        let responseBody=await backendService('GET',route,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         if(responseBody.statusCode===200){
             allPasses=responseBody;
+            getSearchResults();
         }
         setStatusCode(responseBody.statusCode);
     };
@@ -236,11 +245,7 @@ export default function LeaveODApproval({passRoute}){
 
 
     useEffect(()=>{
-        async function fetchFromServer(){
-            await getInfoFromBackend();
-            getSearchResults();
-        }
-        fetchFromServer();
+        getInfoFromBackend()
         //eslint-disable-next-line
     },[]);
 

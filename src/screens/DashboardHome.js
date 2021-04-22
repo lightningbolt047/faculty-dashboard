@@ -66,7 +66,7 @@ export default function DashboardHome(){
     const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    let subScreenList=[<HomeScreen/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval passRoute={"hodLeaveApprove"}/>,<CourseInfoScreen/>,<StudentGatePassMedical/>,<LeaveODApproval passRoute={'odform'}/>,<MentorDiary/>];
+    let subScreenList=[<HomeScreen/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval key={'hodLeaveApprove'} passRoute={"hodLeaveApprove"}/>,<CourseInfoScreen/>,<StudentGatePassMedical/>,<LeaveODApproval key={'odform'} passRoute={'odform'}/>,<MentorDiary/>];
     let subScreenNames=["Home","Profile","Leave Management","Leave Approval","Course Info","Student Gate Passes","OD Forms","Mentoring Diary"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
     const [isHOD,setIsHOD]=useState(false);

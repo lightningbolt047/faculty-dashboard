@@ -26,13 +26,17 @@ function createCourseInfo(courseName, courseCode, sections) {
     return { courseName, courseCode, sections };
 }
 
+let isHOD=false;
+
 export default function HomeScreen(){
 
     const [timetableRows,setTimetableRows]=useState([]);
     const [courseRows,setCourseRows]=useState([]);
-    // const [totalWorkingDays,setTotalWorkingDays]=useState(0);
-    // const [totalLeaveDays,setTotalLeaveDays]=useState(0);
-    // const [attendedDays,setAttendedDays]=useState(0);
+    const [totalLeaveDays,setTotalLeaveDays]=useState(0);
+    const [attendedDays,setAttendedDays]=useState(0);
+    const [pendingLeaveApprovals,setPendingLeaveApprovals]=useState(-1);
+    const [pendingLeaveApprovalsLoading,setPendingLeaveApprovalsLoading]=useState(true);
+    // const [isHOD,setIsHOD]=useState(false);
 
     const getTimetableFromServer=async ()=>{
         let responseBody=await backendService('GET','/timetable',
@@ -40,6 +44,17 @@ export default function HomeScreen(){
             );
         if(responseBody.statusCode===200){
             setTimetableInTable(responseBody)
+        }
+    }
+
+    const getNumPendingLeaveApprovals=async ()=>{
+        setPendingLeaveApprovalsLoading(true);
+        let responseBody=await backendService('GET','/hodLeaveApprove/getNumLeaves',
+            {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        );
+        if(responseBody.statusCode===200){
+            setPendingLeaveApprovals(responseBody.numLeaves);
+            setPendingLeaveApprovalsLoading(false);
         }
     }
 
@@ -52,14 +67,13 @@ export default function HomeScreen(){
         }
     }
 
-    // const getAttendanceDetails=async ()=>{
-    //     let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
-    //     if(responseBody.statusCode===200){
-    //         setTotalWorkingDays(responseBody.totalWorkingDays);
-    //         setTotalLeaveDays(responseBody.totalLeaveDays);
-    //         setAttendedDays(responseBody.attendedDays);
-    //     }
-    // }
+    const getAttendanceDetails=async ()=>{
+        let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
+        if(responseBody.statusCode===200){
+            setTotalLeaveDays(responseBody.totalLeaveDays);
+            setAttendedDays(responseBody.attendedDays);
+        }
+    }
 
     const separateSectionListWithComma=(sectionList)=>{
         let sectionString="";
@@ -109,9 +123,19 @@ export default function HomeScreen(){
 
 
     useEffect(()=>{
+        if(sessionStorage.HOD==='true'){
+            isHOD=true;
+        }else{
+            isHOD=false;
+        }
        getTimetableFromServer();
        getEnrolledCoursesFromServer();
-       // getAttendanceDetails();
+       console.log(isHOD);
+       if(!isHOD){
+           getAttendanceDetails();
+       }else{
+           getNumPendingLeaveApprovals();
+       }
        // eslint-disable-next-line
     },[]);
 
@@ -154,8 +178,9 @@ export default function HomeScreen(){
                     </Card>
                 </Grid>
                 <Grid item>
-                    {/* <FacultyAttendanceCard fieldID="homeRowcard"/> */}
-                    <HodLeaveStatusCard />
+                    {!isHOD && <FacultyAttendanceCard fieldID="homeRowcard" attendedDays={attendedDays}
+                                            totalLeaveDays={totalLeaveDays}/>}
+                    {isHOD && <HodLeaveStatusCard isLoading={pendingLeaveApprovalsLoading} numLeavesPending={pendingLeaveApprovals}/>}
                 </Grid>
             </Grid>
 
