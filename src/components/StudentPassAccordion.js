@@ -13,7 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DateServices from "../services/DateServices";
 import AttendanceServices from "../services/AttendanceServices";
 
-export default function GatePassStudentAccordion({accordionID, passType, passJSON, handlePassAction, passRoute}){
+export default function StudentPassAccordion({accordionID, passType, passJSON, handlePassAction, passRoute}){
     const departureTime=new Date(passJSON.passDetails.departureTime);
     const arrivalTime=new Date(passJSON.passDetails.arrivalTime);
 
@@ -71,7 +71,7 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`studentPassAccordion${passType+accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">{passJSON.personalDetails.clgID}</Typography>
                     </Box>
@@ -84,13 +84,13 @@ export default function GatePassStudentAccordion({accordionID, passType, passJSO
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>0 && studentJSON.personalDetails.studentID.disciplinaryActions.length<3 && <AlertIcon id='alertColor'/>}*/}
                     {/*{studentJSON.personalDetails.studentID.disciplinaryActions.length>=3 && <WarningIcon id='warningColor'/>}*/}
                     <Box width={12}/>
-                        <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'}>
+                        <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'} id={`studentPassAccordionApprove${passType+accordionID}`}>
                             <CheckIcon id={passType!=='approved' && 'okColor'}/>
                         </IconButton>
-                        <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'}>
+                        <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'} id={`studentPassAccordionCancel${passType+accordionID}`}>
                             <CancelIcon id={passType!=='cancelled' && 'warningColor'}/>
                         </IconButton>
-                    {passRoute==='gatepass' && <IconButton size="small" onClick={withholdGatePassHandler} disabled={passType === 'withheld'}>
+                    {passRoute==='gatepass' && <IconButton size="small" onClick={withholdGatePassHandler} disabled={passType === 'withheld'} id={`studentPassAccordionWithhold${passType+accordionID}`}>
                         <LockIcon id={passType !== 'withheld' && 'alertColor'}/>
                     </IconButton>}
                     <Box width={8}/>

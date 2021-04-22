@@ -1,4 +1,4 @@
-import GatePassStudentAccordion from '../../components/GatePassStudentAccordion';
+import StudentPassAccordion from '../../components/StudentPassAccordion';
 import SearchBar from '../../components/SearchBar';
 import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';
@@ -303,7 +303,7 @@ export default function GatePasses({passRoute}){
                 </div>}
                     {shownEmergencyPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                            <StudentPassAccordion key={index} accordionID={index} passType={'emergency'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
                 {shownRegularPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -315,7 +315,7 @@ export default function GatePasses({passRoute}){
                 </div>}
                     {shownRegularPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                            <StudentPassAccordion key={index} accordionID={index} passType={'regular'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
                 {shownWithheldPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -327,7 +327,7 @@ export default function GatePasses({passRoute}){
                 </div>}
                     {shownWithheldPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                            <StudentPassAccordion key={index} accordionID={index} passType={'withheld'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
                 {shownCancelledPasses.length!==0 && <div className={'gatePassSegmentEmergency'}>
@@ -339,7 +339,7 @@ export default function GatePasses({passRoute}){
                 </div>}
                     {shownCancelledPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                            <StudentPassAccordion key={index} accordionID={index} passType={'cancelled'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
                 {shownApprovedPasses.length!==0 && <div className={'gatePassSegmentRegular'}>
@@ -351,7 +351,7 @@ export default function GatePasses({passRoute}){
                 </div>}
                     {shownApprovedPasses.map((studentItem,index)=>(
                         <div>
-                            <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
+                            <StudentPassAccordion key={index} accordionID={index} passType={'approved'} passJSON={studentItem} handlePassAction={handlePassStatusChange} passRoute={passRoute}/>
                         </div>
                     ))}
             </div>

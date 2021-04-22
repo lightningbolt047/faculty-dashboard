@@ -3,7 +3,7 @@ import backendService from '../../services/backendService';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {useState,useEffect} from 'react';
-import GatePassStudentAccordion from '../../components/GatePassStudentAccordion';
+import StudentPassAccordion from '../../components/StudentPassAccordion';
 import Typography from "@material-ui/core/Typography";
 import ExploreIcon from "@material-ui/icons/Explore";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -282,9 +282,9 @@ export default function LeaveODApproval({passRoute}){
                     </div>}
                     {shownRegularPasses.map((studentItem,index)=>(
                         <div>
-                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'regular'}
-                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
-                                                       passRoute='odform'/>}
+                            {passRoute==='odform' && <StudentPassAccordion key={index} accordionID={index} passType={'regular'}
+                                                                           passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                                           passRoute='odform'/>}
                             {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'regular'}
                                                                                passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>
@@ -298,9 +298,9 @@ export default function LeaveODApproval({passRoute}){
                     </div>}
                     {shownCancelledPasses.map((studentItem,index)=>(
                         <div>
-                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'cancelled'}
-                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
-                                                       passRoute='odform'/>}
+                            {passRoute==='odform' && <StudentPassAccordion key={index} accordionID={index} passType={'cancelled'}
+                                                                           passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                                           passRoute='odform'/>}
                             {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'cancelled'}
                                                                                         passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>
@@ -314,9 +314,9 @@ export default function LeaveODApproval({passRoute}){
                     </div>}
                     {shownApprovedPasses.map((studentItem,index)=>(
                         <div>
-                            {passRoute==='odform' && <GatePassStudentAccordion key={index} accordionID={index} passType={'approved'}
-                                                       passJSON={studentItem} handlePassAction={handlePassStatusChange}
-                                                       passRoute='odform'/>}
+                            {passRoute==='odform' && <StudentPassAccordion key={index} accordionID={index} passType={'approved'}
+                                                                           passJSON={studentItem} handlePassAction={handlePassStatusChange}
+                                                                           passRoute='odform'/>}
                             {passRoute==='hodLeaveApprove' && <HodLeaveApproveAccordion key={index} accordionID={index} passType={'approved'}
                                                                                         passJSON={studentItem} handlePassAction={handlePassStatusChange}/>}
                         </div>

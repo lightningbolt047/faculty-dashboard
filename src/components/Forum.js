@@ -186,13 +186,13 @@ export default function Forum({course}){
                     <DialogContentText>
                         Type out your post here so that same course handling faculties can interact.
                     </DialogContentText>
-                    <TextField variant="outlined" value={postText} onChange={handlePostTextChange} color="secondary" label="Post" type="text" fullWidth/>
+                    <TextField variant="outlined" value={postText} onChange={handlePostTextChange} color="secondary" label="Post" type="text" fullWidth id={`forumCreatePostTextField`}/>
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleClose} color="primary" id={`forumCreatePostTextDiscardButton`}>
                     Cancel
                 </Button>
-                <Button onClick={handleAddNewForumPost} color="primary">
+                <Button onClick={handleAddNewForumPost} color="primary" id={`forumCreatePostButton`}>
                     Post
                 </Button>
                 </DialogActions>

@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 
-export default function CourseNotesAccordion({note}){
+export default function CourseNotesAccordion({accordionID,note}){
 
     const noteDate=new Date(note.date);
     const dateString=noteDate.getDate()+"/"+(noteDate.getMonth()+1)+"/"+noteDate.getFullYear();
@@ -16,7 +16,7 @@ export default function CourseNotesAccordion({note}){
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`courseNotesAccordion${accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">Date: {dateString}</Typography>
                     </Box>
