@@ -21,8 +21,8 @@ function createTimeTable(weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7) {
     return { weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7 };
 }
 
-function createCourseInfo(courseName, courseCode, courseCredits, courseType) {
-    return { courseName, courseCode, courseCredits, courseType };
+function createCourseInfo(courseName, courseCode, sections) {
+    return { courseName, courseCode, sections };
 }
 
 export default function HomeScreen(){
@@ -60,10 +60,21 @@ export default function HomeScreen(){
     //     }
     // }
 
+    const separateSectionListWithComma=(sectionList)=>{
+        let sectionString="";
+        for(let i=0;i<sectionList.length;i++){
+            sectionString+=sectionList[i];
+            if(i!==sectionList.length-1){
+                sectionString+=' , '
+            }
+        }
+        return sectionString;
+    }
+
     const setEnrolledCoursesInTable=(receivedCourses)=>{
         let courseRowsTemp=[];
         for(const course of receivedCourses){
-            courseRowsTemp.push(createCourseInfo(course.courseName,course.courseCode,course.courseCredits,course.courseType));
+            courseRowsTemp.push(createCourseInfo(course.courseName,course.courseCode,separateSectionListWithComma(course.sections)));
         }
         setCourseRows(courseRowsTemp);
     }
@@ -90,7 +101,7 @@ export default function HomeScreen(){
         }
         let daysOfWeek=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         for(let i=0;i<daysOfWeek.length;i++){
-            timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTableCourseCodes[i][0]+" "+timeTableClass[i][0], timeTableCourseCodes[i][1]+" "+timeTableClass[i][1], timeTableCourseCodes[i][2]+" "+timeTableClass[i][2], timeTableCourseCodes[i][3]+" "+timeTableClass[i][3],timeTableCourseCodes[i][4]+" "+timeTableClass[i][4],timeTableCourseCodes[i][5]+" "+timeTableClass[i][5],timeTableCourseCodes[i][6]+" "+timeTableClass[i][6]));
+            timeTableRowsTemp.push(createTimeTable(daysOfWeek[i], timeTableCourseCodes[i][0], timeTableCourseCodes[i][1], timeTableCourseCodes[i][2], timeTableCourseCodes[i][3],timeTableCourseCodes[i][4],timeTableCourseCodes[i][5],timeTableCourseCodes[i][6]));
         }
         setTimetableRows(timeTableRowsTemp);
     }
@@ -121,8 +132,7 @@ export default function HomeScreen(){
                                     <TableRow>
                                         <TableCell align="center">Course Name</TableCell>
                                         <TableCell align="center">Course Code</TableCell>
-                                        <TableCell align="center">Course Credits</TableCell>
-                                        <TableCell align="center">Course Type</TableCell>
+                                        <TableCell align="center">Handling Sections</TableCell>
                                     </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -132,8 +142,7 @@ export default function HomeScreen(){
                                             {row.courseName}
                                         </TableCell>
                                         <TableCell align="center">{row.courseCode}</TableCell>
-                                        <TableCell align="center">{row.courseCredits}</TableCell>
-                                        <TableCell align="center">{row.courseType}</TableCell>
+                                        <TableCell align="center">{row.sections}</TableCell>
                                         </TableRow>
                                     ))}
                                     </TableBody>
