@@ -6,6 +6,7 @@ const FacultyCourseNotes=require('../models/facultyCourseNotesSchema');
 const SemesterProgression=require('../models/semesterProgressionSchema');
 
 const getCourseNameFromCourseID=require('../services/getCourseNameFromCourseID');
+const getSectionsFromAdvisorAllocations=require('../services/getSectionsFromAdvisorAllocationIDs');
 const checkCredentials=require('../services/checkCredentialsService');
 
 
@@ -38,6 +39,7 @@ facultyCourseNotesRouter.route('/')
                             courseCode:await getCourseNameFromCourseID(courseProgression.courseID,'courseCode'),
                             courseCredits:await getCourseNameFromCourseID(courseProgression.courseID,'courseCredits'),
                             courseType:await getCourseNameFromCourseID(courseProgression.courseID,'courseType'),
+                            sections:await getSectionsFromAdvisorAllocations(courseProgression.advisorAllocationID),
                             courseID:courseProgression.courseID
                         };
                         sendDocument.push(courseDetails);
