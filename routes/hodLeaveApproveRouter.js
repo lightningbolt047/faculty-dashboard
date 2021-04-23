@@ -23,9 +23,9 @@ hodLeaveApproveRouter.route('/:reqType')
                 FacultyLeave.find({facultyDepartment:hodDepartment,leaveStatus: {$ne:'facultyCancelled'}})
                     .then(async (leaves)=>{
                         if(!leaves || leaves.length===0){
-                            res.statusCode=404;
+                            res.statusCode=200;
                             res.json({
-                                status:"Resource Not found"
+                                numLeaves:0
                             });
                             return;
                         }
