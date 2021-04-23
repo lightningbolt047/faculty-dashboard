@@ -170,7 +170,7 @@ export default function Forum({course}){
 
     return (
         <div>
-            <Typography variant="h5" color="secondary">Forum</Typography>
+            <Typography variant="h5" color="secondary">Course Committee Discussions</Typography>
             {forumPosts.map((item,index)=>(
                 <ForumPostAccordion key={index} postIndex={index} commentText={commentText} onCommentTextChangeHandler={handleCommentTextChange} postCommentHandler={addNewComment} post={item} voteClickHandler={voteClickHandler}/>
             ))}
