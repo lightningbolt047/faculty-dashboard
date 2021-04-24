@@ -36,18 +36,58 @@ facultyLeaveApplyRouter.route('/')
             });
             return;
         }
-        FacultyLeave.findByIdAndUpdate(req.body.leaveID,{$set:{'leaveStatus':req.body.leaveStatus}},{runValidators:true})
-            .then(()=>{
-                res.statusCode=200;
-                res.json({
-                    status:"Leave updated successfully"
-                });
-            },(err)=>{
-                res.statusCode=400;
-                res.json({
-                    status:'Bad request!'
-                });
-            })
+
+        FacultyLeave.findById(req.body.leaveID)
+            .then(async (leave)=>{
+                try{
+                    let numCasualLeaves=leave.casualLeaves;
+                    let numExtraLeaves=leave.extraLeaves;
+                    let numMedicalLeaves=leave.medicalLeaves;
+                    if(req.body.leaveStatus==='facultyCancelled' && leave.leaveStatus==='approved'){
+                        let reduction=1;
+                        if(leave.leaveTiming!=='full'){
+                            reduction=0.5;
+                        }
+                        if(leave.leaveType==='cl'){
+                            numCasualLeaves-=reduction;
+                        }
+                        else if(leave.leaveType==='el'){
+                            numExtraLeaves-=reduction;
+                        }
+                        else if(leave.leaveType==='ml'){
+                            numMedicalLeaves-=reduction;
+                        }
+                    }
+                    await FacultyLeave.findByIdAndUpdate(req.body.leaveID,{$set:{
+                        'leaveStatus':req.body.leaveStatus,
+                        'casualLeaves':numCasualLeaves,
+                        'extraLeaves':numExtraLeaves,
+                        'medicalLeaves':numMedicalLeaves
+                    }});
+                    res.statusCode=200;
+                    res.json({
+                        status:"Leave status update successful"
+                    });
+                }catch(e){
+                    res.statusCode=500;
+                    res.json({
+                        status:"Internal Server Error"
+                    });
+                }
+            });
+
+        // FacultyLeave.findByIdAndUpdate(req.body.leaveID,{$set:{'leaveStatus':req.body.leaveStatus}},{runValidators:true})
+        //     .then(()=>{
+        //         res.statusCode=200;
+        //         res.json({
+        //             status:"Leave updated successfully"
+        //         });
+        //     },(err)=>{
+        //         res.statusCode=400;
+        //         res.json({
+        //             status:'Bad request!'
+        //         });
+        //     })
     })
     .put(async (req,res,next)=>{
         try{
@@ -63,7 +103,7 @@ facultyLeaveApplyRouter.route('/')
             let curDate=new Date();
             let curDateString=curDate.getFullYear()+'-'+(curDate.getMonth()+1)+"-"+curDate.getDate()+"T"+"00:00:00.000Z";
             let curTime=Date.parse(curDateString);
-            if(departureTime>=arrivalTime || departureTime<curTime){
+            if(departureTime>arrivalTime || departureTime<curTime){
                 res.statusCode=400;
                 res.json({
                     status:"Bad Request!"
@@ -75,6 +115,8 @@ facultyLeaveApplyRouter.route('/')
                facultyID:req.headers['dbid'],
                facultyDepartment:user.department,
                reason:req.body.reason,
+               leaveType:req.body.leaveType,
+               leaveTiming:req.body.leaveTiming,
                departureTime:departureTime,
                arrivalTime:arrivalTime
             });
