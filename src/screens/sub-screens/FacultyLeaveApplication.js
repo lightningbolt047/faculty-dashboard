@@ -186,7 +186,7 @@ export default function FacultyLeaveApplication(){
                             </Grid>
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">
-                                <FormControl variant="outlined" id="leaveDropdown">
+                                <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Duration Type</InputLabel>
                                     <Select className="leftAlignDropdownText" value={leaveDurationType} onChange={handleLeaveDurationTypeChange} label="Leave Duration Type">
                                         <MenuItem value="">Select</MenuItem>
@@ -198,7 +198,7 @@ export default function FacultyLeaveApplication(){
                             </Grid>
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">
-                            <FormControl variant="outlined" id="leaveDropdown">
+                            <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Type</InputLabel>
                                     <Select className="leftAlignDropdownText" value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
                                         <MenuItem value="">Select</MenuItem>
