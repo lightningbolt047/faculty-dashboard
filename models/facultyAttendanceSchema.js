@@ -11,24 +11,20 @@ const facultyAttendanceSchema=new Schema({
         type:String,
         required:true
     },
-    year:{
-        type:Number,
-        required:true
-    },
-    sem:{
-        type:Number,
-        enum:[0,1],
-        required:true
-    },
-    totalWorkingDaysID:{
+    totalLeaveDaysID:{
         type:String,
-        required:true
+        required:true,
+        ref:'totalLeaveDays'
     },
-    totalLeaveDays:{
+    casualLeaves:{
         type:Number,
         required:true
     },
-    attendedDays:{
+    extraLeaves:{
+      type:Number,
+      required:true
+    },
+    medicalLeaves:{
         type:Number,
         required:true
     }

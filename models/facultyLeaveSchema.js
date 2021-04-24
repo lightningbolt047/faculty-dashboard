@@ -12,6 +12,21 @@ const facultyLeaveSchema=new Schema({
       type:String,
       required:true
     },
+    leaveType:{
+        type:String,
+        enum:['cl','el','ml'],
+        required:true
+    },
+    facultyAttendanceID:{
+        type:String,
+        ref:'facultyAttendance',
+        required:true,
+    },
+    leaveTiming:{
+        type:String,
+        enum:['fn','an','full'],
+        required:true
+    },
     reason:{
         type:String,
         required:true

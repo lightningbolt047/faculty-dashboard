@@ -2,25 +2,24 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 const Student=require('./studentSchema');
 
-const totalWorkingDaysSchema=new Schema({
+const totalLeaveDaysSchema=new Schema({
     year:{
         type:Number,
         required:true
     },
-    sem:{
-        type:Number,
-        enum:[0,1],
-        required:true
-    },
-    totalWorkingDays:{
+    totalCasualLeaves:{
         type:Number,
         required:true
     },
-    totalLeaveDays:{
+    totalMedicalLeaves:{
         type:Number,
-        default:0
+        required:true
+    },
+    totalExtraLeaves:{
+        type:Number,
+        required:true
     }
 });
 
-var TotalWorkingDays=mongoose.model('totalWorkingDays',totalWorkingDaysSchema);
-module.exports=TotalWorkingDays;
+var TotalLeaveDays=mongoose.model('totalLeaveDays',totalLeaveDaysSchema);
+module.exports=TotalLeaveDays;

@@ -1,5 +1,5 @@
 const FacultyAttendance=require('../models/facultyAttendanceSchema');
-const TotalWorkingDays=require('../models/totalWorkingDaysSchema');
+const TotalLeaveDays=require('../models/totalLeaveDaysSchema');
 
 module.exports=async (facultyID)=>{
     let sendDocument={};
@@ -18,9 +18,15 @@ module.exports=async (facultyID)=>{
             maxYear=facultyAttendance.year;
         }
     }
-    let totalWorkingDaysDocument=await TotalWorkingDays.findById(latestFacultyAttendance.totalWorkingDaysID);
-    sendDocument.totalWorkingDays=totalWorkingDaysDocument.totalWorkingDays;
-    sendDocument.totalLeaveDays=latestFacultyAttendance.totalLeaveDays;
-    sendDocument.attendedDays=latestFacultyAttendance.attendedDays;
+    sendDocument.totalLeaveDays={};
+    sendDocument.facultyLeaveDays={};
+    let totalLeaveDaysDocument=await TotalLeaveDays.findById(latestFacultyAttendance.totalWorkingDaysID);
+    sendDocument.totalLeaveDays.casualLeaves=totalLeaveDaysDocument.totalCasualLeaves;
+    sendDocument.totalLeaveDays.medicalLeaves=totalLeaveDaysDocument.totalMedicalLeaves;
+    sendDocument.totalLeaveDays.ExtraLeaves=totalLeaveDaysDocument.totalExtraLeaves;
+
+    sendDocument.facultyLeaveDays.casualLeaves=facultyAttendances.casualLeaves;
+    sendDocument.facultyLeaveDays.ExtraLeaves=facultyAttendances.ExtraLeaves;
+    sendDocument.facultyLeaveDays.medicalLeaves=facultyAttendances.medicalLeaves;
     return sendDocument;
 }
