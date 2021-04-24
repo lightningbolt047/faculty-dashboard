@@ -13,9 +13,15 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import FacultyAttendanceCard from '../../components/FacultyAttendanceCard';
 import DateServices from "../../services/DateServices";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 
 let allPassDetails=[];
 let fromDateISO,toDateISO;
+
 export default function FacultyLeaveApplication(){
     const [leaveReason,setLeaveReason]=useState("");
     const [fromDate,setFromDate]=useState('');
@@ -25,6 +31,17 @@ export default function FacultyLeaveApplication(){
     const [snackbarOpen,setSnackbarOpen]=useState(false);
     const [putStatusCode,setPutStatusCode]=useState(200);
     const [shownPassDetails,setShownPassDetails]=useState([]);
+    const [leaveDurationType, setleaveDurationType] = useState('');
+    const [leaveType, setleaveType] = useState('');
+
+    const handleLeaveDurationTypeChange = (event) => {
+        setleaveDurationType(event.target.value);
+    };
+
+    const handleLeaveTypeChange = (event) => {
+        setleaveType(event.target.value);
+    };
+
 
     const getAttendanceDetails=async ()=>{
         let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
@@ -165,7 +182,32 @@ export default function FacultyLeaveApplication(){
                             </Typography>
                             <Box height={10}/>
                             <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" label="Reason" value={leaveReason} onChange={handleLeaveReasonChange} fullWidth id={`facultyLeaveApplicationReasonTextField`}/>
+                                <TextField variant="outlined" color="secondary" label="Reason" value={leaveReason} onChange={handleLeaveReasonChange} fullWidth id={`facultyLeaveApplicationReasonTextField`}/>
+                            </Grid>
+                            <Box height={8}/>
+                            <Grid container alignContent="center" justify="center">
+                                <FormControl variant="outlined" id="leaveDropdown">
+                                    <InputLabel>Leave Duration Type</InputLabel>
+                                    <Select className="leftAlignDropdownText" value={leaveDurationType} onChange={handleLeaveDurationTypeChange} label="Leave Duration Type">
+                                        <MenuItem value="">Select</MenuItem>
+                                        <MenuItem value="Forenoon">Forenoon</MenuItem>
+                                        <MenuItem value="Afternoon">Afternoon</MenuItem>
+                                        <MenuItem value="Full Day">Full Day</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Box height={8}/>
+                            <Grid container alignContent="center" justify="center">
+                            <FormControl variant="outlined" id="leaveDropdown">
+                                    <InputLabel>Leave Type</InputLabel>
+                                    <Select className="leftAlignDropdownText" value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
+                                        <MenuItem value="">Select</MenuItem>
+                                        <MenuItem value="casual">Casual Leave</MenuItem>
+                                        <MenuItem value="earned">Earned Leave</MenuItem>
+                                        <MenuItem value="medical">Medical Leave</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            
                             </Grid>
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">

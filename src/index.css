@@ -190,7 +190,7 @@ body {
 .attendanceCard {
   margin: 50px;
   width: 450px;
-  height: 325px;
+  height: 425px;
   padding: 10px;
 }
 
@@ -219,3 +219,10 @@ body {
   height: 80vh;
 }
 
+#leaveDropdown {
+  min-width: 418px;
+}
+
+.leftAlignDropdownText {
+  text-align: left;
+}
