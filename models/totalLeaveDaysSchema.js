@@ -15,7 +15,7 @@ const totalLeaveDaysSchema=new Schema({
         type:Number,
         required:true
     },
-    totalExtraLeaves:{
+    totalEarnedLeaves:{
         type:Number,
         required:true
     }

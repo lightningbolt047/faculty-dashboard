@@ -3,9 +3,11 @@ const express=require('express');
 const facultyLeaveApplyRouter=express.Router();
 
 const FacultyLeave=require('../models/facultyLeaveSchema');
+const FacultyAttendance=require('../models/facultyAttendanceSchema');
 const User=require('../models/userSchema');
 
 const checkCredentials=require('../services/checkCredentialsService');
+const getLeaveDifferenceAsNumDays=require('../services/getDateDifferenceAsNumDays');
 
 facultyLeaveApplyRouter.route('/')
     .get(checkCredentials,(req,res)=>{
@@ -40,29 +42,47 @@ facultyLeaveApplyRouter.route('/')
         FacultyLeave.findById(req.body.leaveID)
             .then(async (leave)=>{
                 try{
-                    let numCasualLeaves=leave.casualLeaves;
-                    let numExtraLeaves=leave.extraLeaves;
-                    let numMedicalLeaves=leave.medicalLeaves;
+                    let facultyAttendanceOverYears=await FacultyAttendance.find({facultyID: leave.facultyID});
+                    if(facultyAttendanceOverYears.length===0){
+                        res.statusCode=500;
+                        res.json({
+                            status:"Internal Server Error"
+                        });
+                        return;
+                    }
+                    let maxYear=facultyAttendanceOverYears[0].year;
+                    let latestFacultyAttendance=facultyAttendanceOverYears[0];
+                    for(const facultyAttendance of facultyAttendanceOverYears){
+                        if(maxYear<facultyAttendance.year){
+                            latestFacultyAttendance=facultyAttendance;
+                            maxYear=facultyAttendance.year;
+                        }
+                    }
+                    let numCasualLeaves=latestFacultyAttendance.casualLeaves;
+                    let numEarnedLeaves=latestFacultyAttendance.earnedLeaves;
+                    let numMedicalLeaves=latestFacultyAttendance.medicalLeaves;
+                    let reduction=getLeaveDifferenceAsNumDays(new Date(leave.arrivalTime),new Date(leave.departureTime));
                     if(req.body.leaveStatus==='facultyCancelled' && leave.leaveStatus==='approved'){
-                        let reduction=1;
-                        if(leave.leaveTiming!=='full'){
+                        if(leave.leaveTiming!=='full' && reduction===1){
                             reduction=0.5;
                         }
                         if(leave.leaveType==='cl'){
                             numCasualLeaves-=reduction;
                         }
                         else if(leave.leaveType==='el'){
-                            numExtraLeaves-=reduction;
+                            numEarnedLeaves-=reduction;
                         }
                         else if(leave.leaveType==='ml'){
                             numMedicalLeaves-=reduction;
                         }
                     }
+                    await FacultyAttendance.findByIdAndUpdate(latestFacultyAttendance._id,{$set:{
+                        'casualLeaves':numCasualLeaves,
+                        'numEarnedLeaves':numEarnedLeaves,
+                        'numMedicalLeaves':numMedicalLeaves
+                    }});
                     await FacultyLeave.findByIdAndUpdate(req.body.leaveID,{$set:{
                         'leaveStatus':req.body.leaveStatus,
-                        'casualLeaves':numCasualLeaves,
-                        'extraLeaves':numExtraLeaves,
-                        'medicalLeaves':numMedicalLeaves
                     }});
                     res.statusCode=200;
                     res.json({
@@ -110,6 +130,41 @@ facultyLeaveApplyRouter.route('/')
                 });
                 return;
             }
+
+            let facultyAttendanceOverYears=await FacultyAttendance.find({facultyID:req.headers['dbid']});
+
+            if(facultyAttendanceOverYears.length===0){
+                res.statusCode=500;
+                res.json({
+                    status:"Internal Server Error"
+                });
+                return;
+            }
+            let latestFacultyAttendance=facultyAttendanceOverYears[0];
+            let maxYear=facultyAttendanceOverYears[0].year;
+            for(const facultyAttendance of facultyAttendanceOverYears){
+                if(maxYear<facultyAttendance.year){
+                    latestFacultyAttendance=facultyAttendance;
+                    maxYear=facultyAttendance.year;
+                }
+            }
+
+            let dateDifference=getLeaveDifferenceAsNumDays(new Date(arrivalTime),new Date(departureTime));
+            if(dateDifference>1 && req.body.leaveTiming!=='full'){
+                res.statusCode=400;
+                res.json({
+                    status:"Bad request"
+                });
+            }
+            if(latestFacultyAttendance.casualLeaves!==0 && dateDifference%3!==0 && req.body.leaveType==='el'){
+                res.statusCode=403;
+                res.json({
+                    status:"You are allowed to apply for individual earned leaves only if you have exhausted your casual leaves"
+                });
+                return;
+            }
+
+
             let user=await User.findById(req.headers['dbid']);
             await FacultyLeave.create({
                facultyID:req.headers['dbid'],

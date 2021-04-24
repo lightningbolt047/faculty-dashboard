@@ -20,7 +20,7 @@ const facultyAttendanceSchema=new Schema({
         type:Number,
         required:true
     },
-    extraLeaves:{
+    earnedLeaves:{
       type:Number,
       required:true
     },

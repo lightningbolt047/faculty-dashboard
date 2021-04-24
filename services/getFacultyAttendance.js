@@ -23,10 +23,10 @@ module.exports=async (facultyID)=>{
     let totalLeaveDaysDocument=await TotalLeaveDays.findById(latestFacultyAttendance.totalWorkingDaysID);
     sendDocument.totalLeaveDays.casualLeaves=totalLeaveDaysDocument.totalCasualLeaves;
     sendDocument.totalLeaveDays.medicalLeaves=totalLeaveDaysDocument.totalMedicalLeaves;
-    sendDocument.totalLeaveDays.ExtraLeaves=totalLeaveDaysDocument.totalExtraLeaves;
+    sendDocument.totalLeaveDays.EarnedLeaves=totalLeaveDaysDocument.totalEarnedLeaves;
 
     sendDocument.facultyLeaveDays.casualLeaves=facultyAttendances.casualLeaves;
-    sendDocument.facultyLeaveDays.ExtraLeaves=facultyAttendances.ExtraLeaves;
+    sendDocument.facultyLeaveDays.EarnedLeaves=facultyAttendances.EarnedLeaves;
     sendDocument.facultyLeaveDays.medicalLeaves=facultyAttendances.medicalLeaves;
     return sendDocument;
 }
