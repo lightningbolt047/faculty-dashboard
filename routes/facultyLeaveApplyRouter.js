@@ -163,8 +163,6 @@ facultyLeaveApplyRouter.route('/')
                 });
                 return;
             }
-
-
             let user=await User.findById(req.headers['dbid']);
             await FacultyLeave.create({
                facultyID:req.headers['dbid'],
