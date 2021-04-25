@@ -9,6 +9,7 @@ const FacultyAttendance = require("../models/facultyAttendanceSchema");
 const checkCredentials=require('../services/checkCredentialsService');
 const getFacultyAttendance=require('../services/getFacultyAttendance');
 const getLeaveDifferenceAsNumDays=require('../services/getDateDifferenceAsNumDays');
+const getMaxYearDocument=require('../services/getMaxYearDocument');
 
 hodLeaveApproveRouter.route('/:reqType')
     .get(checkCredentials,(req,res,next)=>{
@@ -80,6 +81,7 @@ hodLeaveApproveRouter.route('/:reqType')
                                     res.json({
                                         status:'Internal Server Error'
                                     });
+                                    return;
                                 }
                             }
                             res.statusCode=200;
@@ -114,49 +116,43 @@ hodLeaveApproveRouter.route('/')
                    });
                    return;
                }
-
                let leave=await FacultyLeave.findById(req.body.passID);
-               if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled'){
-                   let facultyAttendanceOverYears=await FacultyAttendance.find({facultyID: leave.facultyID});
-                   if(facultyAttendanceOverYears.length===0){
-                       res.statusCode=500;
-                       res.json({
-                           status:"Internal Server Error"
-                       });
-                       return;
-                   }
-                   let maxYear=facultyAttendanceOverYears[0].year;
-                   let latestFacultyAttendance=facultyAttendanceOverYears[0];
-                   for(const facultyAttendance of facultyAttendanceOverYears){
-                       if(maxYear<facultyAttendance.year){
-                           latestFacultyAttendance=facultyAttendance;
-                           maxYear=facultyAttendance.year;
-                       }
-                   }
-                   let reduction=getLeaveDifferenceAsNumDays(new Date(leave.arrivalTime),new Date(leave.departureTime));
+               try{
+                   let latestFacultyAttendance=getMaxYearDocument(await FacultyAttendance.find({facultyID: leave.facultyID}));
+                   let numLeaveDays=getLeaveDifferenceAsNumDays(new Date(leave.arrivalTime),new Date(leave.departureTime));
                    let numCasualLeaves=latestFacultyAttendance.casualLeaves;
                    let numMedicalLeaves=latestFacultyAttendance.medicalLeaves;
                    let numEarnedLeaves=latestFacultyAttendance.earnedLeaves;
-                   if(leave.leaveTiming!=='full' && reduction===1){
-                       reduction=0.5;
+                   if(leave.leaveTiming!=='full' && numLeaveDays===1){
+                       numLeaveDays=0.5;
                    }
                    if(leave.leaveType==='cl'){
-                       numCasualLeaves-=reduction;
+                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                           numCasualLeaves-=numLeaveDays;
+                       }
                    }
                    else if(leave.leaveType==='ml'){
-                       numMedicalLeaves-=reduction;
+                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                           numMedicalLeaves-=numLeaveDays;
+                       }
                    }
                    else if(leave.leaveType==='el'){
-                       numEarnedLeaves-=reduction;
+                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                           numEarnedLeaves-=numLeaveDays;
+                       }
                    }
                    await FacultyAttendance.findByIdAndUpdate(latestFacultyAttendance._id,{$set:{
-                           'casualLeaves':numCasualLeaves,
-                           'numEarnedLeaves':numEarnedLeaves,
-                           'numMedicalLeaves':numMedicalLeaves
+                       'casualLeaves':numCasualLeaves,
+                       'numEarnedLeaves':numEarnedLeaves,
+                       'numMedicalLeaves':numMedicalLeaves
                    }});
+               }catch (e){
+                   res.statusCode=500;
+                   res.json({
+                       status:"Internal Server Error"
+                   });
+                   return;
                }
-
-
                FacultyLeave.findByIdAndUpdate(req.body.passID,{$set:{'leaveStatus':req.body.passStatus}},{runValidators:true})
                    .then((document)=>{
                        if(!document){
