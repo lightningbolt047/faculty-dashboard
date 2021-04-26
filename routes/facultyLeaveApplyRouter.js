@@ -114,7 +114,7 @@ facultyLeaveApplyRouter.route('/')
     })
     .put(async (req,res,next)=>{
         try{
-            if(typeof req.body.reason==='undefined' || typeof req.body.departureTime==='undefined' || typeof req.body.arrivalTime==='undefined'){
+            if(typeof req.body.reason==='undefined' || typeof req.body.departureTime==='undefined' || typeof req.body.arrivalTime==='undefined' || typeof req.body.leaveTiming==='undefined' || req.body.leaveTiming==="" || typeof req.body.leaveType==='undefined' || req.body.leaveType===""){
                 res.statusCode=400;
                 res.json({
                     status:"Bad Request!"
@@ -189,12 +189,14 @@ facultyLeaveApplyRouter.route('/')
                     numMedicalLeaves+=dateDifference;
                 }
                 else if(req.body.leaveType==='el'){
+                    console.log("Okay "+numEarnedLeaves+" "+dateDifference);
                     numEarnedLeaves+=dateDifference;
                 }
+                console.log("New nel: "+numEarnedLeaves);
                 await FacultyAttendance.findByIdAndUpdate(latestFacultyAttendance._id,{$set:{
                     'casualLeaves':numCasualLeaves,
-                    'numEarnedLeaves':numEarnedLeaves,
-                    'numMedicalLeaves':numMedicalLeaves
+                    'earnedLeaves':numEarnedLeaves,
+                    'medicalLeaves':numMedicalLeaves
                 }});
 
                 let user=await User.findById(req.headers['dbid']);

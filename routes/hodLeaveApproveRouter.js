@@ -143,8 +143,8 @@ hodLeaveApproveRouter.route('/')
                    }
                    await FacultyAttendance.findByIdAndUpdate(latestFacultyAttendance._id,{$set:{
                        'casualLeaves':numCasualLeaves,
-                       'numEarnedLeaves':numEarnedLeaves,
-                       'numMedicalLeaves':numMedicalLeaves
+                       'earnedLeaves':numEarnedLeaves,
+                       'medicalLeaves':numMedicalLeaves
                    }});
                }catch (e){
                    res.statusCode=500;
