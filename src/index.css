@@ -128,6 +128,19 @@ body {
 #warningColor{
   color: #ff1744;
 }
+#medicalColor{
+  color:#00b0ff;
+}
+#earnedColor{
+  color:#ff9800;
+}
+#casualColor{
+  color: #d500f9;
+}
+#attendanceBigNumber{
+  color:#7450FC;
+}
+
 
 #userGreetMessage {
   padding-right: 20px;

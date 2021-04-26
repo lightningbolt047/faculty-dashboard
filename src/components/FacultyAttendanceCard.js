@@ -2,42 +2,70 @@ import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import AttendanceServices from "../services/AttendanceServices";
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
+export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
 
-export default function FacultyAttendanceCard({fieldID,attendedDays,totalLeaveDays}){
-
-
-    const getAttendancePercentageString=()=>{
-        return ((attendedDays/(attendedDays+totalLeaveDays))*100).toFixed(2)+"%";
+    if(typeof facultyAttendance==='undefined'){
+        return (
+            <CircularProgress size={24} color="inherit"/>
+        );
     }
-    const findRemainingBunkableDays=()=>{
-        let crossedWorkingDays=attendedDays+totalLeaveDays;
-        let allowedLeaveCount=0;
-        while((attendedDays/crossedWorkingDays)>0.75){
-            allowedLeaveCount++;
-            crossedWorkingDays++;
+
+    let remainingCasualLeaves=facultyAttendance.totalLeaveDays.casualLeaves-facultyAttendance.facultyLeaveDays.casualLeaves;
+    let remainingEarnedLeaves=facultyAttendance.totalLeaveDays.earnedLeaves-facultyAttendance.facultyLeaveDays.earnedLeaves;
+    let remainingMedicalLeaves=facultyAttendance.totalLeaveDays.medicalLeaves-facultyAttendance.facultyLeaveDays.medicalLeaves;
+
+    const getRemainingLeavePercentage=(leaveType)=>{
+        if(leaveType==='casual'){
+            return remainingCasualLeaves/facultyAttendance.totalLeaveDays.casualLeaves;
+        }else if(leaveType==='earned'){
+            return remainingEarnedLeaves/facultyAttendance.totalLeaveDays.earnedLeaves;
+        }else if(leaveType==='medical'){
+            return remainingMedicalLeaves/facultyAttendance.totalLeaveDays.medicalLeaves;
         }
-        if(crossedWorkingDays!==(attendedDays+totalLeaveDays)){
-            allowedLeaveCount--;
-        }
-        return allowedLeaveCount;
     }
+
+    const getLeaveWarning=(leaveType)=>{
+        if(getRemainingLeavePercentage(leaveType)<0.2){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
 
     return (
         <Card className={fieldID} variant="outlined">
             <CardContent>
                 <Box flex={1}/>
-                <Typography  variant="h5" color={"secondary"} component="h2">
-                    Your Attendance Summary
-                </Typography>
                 <Box height={10}/>
-                <Typography>Your Attendance Percentage Is</Typography>
-                <Typography variant="h2" id={AttendanceServices.getAttendancePercentageTextStyle(((attendedDays/(attendedDays+totalLeaveDays))*100))}>{getAttendancePercentageString()}</Typography>
+                <Typography variant={'h6'} id={'attendanceBigNumber'}>Total Remaining Leaves</Typography>
+                <Typography variant="h2" id={'attendanceBigNumber'}>{remainingCasualLeaves+remainingEarnedLeaves+remainingMedicalLeaves}</Typography>
                 <Box height={20}/>
-                <Typography>You can avail</Typography>
-                <Typography variant="h3" color="secondary">{findRemainingBunkableDays()}</Typography>
-                <Typography>More days leave</Typography>
+                <Typography variant={'h6'}>You can avail</Typography>
+                <Box flex={1} height={20}/>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <Typography variant={'subtitle1'} id={getLeaveWarning('casual')?'warningColor':'casualColor'}><b>Casual Leaves</b></Typography>
+                        <Typography variant="h2" id={getLeaveWarning('casual')?'warningColor':'casualColor'}>{remainingCasualLeaves}</Typography>
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid item>
+                        <Typography variant={'subtitle1'} id={getLeaveWarning('earned')?'warningColor':'earnedColor'}><b>Earned Leaves</b></Typography>
+                        <Typography variant="h2" id={getLeaveWarning('earned')?'warningColor':'earnedColor'}>{remainingEarnedLeaves}</Typography>
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid item>
+                        <Typography variant={'subtitle1'} id={getLeaveWarning('medical')?'warningColor':'medicalColor'}><b>Medical Leaves</b></Typography>
+                        <Typography variant="h2" id={getLeaveWarning('medical')?'warningColor':'medicalColor'}>{remainingMedicalLeaves}</Typography>
+                    </Grid>
+                </Grid>
+                {/*<Typography variant="h3" color="secondary">{findRemainingBunkableDays()}</Typography>*/}
+                {/*<Typography>More days leave</Typography>*/}
             </CardContent>
         </Card>
     );

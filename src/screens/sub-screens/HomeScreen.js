@@ -36,6 +36,7 @@ export default function HomeScreen(){
     const [attendedDays,setAttendedDays]=useState(0);
     const [pendingLeaveApprovals,setPendingLeaveApprovals]=useState(-1);
     const [pendingLeaveApprovalsLoading,setPendingLeaveApprovalsLoading]=useState(true);
+    const [facultyAttendanceDetails,setFacultyAttendanceDetails]=useState();
     // const [isHOD,setIsHOD]=useState(false);
 
     const getTimetableFromServer=async ()=>{
@@ -70,8 +71,7 @@ export default function HomeScreen(){
     const getAttendanceDetails=async ()=>{
         let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
         if(responseBody.statusCode===200){
-            setTotalLeaveDays(responseBody.totalLeaveDays);
-            setAttendedDays(responseBody.attendedDays);
+            setFacultyAttendanceDetails(responseBody);
         }
     }
 
@@ -130,7 +130,6 @@ export default function HomeScreen(){
         }
        getTimetableFromServer();
        getEnrolledCoursesFromServer();
-       console.log(isHOD);
        if(!isHOD){
            getAttendanceDetails();
        }else{
@@ -178,8 +177,7 @@ export default function HomeScreen(){
                     </Card>
                 </Grid>
                 <Grid item>
-                    {!isHOD && <FacultyAttendanceCard fieldID="homeRowcard" attendedDays={attendedDays}
-                                            totalLeaveDays={totalLeaveDays}/>}
+                    {!isHOD && <FacultyAttendanceCard fieldID="homeRowcard" facultyAttendance={facultyAttendanceDetails}/>}
                     {isHOD && <HodLeaveStatusCard isLoading={pendingLeaveApprovalsLoading} numLeavesPending={pendingLeaveApprovals}/>}
                 </Grid>
             </Grid>

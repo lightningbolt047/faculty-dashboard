@@ -26,16 +26,15 @@ export default function FacultyLeaveApplication(){
     const [leaveReason,setLeaveReason]=useState("");
     const [fromDate,setFromDate]=useState('');
     const [toDate,setToDate]=useState('');
-    const [totalLeaveDays,setTotalLeaveDays]=useState(0);
-    const [attendedDays,setAttendedDays]=useState(0);
     const [snackbarOpen,setSnackbarOpen]=useState(false);
     const [putStatusCode,setPutStatusCode]=useState(200);
     const [shownPassDetails,setShownPassDetails]=useState([]);
-    const [leaveDurationType, setleaveDurationType] = useState('');
+    const [leaveTiming, setleaveTiming] = useState('');
     const [leaveType, setleaveType] = useState('');
+    const [facultyAttendanceDetails,setFacultyAttendanceDetails]=useState();
 
-    const handleLeaveDurationTypeChange = (event) => {
-        setleaveDurationType(event.target.value);
+    const handleLeaveTimingChange = (event) => {
+        setleaveTiming(event.target.value);
     };
 
     const handleLeaveTypeChange = (event) => {
@@ -46,8 +45,7 @@ export default function FacultyLeaveApplication(){
     const getAttendanceDetails=async ()=>{
         let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
         if(responseBody.statusCode===200){
-            setTotalLeaveDays(responseBody.totalLeaveDays);
-            setAttendedDays(responseBody.attendedDays);
+            setFacultyAttendanceDetails(responseBody);
         }
     }
 
@@ -62,6 +60,8 @@ export default function FacultyLeaveApplication(){
         let responseBody=await backendService('PUT',/facultyLeave/,
             {
                 reason:leaveReason,
+                leaveTiming:leaveTiming,
+                leaveType:leaveType,
                 departureTime:fromDateISO,
                 arrivalTime:toDateISO
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
@@ -72,6 +72,8 @@ export default function FacultyLeaveApplication(){
             setLeaveReason('');
             setFromDate('');
             setToDate('');
+            setleaveTiming("");
+            setleaveType("");
             fromDateISO='';
             toDateISO='';
             fetchFromServer();
@@ -171,7 +173,7 @@ export default function FacultyLeaveApplication(){
         <div>
             <Grid container spacing={3} alignContent="center" justify="center">
                 <Grid item>
-                    <FacultyAttendanceCard fieldID="attendanceCard" attendedDays={attendedDays} totalLeaveDays={totalLeaveDays}/>
+                    <FacultyAttendanceCard fieldID="attendanceCard" facultyAttendance={facultyAttendanceDetails}/>
                 </Grid>
 
                 <Grid item>
@@ -187,12 +189,12 @@ export default function FacultyLeaveApplication(){
                             <Box height={8}/>
                             <Grid container alignContent="center" justify="center">
                                 <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
-                                    <InputLabel>Leave Duration Type</InputLabel>
-                                    <Select className="leftAlignDropdownText" value={leaveDurationType} onChange={handleLeaveDurationTypeChange} label="Leave Duration Type">
-                                        <MenuItem value="">Select</MenuItem>
-                                        <MenuItem value="Forenoon">Forenoon</MenuItem>
-                                        <MenuItem value="Afternoon">Afternoon</MenuItem>
-                                        <MenuItem value="Full Day">Full Day</MenuItem>
+                                    <InputLabel>Leave Timing</InputLabel>
+                                    <Select className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
+                                        {/*<MenuItem value="">Select</MenuItem>*/}
+                                        <MenuItem value="fn">Forenoon</MenuItem>
+                                        <MenuItem value="an">Afternoon</MenuItem>
+                                        <MenuItem value="full">Full Day</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -201,10 +203,10 @@ export default function FacultyLeaveApplication(){
                             <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Type</InputLabel>
                                     <Select className="leftAlignDropdownText" value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
-                                        <MenuItem value="">Select</MenuItem>
-                                        <MenuItem value="casual">Casual Leave</MenuItem>
-                                        <MenuItem value="earned">Earned Leave</MenuItem>
-                                        <MenuItem value="medical">Medical Leave</MenuItem>
+                                        {/*<MenuItem value="">Select</MenuItem>*/}
+                                        <MenuItem value="cl">Casual Leave</MenuItem>
+                                        <MenuItem value="el">Earned Leave</MenuItem>
+                                        <MenuItem value="ml">Medical Leave</MenuItem>
                                     </Select>
                                 </FormControl>
                             
