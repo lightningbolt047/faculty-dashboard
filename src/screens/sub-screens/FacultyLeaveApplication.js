@@ -29,16 +29,18 @@ export default function FacultyLeaveApplication(){
     const [snackbarOpen,setSnackbarOpen]=useState(false);
     const [putStatusCode,setPutStatusCode]=useState(200);
     const [shownPassDetails,setShownPassDetails]=useState([]);
-    const [leaveTiming, setleaveTiming] = useState('');
-    const [leaveType, setleaveType] = useState('');
+    const [leaveTiming, setLeaveTiming] = useState('');
+    const [leaveType, setLeaveType] = useState('');
+    const [leaveTimingDisabled,setLeaveTimingDisabled]=useState(false);
     const [facultyAttendanceDetails,setFacultyAttendanceDetails]=useState();
+    const [leaveTypeSelectOptions,setLeaveTypeSelectOptions]=useState([]);
 
     const handleLeaveTimingChange = (event) => {
-        setleaveTiming(event.target.value);
+        setLeaveTiming(event.target.value);
     };
 
     const handleLeaveTypeChange = (event) => {
-        setleaveType(event.target.value);
+        setLeaveType(event.target.value);
     };
 
 
@@ -46,6 +48,7 @@ export default function FacultyLeaveApplication(){
         let responseBody=await backendService('GET','/profile/getAttendance/',{},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID);
         if(responseBody.statusCode===200){
             setFacultyAttendanceDetails(responseBody);
+            populateLeaveTypeSelectOptions(responseBody);
         }
     }
 
@@ -72,8 +75,8 @@ export default function FacultyLeaveApplication(){
             setLeaveReason('');
             setFromDate('');
             setToDate('');
-            setleaveTiming("");
-            setleaveType("");
+            setLeaveTiming("");
+            setLeaveType("");
             fromDateISO='';
             toDateISO='';
             fetchFromServer();
@@ -99,6 +102,36 @@ export default function FacultyLeaveApplication(){
         fetchFromServer();
         //eslint-disable-next-line
     },[]);
+
+
+    const populateLeaveTypeSelectOptions=(facultyAttendanceResponse)=>{
+        let remainingCasualLeaves=facultyAttendanceResponse.totalLeaveDays.casualLeaves-facultyAttendanceResponse.facultyLeaveDays.casualLeaves;
+        let remainingEarnedLeaves=facultyAttendanceResponse.totalLeaveDays.earnedLeaves-facultyAttendanceResponse.facultyLeaveDays.earnedLeaves;
+        let remainingMedicalLeaves=facultyAttendanceResponse.totalLeaveDays.medicalLeaves-facultyAttendanceResponse.facultyLeaveDays.medicalLeaves;
+
+        let selectOptions=[];
+
+        if(remainingCasualLeaves!==0){
+            selectOptions.push(
+                <MenuItem value="cl">Casual Leave</MenuItem>
+            );
+        }
+        if(remainingEarnedLeaves!==0 && !(typeof fromDateISO!=='undefined' && typeof toDateISO!=='undefined' && (DateServices.getDateDifference(new Date(toDateISO),new Date(fromDateISO))%3)!==0 && remainingCasualLeaves>0)){
+            selectOptions.push(
+                <MenuItem value="el">Earned Leave</MenuItem>
+            );
+        }else{
+            setLeaveType("cl");
+        }
+        if(remainingMedicalLeaves!==0){
+            selectOptions.push(
+                <MenuItem value="ml">Medical Leave</MenuItem>
+            );
+        }
+
+        setLeaveTypeSelectOptions(selectOptions);
+
+    }
 
 
     const sortPassByDateAndShow=()=>{
@@ -128,10 +161,28 @@ export default function FacultyLeaveApplication(){
     const handleFromDateChange=(e)=>{
         setFromDate(e.target.value);
         fromDateISO=DateServices.dateToISO(e.target.value);
+        if(typeof fromDateISO!=='undefined' && typeof toDateISO!=='undefined'){
+            if(DateServices.getDateDifference(new Date(toDate),new Date(e.target.value))>1){
+                setLeaveTimingDisabled(true);
+                setLeaveTiming('full');
+            }else{
+                setLeaveTimingDisabled(false);
+            }
+        }
+        populateLeaveTypeSelectOptions(facultyAttendanceDetails);
     }
     const handleToDateChange=(e)=>{
         setToDate(e.target.value);
         toDateISO=DateServices.dateToISO(e.target.value);
+        if(typeof fromDateISO!=='undefined' && typeof toDateISO!=='undefined'){
+            if(DateServices.getDateDifference(new Date(e.target.value),new Date(fromDate))>1){
+                setLeaveTimingDisabled(true);
+                setLeaveTiming('full');
+            }else{
+                setLeaveTimingDisabled(false);
+            }
+        }
+        populateLeaveTypeSelectOptions(facultyAttendanceDetails);
     }
 
     const handleSnackbarClose=(event,reason)=>{
@@ -190,7 +241,7 @@ export default function FacultyLeaveApplication(){
                             <Grid container alignContent="center" justify="center">
                                 <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Timing</InputLabel>
-                                    <Select className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
+                                    <Select disabled={leaveTimingDisabled} className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
                                         {/*<MenuItem value="">Select</MenuItem>*/}
                                         <MenuItem value="fn">Forenoon</MenuItem>
                                         <MenuItem value="an">Afternoon</MenuItem>
@@ -204,9 +255,9 @@ export default function FacultyLeaveApplication(){
                                     <InputLabel>Leave Type</InputLabel>
                                     <Select className="leftAlignDropdownText" value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
                                         {/*<MenuItem value="">Select</MenuItem>*/}
-                                        <MenuItem value="cl">Casual Leave</MenuItem>
-                                        <MenuItem value="el">Earned Leave</MenuItem>
-                                        <MenuItem value="ml">Medical Leave</MenuItem>
+                                        {leaveTypeSelectOptions.map((item,index)=>(
+                                            item
+                                        ))}
                                     </Select>
                                 </FormControl>
                             

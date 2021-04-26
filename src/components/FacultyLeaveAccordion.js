@@ -25,6 +25,18 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
         event.stopPropagation();
         handleLeaveChange(accordionID,'facultyCancelled');
     }
+
+    const getLeaveType=()=>{
+        if(passJSON.leaveType==='cl'){
+            return "Casual Leave";
+        }
+        else if(passJSON.leaveType==='el'){
+            return "Earned Leave";
+        }
+        else{
+            return "Medical Leave";
+        }
+    }
     
     return (
         <div className="accordionSpace">
@@ -71,7 +83,8 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
                                 <b>Leave Details</b>
                                 <Box height={10}/>
                                 <div>
-                                    <span>Leave Reason</span>: <b>{passJSON.reason}</b>
+                                    <span>Leave Reason</span>: <b>{passJSON.reason}</b><br/>
+                                    <span>Leave Type</span>: <b>{getLeaveType()}</b>
                                 </div>
                             </div>
                         </Box>

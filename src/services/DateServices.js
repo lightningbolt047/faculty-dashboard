@@ -10,6 +10,9 @@ class DateServices{
     static getDateDifference=(date1,date2)=>{
         let milliInOneDay=1000*60*60*24;
         let dayDifference=Math.round((date1.getTime()-date2.getTime())/milliInOneDay);
+        if(isNaN(parseInt(dayDifference.toFixed(0))+1)){
+            return 0;
+        }
         return parseInt(dayDifference.toFixed(0))+1;
     }
 }

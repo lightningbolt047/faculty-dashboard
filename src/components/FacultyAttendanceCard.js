@@ -42,6 +42,9 @@ export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
         <Card className={fieldID} variant="outlined">
             <CardContent>
                 <Box flex={1}/>
+                <Typography  variant="h5" color={"secondary"} component="h2">
+                    Your Leave Details
+                </Typography>
                 <Box height={10}/>
                 <Typography variant={'h6'} id={'attendanceBigNumber'}>Total Remaining Leaves</Typography>
                 <Typography variant="h2" id={'attendanceBigNumber'}>{remainingCasualLeaves+remainingEarnedLeaves+remainingMedicalLeaves}</Typography>
@@ -50,17 +53,17 @@ export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
                 <Box flex={1} height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <Typography variant={'subtitle1'} id={getLeaveWarning('casual')?'warningColor':'casualColor'}><b>Casual Leaves</b></Typography>
+                        <Typography variant={'caption'} id={getLeaveWarning('casual')?'warningColor':'casualColor'}><b>Casual Leaves</b></Typography>
                         <Typography variant="h2" id={getLeaveWarning('casual')?'warningColor':'casualColor'}>{remainingCasualLeaves}</Typography>
                     </Grid>
                     <Divider orientation="vertical" flexItem />
                     <Grid item>
-                        <Typography variant={'subtitle1'} id={getLeaveWarning('earned')?'warningColor':'earnedColor'}><b>Earned Leaves</b></Typography>
+                        <Typography variant={'caption'} id={getLeaveWarning('earned')?'warningColor':'earnedColor'}><b>Earned Leaves</b></Typography>
                         <Typography variant="h2" id={getLeaveWarning('earned')?'warningColor':'earnedColor'}>{remainingEarnedLeaves}</Typography>
                     </Grid>
                     <Divider orientation="vertical" flexItem />
                     <Grid item>
-                        <Typography variant={'subtitle1'} id={getLeaveWarning('medical')?'warningColor':'medicalColor'}><b>Medical Leaves</b></Typography>
+                        <Typography variant={'caption'} id={getLeaveWarning('medical')?'warningColor':'medicalColor'}><b>Medical Leaves</b></Typography>
                         <Typography variant="h2" id={getLeaveWarning('medical')?'warningColor':'medicalColor'}>{remainingMedicalLeaves}</Typography>
                     </Grid>
                 </Grid>

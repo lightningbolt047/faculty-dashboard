@@ -32,8 +32,6 @@ export default function HomeScreen(){
 
     const [timetableRows,setTimetableRows]=useState([]);
     const [courseRows,setCourseRows]=useState([]);
-    const [totalLeaveDays,setTotalLeaveDays]=useState(0);
-    const [attendedDays,setAttendedDays]=useState(0);
     const [pendingLeaveApprovals,setPendingLeaveApprovals]=useState(-1);
     const [pendingLeaveApprovalsLoading,setPendingLeaveApprovalsLoading]=useState(true);
     const [facultyAttendanceDetails,setFacultyAttendanceDetails]=useState();
