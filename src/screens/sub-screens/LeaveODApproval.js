@@ -55,6 +55,10 @@ export default function LeaveODApproval({passRoute}){
 
     const handlePassStatusChange=async (passID,curPassIndex,curPassType,passStatusNewValue)=>{
         if(await sendPassStatusUpdateToBackend(passID,passStatusNewValue)===200){
+            if(passRoute==='hodLeaveApprove'){
+                await getInfoFromBackend();
+                return;
+            }
             let pass;
             if(curPassType==='approved'){
                 pass=shownApprovedPasses[curPassIndex];

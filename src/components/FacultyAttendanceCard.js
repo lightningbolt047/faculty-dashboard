@@ -49,7 +49,7 @@ export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
                 <Typography variant={'h6'} id={'attendanceBigNumber'}>Total Remaining Leaves</Typography>
                 <Typography variant="h2" id={'attendanceBigNumber'}>{remainingCasualLeaves+remainingEarnedLeaves+remainingMedicalLeaves}</Typography>
                 <Box height={20}/>
-                <Typography variant={'h6'}>You can avail</Typography>
+                <Typography variant={'h6'} id={'okColor'}>You can avail</Typography>
                 <Box flex={1} height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>

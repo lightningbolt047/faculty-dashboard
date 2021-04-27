@@ -9,6 +9,7 @@ import CheckIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import FacultyLeaveServices from '../services/FacultyLeaveServices';
 
 export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveChange}){
 
@@ -24,18 +25,6 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
     const cancelLeaveHandler=(event)=>{
         event.stopPropagation();
         handleLeaveChange(accordionID,'facultyCancelled');
-    }
-
-    const getLeaveType=()=>{
-        if(passJSON.leaveType==='cl'){
-            return "Casual Leave";
-        }
-        else if(passJSON.leaveType==='el'){
-            return "Earned Leave";
-        }
-        else{
-            return "Medical Leave";
-        }
     }
     
     return (
@@ -84,7 +73,8 @@ export default function FacultyLeaveAccordion({accordionID,passJSON,handleLeaveC
                                 <Box height={10}/>
                                 <div>
                                     <span>Leave Reason</span>: <b>{passJSON.reason}</b><br/>
-                                    <span>Leave Type</span>: <b>{getLeaveType()}</b>
+                                    <span>Leave Type</span>: <b>{FacultyLeaveServices.getFacultyLeaveTypeStringFromCode(passJSON.leaveType)}</b><br/>
+                                    <span>Leave Timing</span>: <b>{FacultyLeaveServices.getFacultyLeaveTimingStringFromCode(passJSON.leaveTiming)}</b>
                                 </div>
                             </div>
                         </Box>

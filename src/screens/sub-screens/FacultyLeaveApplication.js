@@ -76,6 +76,7 @@ export default function FacultyLeaveApplication(){
             setFromDate('');
             setToDate('');
             setLeaveTiming("");
+            setLeaveTimingDisabled(false);
             setLeaveType("");
             fromDateISO='';
             toDateISO='';
@@ -121,7 +122,9 @@ export default function FacultyLeaveApplication(){
                 <MenuItem value="el">Earned Leave</MenuItem>
             );
         }else{
-            setLeaveType("cl");
+            if(leaveType==='el'){
+                setLeaveType("cl");
+            }
         }
         if(remainingMedicalLeaves!==0){
             selectOptions.push(
@@ -145,7 +148,7 @@ export default function FacultyLeaveApplication(){
     }
 
     const handleFacultyLeaveChange=async (index,newLeaveStatus)=>{
-        if(await updateLeaveStatus(index,newLeaveStatus)){
+        if(await updateLeaveStatus(index,newLeaveStatus)===200){
             let tempLeaveList=[];
             for(const leave of shownPassDetails){
                 tempLeaveList.push(leave);

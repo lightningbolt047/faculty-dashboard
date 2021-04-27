@@ -9,27 +9,38 @@ import Divider from '@material-ui/core/Divider';
 import CheckIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from "@material-ui/core/IconButton";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FacultyLeaveServices from "../services/FacultyLeaveServices";
 
 export default function HodLeaveApproveAccordion({accordionID, passType, passJSON, handlePassAction}){
     const departureTime=new Date(passJSON.passDetails.departureTime);
     const arrivalTime=new Date(passJSON.passDetails.arrivalTime);
 
-    const getAttendancePercentageTextStyle=(percentage)=>{
-        if(percentage<75){
-            return 'warningColor';
-        }else if(percentage>=75 && percentage<=85){
-            return 'alertColor';
-        }
-        else{
-            return 'okColor';
+    if(typeof passJSON==='undefined'){
+        return (
+            <CircularProgress size={24} color="secondary"/>
+        );
+    }
+
+    let remainingCasualLeaves=passJSON.attendanceDetails.totalLeaveDays.casualLeaves-passJSON.attendanceDetails.facultyLeaveDays.casualLeaves;
+    let remainingEarnedLeaves=passJSON.attendanceDetails.totalLeaveDays.earnedLeaves-passJSON.attendanceDetails.facultyLeaveDays.earnedLeaves;
+    let remainingMedicalLeaves=passJSON.attendanceDetails.totalLeaveDays.medicalLeaves-passJSON.attendanceDetails.facultyLeaveDays.medicalLeaves;
+
+    const getRemainingLeavePercentage=(leaveType)=>{
+        if(leaveType==='casual'){
+            return remainingCasualLeaves/passJSON.attendanceDetails.totalLeaveDays.casualLeaves;
+        }else if(leaveType==='earned'){
+            return remainingEarnedLeaves/passJSON.attendanceDetails.totalLeaveDays.earnedLeaves;
+        }else if(leaveType==='medical'){
+            return remainingMedicalLeaves/passJSON.attendanceDetails.totalLeaveDays.medicalLeaves;
         }
     }
 
-    const getAttendancePercentage=()=>{
-        try{
-            return ((passJSON.attendanceDetails.attendedDays/(passJSON.attendanceDetails.attendedDays+passJSON.attendanceDetails.totalLeaveDays))*100).toFixed(2);
-        }catch (e){
-            return '0';
+    const getLeaveWarning=(leaveType)=>{
+        if(getRemainingLeavePercentage(leaveType)<0.2){
+            return 'warningColor';
+        }else{
+            return 'okColor';
         }
     }
 
@@ -60,8 +71,8 @@ export default function HodLeaveApproveAccordion({accordionID, passType, passJSO
                     </Box>
                     <Box width={8}/>
                     <Box width={12}/>
-                    <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved'} id={`hodLeaveApproveAccordionApprove${passType+accordionID}`}>
-                        <CheckIcon id={passType!=='approved' && 'okColor'}/>
+                    <IconButton size="small" onClick={approveGatePassHandler} disabled={passType==='approved' || passType==='cancelled'} id={`hodLeaveApproveAccordionApprove${passType+accordionID}`}>
+                        <CheckIcon id={!(passType==='approved' || passType==='cancelled') && 'okColor'}/>
                     </IconButton>
                     <IconButton size="small" onClick={cancelGatePassHandler} disabled={passType==='cancelled'} id={`hodLeaveApproveAccordionCancel${passType+accordionID}`}>
                         <CancelIcon id={passType!=='cancelled' && 'warningColor'}/>
@@ -93,6 +104,14 @@ export default function HodLeaveApproveAccordion({accordionID, passType, passJSO
                                 <Box height={10}/>
 
                                 <div>
+                                    <span>Leave Type</span>: <b>{FacultyLeaveServices.getFacultyLeaveTypeStringFromCode(passJSON.passDetails.leaveType)}</b>
+                                </div>
+
+                                <div>
+                                    <span>Leave Timing</span>: <b>{FacultyLeaveServices.getFacultyLeaveTimingStringFromCode(passJSON.passDetails.leaveTiming)}</b>
+                                </div>
+
+                                <div>
                                     <span>Reason</span>: <b>{passJSON.passDetails.reason}</b>
                                 </div>
 
@@ -113,25 +132,25 @@ export default function HodLeaveApproveAccordion({accordionID, passType, passJSO
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
                                     <div>
-                                        <span>{"Total Working Days : "}</span>
-                                        <span>{passJSON.attendanceDetails.totalWorkingDays}</span>
+                                        <span id={getLeaveWarning('casual')}>{"Casual Leaves Taken: "}</span>
+                                        <span id={getLeaveWarning('casual')}>{passJSON.attendanceDetails.facultyLeaveDays.casualLeaves}</span>
                                     </div>
-                                <Box height={8}/>
+                                <Box height={10}/>
                                 <div>
-                                    <span>{"Leaves Taken : "}</span>
-                                    <span>{passJSON.attendanceDetails.totalLeaveDays}</span>
+                                    <span id={getLeaveWarning('earned')}>{"Earned Leaves Taken : "}</span>
+                                    <span id={getLeaveWarning('earned')}>{passJSON.attendanceDetails.facultyLeaveDays.earnedLeaves}</span>
                                 </div>
-                                <Box height={8}/>
+                                <Box height={10}/>
                                 <div>
-                                    <span>{"Days Present : "}</span>
-                                    <span>{passJSON.attendanceDetails.attendedDays}</span>
+                                    <span id={getLeaveWarning('medical')}>{"Medical Leaves Taken : "}</span>
+                                    <span id={getLeaveWarning('medical')}>{passJSON.attendanceDetails.facultyLeaveDays.medicalLeaves}</span>
                                 </div>
-                                <Box height={8}/>
-                                <div>
-                                    <span>{"Attendance % : "}</span>
-                                    <span id={getAttendancePercentageTextStyle(getAttendancePercentage())}>{getAttendancePercentage()}</span>
-                                </div>
-                                <Box height={8}/>
+                                <Box height={10}/>
+                                {/*<div>*/}
+                                {/*    <span>{"Attendance % : "}</span>*/}
+                                {/*    <span id={getAttendancePercentageTextStyle(getAttendancePercentage())}>{getAttendancePercentage()}</span>*/}
+                                {/*</div>*/}
+                                {/*<Box height={8}/>*/}
                             </div>
                         </Box>
                     </Grid>
