@@ -58,7 +58,7 @@ facultyLeaveApplyRouter.route('/')
                         let numEarnedLeaves=latestFacultyAttendance.earnedLeaves;
                         let numMedicalLeaves=latestFacultyAttendance.medicalLeaves;
                         let reduction=getLeaveDifferenceAsNumDays(new Date(leave.arrivalTime),new Date(leave.departureTime));
-                        if(req.body.leaveStatus==='facultyCancelled' && leave.leaveStatus==='approved'){
+                        if(req.body.leaveStatus==='facultyCancelled' && leave.leaveStatus!=='facultyCancelled'){
                             if(leave.leaveTiming!=='full' && reduction===1){
                                 reduction=0.5;
                             }
@@ -70,6 +70,20 @@ facultyLeaveApplyRouter.route('/')
                             }
                             else if(leave.leaveType==='ml'){
                                 numMedicalLeaves-=reduction;
+                            }
+                        }
+                        if(req.body.leaveStatus==='pending' && leave.leaveStatus!=='pending'){
+                            if(leave.leaveTiming!=='full' && reduction===1){
+                                reduction=0.5;
+                            }
+                            if(leave.leaveType==='cl'){
+                                numCasualLeaves+=reduction;
+                            }
+                            else if(leave.leaveType==='el'){
+                                numEarnedLeaves+=reduction;
+                            }
+                            else if(leave.leaveType==='ml'){
+                                numMedicalLeaves+=reduction;
                             }
                         }
                         await FacultyAttendance.findByIdAndUpdate(latestFacultyAttendance._id,{$set:{

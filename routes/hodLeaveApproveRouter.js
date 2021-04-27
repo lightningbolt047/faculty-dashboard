@@ -27,9 +27,13 @@ hodLeaveApproveRouter.route('/:reqType')
                     .then(async (leaves)=>{
                         if(!leaves || leaves.length===0){
                             res.statusCode=200;
-                            res.json({
-                                numLeaves:0
-                            });
+                            if(req.params.reqType==='getNumLeaves'){
+                                res.json({
+                                    numLeaves:0
+                                });
+                            }else{
+                                res.json(leaves);
+                            }
                             return;
                         }
                         let curDate=Date.now();
@@ -116,7 +120,16 @@ hodLeaveApproveRouter.route('/')
                    });
                    return;
                }
+
+
                let leave=await FacultyLeave.findById(req.body.passID);
+               if(leave.leaveType==='cancelled' && req.body.passStatus==='approved'){
+                   res.statusCode=403;
+                   res.json({
+                       status:"Access Denied!"
+                   });
+                   return;
+               }
                try{
                    let latestFacultyAttendance=getMaxYearDocument(await FacultyAttendance.find({facultyID: leave.facultyID}));
                    let numLeaveDays=getLeaveDifferenceAsNumDays(new Date(leave.arrivalTime),new Date(leave.departureTime));
@@ -127,17 +140,17 @@ hodLeaveApproveRouter.route('/')
                        numLeaveDays=0.5;
                    }
                    if(leave.leaveType==='cl'){
-                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                       if(req.body.passStatus==='cancelled') {
                            numCasualLeaves-=numLeaveDays;
                        }
                    }
                    else if(leave.leaveType==='ml'){
-                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                       if(req.body.passStatus==='cancelled') {
                            numMedicalLeaves-=numLeaveDays;
                        }
                    }
                    else if(leave.leaveType==='el'){
-                       if(leave.leaveStatus==='approved' && req.body.passStatus==='cancelled') {
+                       if(req.body.passStatus==='cancelled') {
                            numEarnedLeaves-=numLeaveDays;
                        }
                    }
