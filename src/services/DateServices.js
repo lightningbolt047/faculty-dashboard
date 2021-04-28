@@ -7,6 +7,9 @@ class DateServices{
     static getDateTimeAsString=(dateTime)=>{
         return `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()} ${dateTime.getHours().toString().length<2?0+dateTime.getHours().toString():dateTime.getHours().toString()}:${dateTime.getMinutes().toString().length<2?0+dateTime.getMinutes().toString():dateTime.getMinutes().toString()}`
     }
+    static getDateAsString=(dateTime)=>{
+        return `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`;
+    }
     static getDateDifference=(date1,date2)=>{
         let milliInOneDay=1000*60*60*24;
         let dayDifference=Math.round((date1.getTime()-date2.getTime())/milliInOneDay);

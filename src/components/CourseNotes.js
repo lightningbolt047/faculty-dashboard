@@ -13,6 +13,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import DateServices from '../services/DateServices';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { ExportToCsv } from 'export-to-csv';
 
 
 let courseNotesFromServer=[];
@@ -68,6 +70,32 @@ export default function CourseNotes({course}){
         }
     }
 
+    const getAppropriateCSVData=()=>{
+        let csvData=[];
+        const csvOptions={
+            fieldSeparator:',',
+            quoteStrings:'"',
+            decimalSeparator:'.',
+            showLabels:true,
+            name:"CourseNotes.csv",
+            title:"CourseNotes.csv",
+            useTextFile:false,
+            useBom:true,
+            useKeysAsHeaders:true
+        };
+        const csvExporter=new ExportToCsv(csvOptions);
+        for(const document of courseNotes){
+            csvData.push({
+                Date:DateServices.getDateAsString(new Date(document.date)),
+                Notes:document.notes
+            });
+        }
+
+        csvExporter.generateCsv(csvData);
+
+        return csvData;
+    }
+
     const getSortedOrder=()=>{
         courseNotesFromServer.sort((a,b)=>{
             return Date.parse(b.date)-Date.parse(a.date);
@@ -103,7 +131,11 @@ export default function CourseNotes({course}){
 
     return (
         <div>
-            <Typography variant="h5" color="secondary">Daily Course Progress</Typography>
+            <Typography display={'inline'} variant="h5" color="secondary">Daily Course Progress
+                <Button variant={'contained'} startIcon={<CloudDownloadIcon/>} color={'secondary'} onClick={getAppropriateCSVData}>
+                    Download
+                </Button>
+            </Typography>
             {courseNotes.map((item,index)=>(
                 <CourseNotesAccordion accordionID={index} note={item}/>
             ))}
