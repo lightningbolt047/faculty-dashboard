@@ -145,7 +145,7 @@ export default function CourseNotes({course}){
     return (
         <div>
             <Typography display={'inline'} variant="h5" color="secondary">Daily Course Progress
-                <Button variant={'contained'} startIcon={<CloudDownloadIcon/>} color={'secondary'} onClick={getAppropriateCSVData}>
+                <Button id = "downloadCSVButton" variant={'contained'} startIcon={<CloudDownloadIcon/>} color={'secondary'} onClick={getAppropriateCSVData}>
                     Download
                 </Button>
             </Typography>
