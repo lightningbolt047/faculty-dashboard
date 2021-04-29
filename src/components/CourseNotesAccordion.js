@@ -5,12 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import DateServices from "../services/DateServices";
 
 
 export default function CourseNotesAccordion({accordionID,note}){
 
     const noteDate=new Date(note.date);
-    const dateString=noteDate.getDate()+"/"+(noteDate.getMonth()+1)+"/"+noteDate.getFullYear();
 
 
     return (
@@ -18,7 +18,10 @@ export default function CourseNotesAccordion({accordionID,note}){
             <Accordion>
                 <AccordionSummary id={`courseNotesAccordion${accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Date: {dateString}</Typography>
+                        <Typography className="accordionText" id="accordionTextPrimary">Date: {DateServices.getDateAsString(noteDate)+" "+DateServices.getDayStringFromDateObject(noteDate)} </Typography>
+                    </Box>
+                    <Box flex={1}>
+                        <Typography className="accordionText" id="accordionTextPrimary">Hour: {note.hour+1}</Typography>
                     </Box>
                 </AccordionSummary>
                 <AccordionDetails>

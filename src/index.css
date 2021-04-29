@@ -236,6 +236,11 @@ body {
   min-width: 418px;
 }
 
+#hourDropdown{
+  min-width: 100%;
+}
+
+
 .leftAlignDropdownText {
   text-align: left;
 }

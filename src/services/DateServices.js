@@ -1,4 +1,7 @@
 class DateServices{
+    static daysOfWeek=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+
     static dateToISO=(inputDate)=>{
         if(inputDate!=='' && typeof inputDate!=='undefined'){
             return new Date(inputDate).toISOString();
@@ -18,6 +21,10 @@ class DateServices{
         }
         return parseInt(dayDifference.toFixed(0))+1;
     }
+    static getDayStringFromDateObject=(date)=>{
+        return DateServices.daysOfWeek[date.getDay()];
+    }
+
 }
 
 export default DateServices;

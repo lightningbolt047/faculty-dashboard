@@ -15,16 +15,22 @@ import Button from '@material-ui/core/Button';
 import DateServices from '../services/DateServices';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { ExportToCsv } from 'export-to-csv';
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
 
 
 let courseNotesFromServer=[];
 let dateISO;
+const hours=[0,1,2,3,4,5,6];
 export default function CourseNotes({course}){
     const [open, setOpen] = useState(false);
     const [courseNotes,setCourseNotes]=useState([]);
     const [noteDate,setNoteDate]=useState();
     const [note,setNote]=useState("");
     const [courseNotesID,setCourseNotesID]=useState();
+    const [selectedHour,setSelectedHour]=useState(hours[0]+1);
 
 
     const getCourseNotesFromServer=async ()=>{
@@ -44,6 +50,7 @@ export default function CourseNotes({course}){
             {
                 facultyCourseNotesID:courseNotesID,
                 noteDate:dateISO,
+                hour:selectedHour,
                 noteText:note
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
@@ -58,6 +65,7 @@ export default function CourseNotes({course}){
             let tempCourseNotes=[];
             tempCourseNotes.push({
                 date:new Date(dateISO).toString(),
+                hour:selectedHour,
                 notes:note
             });
             for(const note of courseNotes){
@@ -87,6 +95,7 @@ export default function CourseNotes({course}){
         for(const document of courseNotes){
             csvData.push({
                 Date:DateServices.getDateAsString(new Date(document.date)),
+                Hour:document.hour,
                 Notes:document.notes
             });
         }
@@ -129,6 +138,10 @@ export default function CourseNotes({course}){
         setNote(e.target.value);
     }
 
+    const handleSelectedHourChange=(e)=>{
+        setSelectedHour(e.target.value);
+    }
+
     return (
         <div>
             <Typography display={'inline'} variant="h5" color="secondary">Daily Course Progress
@@ -152,6 +165,16 @@ export default function CourseNotes({course}){
                     Enter date and corresponding notes to maintain your daily progress.
                 </DialogContentText>
                 <TextField variant="outlined" color="secondary" value={noteDate} onChange={handleDateChange} label="Date" InputLabelProps={{ shrink: true }} type="date" fullWidth id={`courseNotesAddNewNoteDateTextField`}/>
+                <Box height={10}/>
+                <FormControl color={'secondary'} variant="outlined" id="hourDropdown">
+                    <InputLabel>Hour</InputLabel>
+                    <Select className="leftAlignDropdownText" value={selectedHour} onChange={handleSelectedHourChange} label="Hour">
+                        {/*<MenuItem value="">Select</MenuItem>*/}
+                        {hours.map((item,index)=>(
+                            <MenuItem value={item+1}>{item+1}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <Box height={10}/>
                 <TextField variant="outlined" color="secondary" value={note} onChange={handleNoteChange} label="Notes" type="text" fullWidth id={`courseNotesAddNewNoteTextTextField`}/>
             </DialogContent>
