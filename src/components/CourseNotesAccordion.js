@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import DateServices from "../services/DateServices";
+import TimeTableServices from "../services/TimeTableServices";
 
 
 export default function CourseNotesAccordion({accordionID,note}){
@@ -13,15 +14,16 @@ export default function CourseNotesAccordion({accordionID,note}){
     const noteDate=new Date(note.date);
 
 
+
     return (
         <div className="accordionSpace">
             <Accordion>
                 <AccordionSummary id={`courseNotesAccordion${accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Date: {DateServices.getDateAsString(noteDate)+" "+DateServices.getDayStringFromDateObject(noteDate)} </Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">Date: <b>{DateServices.getDateAsString(noteDate)+" "+DateServices.getDayStringFromDateObject(noteDate)}</b> </Typography>
                     </Box>
                     <Box flex={1}>
-                        <Typography className="accordionText" id="accordionTextPrimary">Hour: {note.hour+1}</Typography>
+                        <Typography className="accordionText" id="accordionTextSecondary">Hour: <b>{TimeTableServices.getTimeRangeFromHour(note.hour)}</b></Typography>
                     </Box>
                 </AccordionSummary>
                 <AccordionDetails>

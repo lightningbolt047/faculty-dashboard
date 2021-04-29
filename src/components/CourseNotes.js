@@ -19,6 +19,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+import TimeTableServices from "../services/TimeTableServices";
 
 
 let courseNotesFromServer=[];
@@ -95,7 +96,8 @@ export default function CourseNotes({course}){
         for(const document of courseNotes){
             csvData.push({
                 Date:DateServices.getDateAsString(new Date(document.date)),
-                Hour:document.hour,
+                StartTime:TimeTableServices.hourStartTimes[document.hour],
+                EndTime:TimeTableServices.hourEndTimes[document.hour],
                 Notes:document.notes
             });
         }
