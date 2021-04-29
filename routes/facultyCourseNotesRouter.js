@@ -8,6 +8,7 @@ const SemesterProgression=require('../models/semesterProgressionSchema');
 const getCourseNameFromCourseID=require('../services/getCourseNameFromCourseID');
 const getSectionsFromAdvisorAllocations=require('../services/getSectionsFromAdvisorAllocationIDs');
 const checkCredentials=require('../services/checkCredentialsService');
+const checkCoursePresentForFaculty=require('../services/checkCoursePresentForFaculty');
 
 
 facultyCourseNotesRouter.route('/')
@@ -58,7 +59,7 @@ facultyCourseNotesRouter.route('/')
                     status:"Internal Server Error"
                 });
             })
-    });
+    })
 
 facultyCourseNotesRouter.route('/:courseID')
     .get(checkCredentials,async (req,res,next)=>{
@@ -159,6 +160,33 @@ facultyCourseNotesRouter.route('/:courseID')
                     status:"Internal Server Error"
                 });
             });
+    })
+    .delete(checkCredentials,async (req,res,next)=>{
+        try{
+            if(await checkCoursePresentForFaculty(req.headers['dbid'],req.params.courseID)){
+                FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID,{
+                   $pull:{
+                       'notes': {_id:req.body.noteID}
+                   }
+                })
+                    .then(()=>{
+                        res.statusCode=200;
+                        res.json({
+                            status:"Note deleted successfully"
+                        });
+                    },(err)=>{
+                        res.statusCode=500;
+                        res.json({
+                            status:"Internal Server Error"
+                        });
+                    });
+            }
+        }catch(e){
+            res.statusCode=500;
+            res.json({
+                status:"Internal Server Error"
+            });
+        }
     })
 
 
