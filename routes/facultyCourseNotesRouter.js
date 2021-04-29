@@ -89,18 +89,6 @@ facultyCourseNotesRouter.route('/:courseID')
 
         const exists=await FacultyCourseNotes.exists({_id:req.body.facultyCourseNotesID});
         if(!exists){
-            console.log(
-                {
-                    facultyID:req.headers['dbid'],
-                    year:process.env.CUR_ACADEMIC_YEAR,
-                    sem:process.env.CUR_SEM_TYPE,
-                    courseID:req.params.courseID,
-                    notes:[{
-                        date: new Date(req.body.noteDate),
-                        notes:req.body.noteText
-                    }]
-                }
-            );
             FacultyCourseNotes.create({
                 facultyID:req.headers['dbid'],
                 year:process.env.CUR_ACADEMIC_YEAR,
@@ -108,6 +96,7 @@ facultyCourseNotesRouter.route('/:courseID')
                 courseID:req.params.courseID,
                 notes:[{
                     date: new Date(req.body.noteDate),
+                    hour:req.body.hour,
                     notes:req.body.noteText
                 }]
             })
@@ -123,7 +112,7 @@ facultyCourseNotesRouter.route('/:courseID')
                 });
             });
         }else{
-            FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$push: {'notes': {date:new Date(req.body.noteDate),notes:req.body.noteText}}})
+            FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$push: {'notes': {date:new Date(req.body.noteDate),hour:req.body.hour,notes:req.body.noteText}}})
                 .then(()=>{
                     res.statusCode=200;
                     res.json({
