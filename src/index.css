@@ -239,3 +239,7 @@ body {
 .leftAlignDropdownText {
   text-align: left;
 }
+
+#downloadCSVButton {
+  margin-left: 10px;
+}
