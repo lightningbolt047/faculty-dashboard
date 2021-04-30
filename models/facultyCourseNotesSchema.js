@@ -31,7 +31,7 @@ const facultyCourseNotesSchema=new Schema({
             hour:{
                 type:Number,
                 required:true,
-                range:[0,7]
+                range:[0,6]
             },
             notes:{
                 type:String,
