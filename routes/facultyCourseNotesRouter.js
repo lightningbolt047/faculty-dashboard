@@ -101,10 +101,11 @@ facultyCourseNotesRouter.route('/:courseID')
                     notes:req.body.noteText
                 }]
             })
-            .then(()=>{
+            .then((document)=>{
                 res.statusCode=200;
                 res.json({
-                   status:"Successfully added new course notes document"
+                   status:"Successfully added new course notes document",
+                   facultyCourseNotesID:document._id
                 });
             },(err)=>{
                 res.statusCode=500;
@@ -114,10 +115,11 @@ facultyCourseNotesRouter.route('/:courseID')
             });
         }else{
             FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$push: {'notes': {date:new Date(req.body.noteDate),hour:req.body.hour,notes:req.body.noteText}}})
-                .then(()=>{
+                .then((document)=>{
                     res.statusCode=200;
                     res.json({
-                        status:"Added new note successfully"
+                        status:"Added new note successfully",
+                        facultyCourseNotesID:document._id
                     });
                 },(err)=>{
                     res.statusCode=500;
