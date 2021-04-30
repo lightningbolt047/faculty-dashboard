@@ -55,6 +55,7 @@ export default function CourseNotes({course}){
                 noteText:note
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
+        setCourseNotesID(responseBody.facultyCourseNotesID);
         return responseBody.statusCode;
     }
 
@@ -96,11 +97,19 @@ export default function CourseNotes({course}){
         for(const document of courseNotes){
             csvData.push({
                 Date:DateServices.getDateAsString(new Date(document.date)),
+                hour:document.hour+1,
                 StartTime:TimeTableServices.hourStartTimes[document.hour],
                 EndTime:TimeTableServices.hourEndTimes[document.hour],
                 Notes:document.notes
             });
         }
+
+        csvData.sort((a,b)=>{
+            if(Date.parse(b.date)===Date.parse(a.date)){
+                return b.hour-a.hour;
+            }
+            return Date.parse(b.date)-Date.parse(a.date);
+        });
 
         csvExporter.generateCsv(csvData);
 
@@ -109,6 +118,9 @@ export default function CourseNotes({course}){
 
     const getSortedOrder=()=>{
         courseNotesFromServer.sort((a,b)=>{
+            if(Date.parse(b.date)===Date.parse(a.date)){
+                return b.hour-a.hour;
+            }
             return Date.parse(b.date)-Date.parse(a.date);
         });
         setCourseNotes(courseNotesFromServer);
@@ -181,10 +193,10 @@ export default function CourseNotes({course}){
                 <TextField variant="outlined" color="secondary" value={note} onChange={handleNoteChange} label="Notes" type="text" fullWidth id={`courseNotesAddNewNoteTextTextField`}/>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleNewNoteCancel} color="primary" id={`courseNotesAddNewNoteDiscardButton`}>
+            <Button onClick={handleNewNoteCancel} color="secondary" id={`courseNotesAddNewNoteDiscardButton`}>
                 Cancel
             </Button>
-            <Button onClick={handleNewNoteAddition} color="primary" id={`courseNotesAddNewNoteButton`}>
+            <Button onClick={handleNewNoteAddition} color="secondary" id={`courseNotesAddNewNoteButton`}>
                 Add Note
             </Button>
             </DialogActions>
