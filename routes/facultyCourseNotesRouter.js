@@ -105,7 +105,8 @@ facultyCourseNotesRouter.route('/:courseID')
                 res.statusCode=200;
                 res.json({
                    status:"Successfully added new course notes document",
-                   facultyCourseNotesID:document._id
+                   facultyCourseNotesID:document._id,
+                   noteID:document.notes[0]._id
                 });
             },(err)=>{
                 res.statusCode=500;
@@ -115,12 +116,27 @@ facultyCourseNotesRouter.route('/:courseID')
             });
         }else{
             FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseNotesID, {$push: {'notes': {date:new Date(req.body.noteDate),hour:req.body.hour,notes:req.body.noteText}}})
-                .then((document)=>{
-                    res.statusCode=200;
-                    res.json({
-                        status:"Added new note successfully",
-                        facultyCourseNotesID:document._id
-                    });
+                .then(async (document)=>{
+                    try{
+                        let noteID;
+                        let updatedDocument=await FacultyCourseNotes.findById(document._id);
+                        if(updatedDocument.notes.length===0){
+                            noteID=0;
+                        }else{
+                            noteID=updatedDocument.notes[updatedDocument.notes.length-1]._id;
+                        }
+                        res.statusCode=200;
+                        res.json({
+                            status:"Added new note successfully",
+                            noteID:noteID,
+                            facultyCourseNotesID:updatedDocument._id
+                        });
+                    }catch(e){
+                        res.statusCode=500;
+                        res.json({
+                            status:"Internal Server Error"
+                        });
+                    }
                 },(err)=>{
                     res.statusCode=500;
                     res.json({
