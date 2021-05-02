@@ -15,7 +15,7 @@ import {DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 
-export default function CourseNotesAccordion({accordionID,note}){
+export default function CourseNotesAccordion({accordionID,note,handleDeleteNote}){
 
     const noteDate=new Date(note.date);
     const [dialogOpen,setDialogOpen]=useState(false);
@@ -30,6 +30,11 @@ export default function CourseNotesAccordion({accordionID,note}){
     const handleDeleteIconAction=(e)=>{
         e.stopPropagation();
         handleDialogOpen();
+    }
+
+    const handleDeleteButtonClick=async ()=>{
+        await handleDeleteNote(accordionID);
+        setDialogOpen(false);
     }
 
 
@@ -63,14 +68,14 @@ export default function CourseNotesAccordion({accordionID,note}){
                     <Typography variant="h5" color="secondary">Are you sure?</Typography>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure about deleting the note?
+                            Are you sure about deleting this note?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleDialogClose} color="secondary" id={`courseNotesAddNewNoteDiscardButton`}>
                             Cancel
                         </Button>
-                        <Button color="secondary" id={`courseNotesAddNewNoteButton`}>
+                        <Button onClick={handleDeleteButtonClick} color="secondary" id={`courseNotesAddNewNoteButton`}>
                             Delete
                         </Button>
                     </DialogActions>

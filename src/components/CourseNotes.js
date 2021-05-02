@@ -46,7 +46,9 @@ export default function CourseNotes({course}){
     }
 
     const sendNewCourseNoteToServer=async ()=>{
-
+        if(typeof noteDate==='undefined' || noteDate===''){
+            return {statusCode:0};
+        }
         let responseBody=await backendService('PUT',`/courseNotes/${course.courseID}`,
             {
                 facultyCourseNotesID:courseNotesID,
@@ -56,16 +58,18 @@ export default function CourseNotes({course}){
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
         setCourseNotesID(responseBody.facultyCourseNotesID);
-        return responseBody.statusCode;
+        return responseBody;
     }
 
     const handleNewNoteAddition=async ()=>{
         if(typeof note==='undefined' || note===""){
             return
         }
-        if(await sendNewCourseNoteToServer()===200){
+        let responseFromServer=await sendNewCourseNoteToServer();
+        if(responseFromServer.statusCode===200){
             let tempCourseNotes=[];
             tempCourseNotes.push({
+                _id:responseFromServer.noteID,
                 date:new Date(dateISO).toString(),
                 hour:selectedHour,
                 notes:note
@@ -77,6 +81,28 @@ export default function CourseNotes({course}){
             setNote(undefined);
             setNoteDate(undefined);
             setOpen(false);
+        }
+    }
+
+    const deleteNoteFromServer=async (accordionID)=>{
+        let responseBody=await backendService('DELETE',`/courseNotes/${course.courseID}`,
+            {
+                facultyCourseNotesID: courseNotesID,
+                noteID:courseNotes[accordionID]._id
+            },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
+        )
+        return responseBody.statusCode;
+    }
+
+    const handleNoteDeletion=async (accordionID)=>{
+        if(await deleteNoteFromServer(accordionID)===200){
+            let tempCourseNotes=[];
+            for(let i=0;i<courseNotes.length;i++){
+                if(i!==accordionID){
+                    tempCourseNotes.push(courseNotes[i]);
+                }
+            }
+            setCourseNotes(tempCourseNotes);
         }
     }
 
@@ -164,7 +190,7 @@ export default function CourseNotes({course}){
                 </Button>
             </Typography>
             {courseNotes.map((item,index)=>(
-                <CourseNotesAccordion accordionID={index} note={item}/>
+                <CourseNotesAccordion accordionID={index} note={item} handleDeleteNote={handleNoteDeletion}/>
             ))}
             <Box height={10}/>
             <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
