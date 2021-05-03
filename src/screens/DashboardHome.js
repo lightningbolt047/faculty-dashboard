@@ -21,6 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WorkOffIcon from '@material-ui/icons/WorkOff';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
 import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
@@ -29,6 +30,7 @@ import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import HomeScreen from './sub-screens/HomeScreen';
 import CourseInfoScreen from './sub-screens/CourseInfoScreen';
+import { Link } from 'react-router-dom'
 
 
 const sidebarWidth=240;
@@ -95,6 +97,7 @@ export default function DashboardHome(){
         setCurScreen(index);
         setSidebarOpen(false);
     }
+
 
     useEffect(()=>{
         if(typeof sessionStorage.USER_DB_ID==='undefined' || typeof sessionStorage.USER_AUTH_TOKEN==='undefined'){
@@ -179,6 +182,11 @@ export default function DashboardHome(){
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>
                     </ListItem>}
+
+                    <ListItem button key="Calendar" id="dashboardCalendarBtn" onClick={()=>window.open('https://intranet.cb.amrita.edu/sites/default/files/2020_2021_Academic_calendar_29_MAR_2021.pdf','_blank')}>   
+                        <ListItemIcon>{<CalendarTodayIcon/>}</ListItemIcon>
+                        <ListItemText primary="Get Your Calendar"/>
+                    </ListItem>
                
                     <ListItem button onClick={()=>setSidebarOpen(false)}>
                         <ListItemIcon>{<CloseIcon/>}</ListItemIcon>
