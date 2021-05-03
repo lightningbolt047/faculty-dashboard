@@ -30,7 +30,6 @@ import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import HomeScreen from './sub-screens/HomeScreen';
 import CourseInfoScreen from './sub-screens/CourseInfoScreen';
-import { Link } from 'react-router-dom'
 
 
 const sidebarWidth=240;
