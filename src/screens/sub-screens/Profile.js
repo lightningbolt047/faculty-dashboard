@@ -5,13 +5,13 @@ import {useState,useEffect,useRef} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import backendQuery from '../../services/backendServices';
+import backendService from '../../services/backendService';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '@material-ui/lab/Alert';
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
 
-var buttonEnabledList=[true,true,true,true,true];
+let buttonEnabledList=[true,true,true,true,true];
 export default function Profile(){
 
     const [phNo,setPhNo]=useState("982-345-1234");
@@ -28,21 +28,17 @@ export default function Profile(){
     const [enableSaveButton,setEnableSaveButton]=useState(true);
     const [alertVisible,setAlertVisible]=useState(false);
     const history=useHistory();
-    var imageUploadSuccess=false;
+    let imageUploadSuccess=false;
 
-    var uploadImageFile=useRef(null);
+    let uploadImageFile=useRef(null);
 
     const [imagePath,setImagePath]=useState('');
 
     const getInfoFromBackend=async ()=>{
         setFetchingData(true);
-        var responseBody=await backendQuery('GET',`/profile/getFullProfile/`,
+        let responseBody=await backendService('GET',`/profile/getFullProfile/`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
-        // if(responseBody.statusCode===404){
-
-        // }
-        console.log(responseBody);
         if(responseBody.statusCode===200){
             setPhNo(responseBody.phoneNumber);
             setEmail(responseBody.email);
@@ -56,7 +52,6 @@ export default function Profile(){
         }
         setFetchingData(false);
     };
-    //eslint-disable-next-line
     useEffect(()=>{
         getInfoFromBackend();
     },[]);
@@ -75,7 +70,7 @@ export default function Profile(){
         }
 
         setSendingData(true);
-        var responseBody=await backendQuery('POST',`/profile/`,
+        let responseBody=await backendService('POST',`/profile/`,
             {
                 updateType:'personalInfoUpdate',
                 phoneNumber:phNo,
@@ -86,11 +81,7 @@ export default function Profile(){
                 imagePath:imagePath
             },sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
-        // if(responseBody.statusCode===404){
-
-        // }
         setProfileUpdateStatus(responseBody.statusCode);
-        console.log(responseBody);
         setSendingData(false);
         setAlertVisible(true);
         setTimeout(()=>{
@@ -101,8 +92,8 @@ export default function Profile(){
     const handleEnableSaveButton=(index,value)=>{
         let count=0;
         buttonEnabledList[index]=value;
-        for(let i=0;i<buttonEnabledList.length;i++){
-            if(buttonEnabledList[i]===true){
+        for(let buttonEnabled of buttonEnabledList){
+            if(buttonEnabled){
                 count++;
             }
         }
@@ -136,17 +127,16 @@ export default function Profile(){
     const handleFileSelection=(event)=>{
         if(!imageUploadSuccess){
             uploadImageFile=event.target.files[0];
-            console.log(uploadImageFile);
             handleSendImage();
         }
     }
-    const handleSendImage=(event)=>{
+    const handleSendImage=()=>{
 
         if(uploadImageFile==null){
             return;
         }
-        
-        var formData=new FormData();
+
+        const formData = new FormData();
 
         formData.append('imageFile',uploadImageFile);
 
@@ -159,10 +149,9 @@ export default function Profile(){
             },
             data: formData
         })
-        .then((res)=>{
+        .then(()=>{
             window.location.reload();
         });
-        console.log("Exec");
     }
 
     const getImagePath=()=>{
@@ -189,7 +178,7 @@ export default function Profile(){
             {!fetchingData && <div className="centerAligningDivs">
                 <input style={{display:'none'}} accept=".jpg,.jpeg,.png" type='file' ref={uploadImageFile} onChange={(e)=>handleFileSelection(e)}/>
                 <Box flex={1}>
-                    <Avatar src={getImagePath()} style={{width:'120px',height:'120px'}}onClick={(e)=>{if(!imageUploadSuccess){
+                    <Avatar src={getImagePath()} style={{width:'120px',height:'120px'}} onClick={()=>{if(!imageUploadSuccess){
                         uploadImageFile.current.click()
                     }}}/>
                 </Box>
@@ -201,34 +190,34 @@ export default function Profile(){
                 <Box height={20}/>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={0}/>
+                        <EditableInput fieldID={"profilePhoneNumber"} fieldButtonID={"profilePhoneNumberButton"} fieldLabel={"Phone Number"} inputSize="small" textValue={phNo} handleValueChange={handlePhNoChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={0}/>
                     </Grid>
                     <Grid item>
-                        <EditableInput fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={1}/>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} alignContent="center" justify="center">
-                    <Grid item>
-                        <EditableInput fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={2}/>
+                        <EditableInput fieldID={"profileEmail"} fieldButtonID={"profileEmailButton"} fieldLabel={"Email"} inputSize="small" textValue={email} handleValueChange={handleEmailChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={1}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <EditableInput fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={3}/>
-                    </Grid>
-                    <Grid item>
-                        <EditableInput fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={4}/>
+                        <EditableInput fieldID={"profileAddress"} fieldButtonID={"profileAddressButton"} fieldLabel={"Residential Address"} inputSize="small" textValue={address} handleValueChange={handleAddressChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={2}/>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3} alignContent="center" justify="center">
                     <Grid item>
-                        <Button variant='contained' color='secondary' onClick={()=>history.push('/authChange')}>
+                        <EditableInput fieldID={"profileSecQuestion"} fieldButtonID={"profileSecQuestionButton"} fieldLabel={"Security Question"} inputSize="small" textValue={securityQuestion} handleValueChange={handleSecurityQnChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={3}/>
+                    </Grid>
+                    <Grid item>
+                        <EditableInput fieldID={"profileSecAnswer"} fieldButtonID={"profileSecAnswerButton"} fieldLabel={"Security Answer"} inputSize="small" textValue={securityAnswer} handleValueChange={handleSecurityAnswerChange} handleSaveButtonStatus={handleEnableSaveButton} fieldIndex={4}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignContent="center" justify="center">
+                    <Grid item>
+                        <Button id='profileChangePasswordBtn' variant='contained' color='secondary' onClick={()=>history.push('/authChange')}>
                                 Change Password
                         </Button>
                     </Grid>
                     
                     <Grid item>
-                        <Button variant='contained' color='secondary' disabled={!enableSaveButton} onClick={postInfoToBackend}>
+                        <Button id="profileSavebtn" variant='contained' color='secondary' disabled={!enableSaveButton} onClick={postInfoToBackend}>
                             {sendingData && <CircularProgress size={24} color="inherit"/>}
                             {!sendingData && "Save"}
                         </Button>

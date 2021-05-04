@@ -20,8 +20,16 @@ import BookIcon from '@material-ui/icons/Book';
 import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import WorkOffIcon from '@material-ui/icons/WorkOff';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import {useMediaQuery} from 'react-responsive';
 import HomeIcon from '@material-ui/icons/Home';
+import StudentGatePassMedical from "./sub-screens/StudentGatePassMedical";
+import LeaveODApproval from "./sub-screens/LeaveODApproval";
+import FacultyLeaveApplication from "./sub-screens/FacultyLeaveApplication";
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import HomeScreen from './sub-screens/HomeScreen';
+import CourseInfoScreen from './sub-screens/CourseInfoScreen';
 
 
 const sidebarWidth=240;
@@ -47,25 +55,24 @@ const styles=makeStyles((theme)=>({
         overflowX: 'hidden',
         width: theme.spacing(7) + 1,
         [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9) + 1,
+          width: theme.spacing(7) + 1,
         },
       }
 }));
 
 
-
 export default function DashboardHome(){
     
     const useStyles=styles();
-    // eslint-disable-next-line
-    const [cookies, setCookie, removeCookie] = useCookies(['faculty-dash-auth']);
+    const removeCookie = useCookies(['faculty-dash-auth'])[2];
     const [sidebarOpen, setSidebarOpen]  = useState(false);
     const history=useHistory();
-    var subScreenList=[<div/>,<Profile/>,<MentorDiary/>];
+    let subScreenList=[<HomeScreen/>,<Profile/>,<FacultyLeaveApplication/>,<LeaveODApproval key={'hodLeaveApprove'} passRoute={"hodLeaveApprove"}/>,<CourseInfoScreen/>,<StudentGatePassMedical/>,<LeaveODApproval key={'odform'} passRoute={'odform'}/>,<MentorDiary/>];
+    let subScreenNames=["Home","Profile","Leave Management","Leave Approval","Course Info","Student Gate Passes","OD Forms","Mentoring Diary"];
     const [curScreen,setCurScreen]=useState(sessionStorage.DASHBOARD_SUB_SCREEN_ID);
+    const [isHOD,setIsHOD]=useState(false);
     const isSmallWidth = useMediaQuery({ query: '(max-width: 1224px)' });
 
-    console.log("sessionStorage "+sessionStorage.DASHBOARD_SUB_SCREEN_ID);
 
     const logoutRoutine=()=>{
         removeCookie("dbID");
@@ -78,23 +85,30 @@ export default function DashboardHome(){
         if(sidebarOpen){
             return sidebarWidth;
         }
-        return sidebarWidth/3.5;
+        return sidebarWidth/4.5;
     }
 
     const getMainUIContent=()=>{
         return subScreenList[curScreen];
     }
-
     const handleSubScreenChange=(index)=>{
         sessionStorage.DASHBOARD_SUB_SCREEN_ID=index;
         setCurScreen(index);
         setSidebarOpen(false);
     }
 
+
     useEffect(()=>{
         if(typeof sessionStorage.USER_DB_ID==='undefined' || typeof sessionStorage.USER_AUTH_TOKEN==='undefined'){
             history.replace('/');
+            return;
         }
+        if(sessionStorage.HOD==='true'){
+            setIsHOD(true);
+        }else{
+            setIsHOD(false);
+        }
+
         // eslint-disable-next-line
     },[]);
 
@@ -107,15 +121,15 @@ export default function DashboardHome(){
                         <IconButton edge="start" color="inherit" onClick={()=>setSidebarOpen(!sidebarOpen)}>
                             <MenuIcon/>
                         </IconButton>
-                        <h2>Home</h2>
+                        <h2>{subScreenNames[curScreen]}</h2>
                     </Box>
                     {!isSmallWidth && <div>
                         <h2 id="userGreetMessage">Hello {sessionStorage.FACULTY_NAME} !</h2>
                     </div>}
-                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
+                    <IconButton color="inherit" id={"appBarProfile"} className="dashboardHomeAccountCircle" onClick={()=>handleSubScreenChange(1)}>
                         <AccountCircleIcon/>
                     </IconButton>
-                    <IconButton color="inherit" className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
+                    <IconButton color="inherit" id={"appBarLogout"} className="dashboardHomeAccountCircle" onClick={logoutRoutine}>
                         <LogoutIcon/>
                     </IconButton>
                 </Toolbar>
@@ -133,30 +147,45 @@ export default function DashboardHome(){
             }}
             >
                 <List>
-                <ListItem button key="Home" onClick={()=>handleSubScreenChange(0)}>
+                <ListItem button key="Home" id="dashboardHomeBtn" onClick={()=>handleSubScreenChange(0)}>
                         <ListItemIcon>{<HomeIcon/>}</ListItemIcon>
                         <ListItemText primary="Home"/>
                     </ListItem>
-                    <ListItem button key="Profile" onClick={()=>handleSubScreenChange(1)}>
+                    <ListItem button key="Profile" id="dashboardProfileBtn" onClick={()=>handleSubScreenChange(1)}>
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
-                    <ListItem button key="Attendance">
+                    {!isHOD && <ListItem button key="FacultyAttendance" id="dashboardAttendanceBtn"
+                               onClick={() => handleSubScreenChange(2)}>
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
-                        <ListItemText primary="Attendance"/>
-                    </ListItem>
-                    <ListItem button key="Course Info">
+                        <ListItemText primary="Leave Management"/>
+                    </ListItem>}
+                    {isHOD && <ListItem button key="LeaveApproval" id="dashboardAttendanceBtn"
+                               onClick={() => handleSubScreenChange(3)}>
+                        <ListItemIcon>{<LockOpenIcon/>}</ListItemIcon>
+                        <ListItemText primary="Leave Approval"/>
+                    </ListItem>}
+                    <ListItem button key="Course Info" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(4)}>
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass">
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(5)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
-                        <ListItemText primary="Gate Pass"/>
+                        <ListItemText primary="Student Passes"/>
                     </ListItem>}
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" onClick={()=>handleSubScreenChange(2)}>
+                    <ListItem button key="OD Forms" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(6)}>
+                        <ListItemIcon>{<WorkOffIcon/>}</ListItemIcon>
+                        <ListItemText primary="OD Forms"/>
+                    </ListItem>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Mentoring Diary" id="dashboardMentorBtn" onClick={()=>handleSubScreenChange(7)}>
                         <ListItemIcon>{<BookIcon/>}</ListItemIcon>
                         <ListItemText primary="Mentoring Diary"/>
                     </ListItem>}
+
+                    <ListItem button key="Calendar" id="dashboardCalendarBtn" onClick={()=>window.open('https://intranet.cb.amrita.edu/sites/default/files/2020_2021_Academic_calendar_29_MAR_2021.pdf','_blank')}>   
+                        <ListItemIcon>{<CalendarTodayIcon/>}</ListItemIcon>
+                        <ListItemText primary="Get Your Calendar"/>
+                    </ListItem>
                
                     <ListItem button onClick={()=>setSidebarOpen(false)}>
                         <ListItemIcon>{<CloseIcon/>}</ListItemIcon>

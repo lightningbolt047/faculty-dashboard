@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {useState} from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function EditableTextArea({accordionID,studentID,mentorDiaryText,textAreaHelpText,handleTextChange,handleSubmit}){
+export default function EditableTextArea({accordionID,studentID,mentorDiaryText,textAreaHelpText,handleTextChange,handleSubmit,advisorAllocationID}){
 
     const [editing,setEditing]=useState(false);
     const [loading,setLoading]=useState(false);
@@ -14,11 +14,11 @@ export default function EditableTextArea({accordionID,studentID,mentorDiaryText,
 
     return (
         <div>
-            <TextareaAutosize rowsMin={5} className="txtArea" placeholder={textAreaHelpText} disabled={!editing} value={mentorDiaryText} onChange={event=>handleTextChange(accordionID,event)} />
-            <IconButton onClick={async ()=>{
+            <TextareaAutosize id={`mentoringTextArea${accordionID}`} rowsMin={5} className="txtArea" placeholder={textAreaHelpText} disabled={!editing} value={mentorDiaryText} onChange={event=>handleTextChange(accordionID,event)} />
+            <IconButton id={`mentoringTextAreaBtn${accordionID}`} onClick={async ()=>{
                 if(editing){
                     setLoading(true);
-                    await handleSubmit(studentID,accordionID);
+                    await handleSubmit(studentID,accordionID,advisorAllocationID);
                     setLoading(false);
                     setEditing(false);
                     return;

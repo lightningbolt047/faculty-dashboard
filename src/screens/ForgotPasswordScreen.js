@@ -6,9 +6,9 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import {useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import hashString from '../services/hashService';
+import hashString from '../services/hashString';
 import Alert from '@material-ui/lab/Alert';
-import backendQuery from '../services/backendServices';
+import backendService from '../services/backendService';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 
@@ -43,7 +43,7 @@ export default function ForgotPasswordScreen(){
     const checkUserPresence=async ()=>{
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        let responseBody=await backendService('POST','/recovery',
             {
                 reqType:"userPresenceCheck",
                 clgID:username
@@ -70,7 +70,7 @@ export default function ForgotPasswordScreen(){
         }
         setButtonWorking(true);
 
-        var responseBody=await backendQuery('POST','/recovery',
+        let responseBody=await backendService('POST','/recovery',
             {
                 reqType:"secAnswerChangePassword",
                 dbID:dbID,
@@ -104,15 +104,15 @@ export default function ForgotPasswordScreen(){
             <div className="getSecQuestion">
                 <p id="secQuestion">{"Security Question: "+secQuestion}</p>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
+                    <TextField id={"forgotPasswordSecAnswer"} variant="outlined" color="secondary" value={secAnswer} label="Security Answer" onChange={event => {if(!passwordChangeSuccess){setSecAnswer(event.target.value)}}} fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordNewPassword"} variant="outlined" color="secondary" value={password} label="Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
                 <Grid container alignContent="center" justify="center">
-                    <TextField variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
+                    <TextField id={"forgotPasswordConfirmNewPassword"} variant="outlined" color="secondary" value={confirmPassword} label="Confirm Password" onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} onChange={event => {if(!passwordChangeSuccess){setConfirmPassword(event.target.value)}}} type='password' fullWidth/>
                 </Grid>
                 <Box height={8}/>
             </div>
@@ -141,7 +141,7 @@ export default function ForgotPasswordScreen(){
         );
     }
 
-    var timeoutObject;
+    let timeoutObject;
 
     const sendUserBackToLogin=async ()=>{
         timeoutObject=setTimeout(()=>{
@@ -197,14 +197,14 @@ export default function ForgotPasswordScreen(){
                         </Grid>
                         <div className="getUser">
                             <Grid container alignContent="center" justify="center">
-                                <TextField variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
+                                <TextField id={"forgotPasswordClgID"} variant="outlined" color="secondary" value={username} label="College ID" onChange ={event => {if(!userPresent){setUsername(event.target.value)}}}  fullWidth/>
                             </Grid>
                             <Box height={8}/>
                         </div>
                         {userPresent && secQuestion==null && getNoSecurityQuestionDiv()}
                         {userPresent && secQuestion!=null && getRecoveryPasswordForm()}
 
-                        <Button variant='contained' color='secondary' onClick={async ()=>{
+                        <Button variant='contained' id={"forgotPasswordSubmitButton"} color='secondary' onClick={async ()=>{
                             if(!userPresent){
                                 checkUserPresence();
                                 return;
@@ -222,7 +222,7 @@ export default function ForgotPasswordScreen(){
                             {!buttonWorking && passwordChangeSuccess && "Go back"}
                             {buttonWorking && <CircularProgress size={24} color="inherit"/>}
 
-                        </Button><br></br>
+                        </Button>
                         <Box height={8}/>
                     </CardContent>
                 </Card>

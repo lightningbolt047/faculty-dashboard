@@ -1,9 +1,14 @@
-
 body {
   margin: 0;
   padding: 0;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #333;
+  height: 100vh;
+  width: 100vw;
+}
+
+.App {
+  text-align: center;
 }
 
 .loginScreen {
@@ -86,8 +91,13 @@ body {
   font-weight: 700;
 }
 
+#facultyLeaveAccordionTextPrimary {
+  font-weight: 100;
+}
+
 .accordionDividerContent{
   padding-left: 10px;
+  padding-right: 10px;
   text-align: left;
 }
 
@@ -118,6 +128,19 @@ body {
 #warningColor{
   color: #ff1744;
 }
+#medicalColor{
+  color:#00a152;
+}
+#earnedColor{
+  color:#00a152;
+}
+#casualColor{
+  color: #00a152;
+}
+#attendanceBigNumber{
+  color:#00a152;
+}
+
 
 #userGreetMessage {
   padding-right: 20px;
@@ -127,4 +150,101 @@ body {
   width: 40%;
   margin-left: auto;
   margin-right: auto;
+}
+
+#approveGatePass {
+  background-color: #00a152;
+  color: white;
+}
+
+#denyGatePass {
+  background-color: #ff1744;
+  color: white;
+}
+
+#withholdGatePass {
+  background-color: #ffc107;
+  color: white;
+}
+
+
+.gatePassSegmentEmergency {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #ff1744;
+}
+
+#gatePassSegmentText {
+  padding-left: 20px;
+}
+
+.gatePassSegmentRegular {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #00a152;
+}
+
+.gatePassSegmentCancelled {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #f44336;
+}
+
+.gatePassSegmentWithheld {
+  text-align: start;
+  margin-left: 5%;
+  display: flex;
+  color: #ffa000;
+}
+
+.attendanceCard {
+  margin: 50px;
+  width: 450px;
+  height: 425px;
+  padding: 10px;
+}
+
+.homeRowcard{
+  margin-top: 20px;
+  margin-bottom: 7.5px;
+  height: 350px;
+  width: 100%;
+  padding: 5px;
+}
+
+.homeCard {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 7.5px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: auto;
+  padding: 2.5px;
+}
+.timetable {
+  min-width: 750px;
+}
+
+#courseTabsDiv {
+  height: 80vh;
+}
+
+#leaveDropdown {
+  min-width: 418px;
+}
+
+#hourDropdown{
+  min-width: 100%;
+}
+
+
+.leftAlignDropdownText {
+  text-align: left;
+}
+
+#downloadCSVButton {
+  margin-left: 10px;
 }

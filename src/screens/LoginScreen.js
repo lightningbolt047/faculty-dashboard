@@ -9,8 +9,8 @@ import {useEffect, useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Link,useHistory} from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-import backendQuery from '../services/backendServices';
-import hashString from '../services/hashService';
+import backendService from '../services/backendService';
+import hashString from '../services/hashString';
 import { useCookies } from 'react-cookie';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -41,7 +41,7 @@ export default function LoginScreen(){
     const [responseMessage,setResponseMessage]=useState("");
     const [signInWorking,setSignInWorking]=useState(false);
     const [snackbarOpen,setSnackbarOpen]=useState(true);
-    var dbID=null;
+    let dbID=null;
 
     sessionStorage.clear();
 
@@ -53,14 +53,13 @@ export default function LoginScreen(){
             return;
         }
         setSignInWorking(true);
-        var responseBody=await backendQuery('POST','/auth',
+        let responseBody=await backendService('POST','/auth',
                 {
                     loginType:"cookie",
                     dbID:cookies.dbID,
                     authToken:cookies.authToken
                 }
             );
-            console.log(responseBody.statusCode);
             if(responseBody.statusCode===401){
                 if(responseBody.status==="Account locked"){
                     setResponseMessage("Account Locked");
@@ -77,9 +76,10 @@ export default function LoginScreen(){
                 sessionStorage.USER_AUTH_TOKEN=cookies.authToken;
                 sessionStorage.FACULTY_TYPE=responseBody.facultyType;
                 sessionStorage.FACULTY_NAME=responseBody.name;
+                sessionStorage.HOD=responseBody.hod;
                 redirectToHome();
             }
-            console.log(responseBody);
+            setResponseMessage(responseBody.status);
     }
 
     const redirectToHome=()=>{
@@ -104,7 +104,7 @@ export default function LoginScreen(){
             setSignInWorking(false);
             return;
         }
-        var responseBody=await backendQuery('POST','/auth',
+        let responseBody=await backendService('POST','/auth',
             {
                 loginType:"user",
                 clgID:username,
@@ -118,6 +118,7 @@ export default function LoginScreen(){
             sessionStorage.DASHBOARD_SUB_SCREEN_ID=0;
             sessionStorage.FACULTY_TYPE=responseBody.facultyType;
             sessionStorage.FACULTY_NAME=responseBody.name;
+            sessionStorage.HOD=responseBody.hod;
             dbID=responseBody.dbID; 
             if(keepSignedIn){
                 setCookie('dbID',responseBody.dbID,cookieOptions);
@@ -132,7 +133,6 @@ export default function LoginScreen(){
             setSnackbarOpen(true);
         }
         setSignInWorking(false);
-        console.log(responseBody);
     }
 
 
@@ -170,11 +170,11 @@ export default function LoginScreen(){
                             </Typography>
                         </Grid>
                         <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" value={username} label="Username" onChange ={event => setUsername(event.target.value)}  fullWidth/>
+                            <TextField variant="outlined" color="secondary" id={"loginUsername"} value={username} label="Username" onChange ={event => setUsername(event.target.value)}  fullWidth/>
                         </Grid>
                         <Box height={8}/>
                         <Grid container alignContent="center" justify="center">
-                            <TextField variant="outlined" color="secondary" value={password} label="Password" onChange={event => setPassword(event.target.value)} onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} type='password' fullWidth/>
+                            <TextField variant="outlined" color="secondary" id={"loginPassword"} value={password} label="Password" onChange={event => setPassword(event.target.value)} onCut={discardCutCopyPaste} onCopy={discardCutCopyPaste} onPaste={discardCutCopyPaste} type='password' fullWidth/>
                         </Grid>
                         <Box height={8}/>
                         <FormControlLabel
@@ -184,18 +184,18 @@ export default function LoginScreen(){
                             }}/>
                             }
                             checked={keepSignedIn}
-                            onChange={(e)=>{setKeepSignedIn(!keepSignedIn)}}
+                            onChange={()=>{setKeepSignedIn(!keepSignedIn)}}
                             label="Keep me signed in"
                         />
-                        <Button variant='contained' color='secondary' onClick={async ()=>signInHandler()}>
+                        <Button variant='contained' id={"signInButton"} color='secondary' onClick={async ()=>signInHandler()}>
                             {!signInWorking && "Sign In"}
                             {signInWorking && <CircularProgress size={24} color="inherit"/>}
                         </Button>
                         
                         <Box height={8}/>
-                        <Link to="/recovery">Forgot Password?</Link>
+                        <Link to="/recovery" id={"loginForgotPasswordLink"}>Forgot Password?</Link>
                         <Box height={8}/>
-                        <Link to="/authChange">Change Password</Link>
+                        <Link to="/authChange" id={"loginChangePasswordLink"}>Change Password</Link>
                         <Box height={8}/>
                         {statusCode!==200 && <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={handleSnackbarClose}>
                             {errDiv()}

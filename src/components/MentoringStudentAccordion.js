@@ -10,13 +10,14 @@ import EditableTextArea from './EditableTextArea';
 import CheckIcon from '@material-ui/icons/CheckCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import AlertIcon from '@material-ui/icons/Error';
+import AttendanceServices from "../services/AttendanceServices";
 
 export default function MentoringStudentAccordion({accordionID, studentJSON, mentorDairyText, handleMentorTextChange,handleMentorTextSubmit}){
 
     const getCGPA=()=>{
         let sum=0;
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
-            sum+=studentJSON.personalDetails.studentID.sgpaList[i];
+        for(let sgpaIter of studentJSON.personalDetails.studentID.sgpaList){
+            sum+=sgpaIter;
         }
          
         return (sum/studentJSON.personalDetails.studentID.sgpaList.length).toFixed(2);
@@ -24,32 +25,23 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
 
     const getSGPAString=()=>{
         let sgpaString="";
-        for(let i=0;i<studentJSON.personalDetails.studentID.sgpaList.length;i++){
+        let i=0;
+        for(const sgpa of studentJSON.personalDetails.studentID.sgpaList){
             if(i!==studentJSON.personalDetails.studentID.sgpaList.length-1){
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i]+" , ";
+                sgpaString+=sgpa+" , ";
             }else{
-                sgpaString+=studentJSON.personalDetails.studentID.sgpaList[i];
+                sgpaString+=sgpa;
             }
+            i++;
         }
         return sgpaString;
-    }
-
-    const getAttendancePercentageTextStyle=(percentage)=>{
-        if(percentage<75){
-            return 'warningColor';
-        }else if(percentage>=75 && percentage<=85){
-            return 'alertColor';
-        }
-        else{
-            return 'okColor';
-        }
     }
 
 
     return (
         <div className="accordionSpace">
             <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary id={`mentoringAccordion${accordionID}`} expandIcon={<ExpandMoreIcon />}>
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextPrimary">{studentJSON.personalDetails.studentID.clgID}</Typography>
                     </Box>
@@ -73,7 +65,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                 <Box height={4}/>
                                 <b>Department</b>: {studentJSON.personalDetails.studentID.department}
                                 <Box height={8}/>
-                                <EditableTextArea key={accordionID} studentID={studentJSON.personalDetails.studentID._id} textAreaHelpText={"Enter student mentoring notes"} accordionID={accordionID} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange} handleSubmit={handleMentorTextSubmit}/>
+                                <EditableTextArea key={accordionID} studentID={studentJSON.personalDetails.studentID._id} textAreaHelpText={"Enter student mentoring notes"} accordionID={accordionID} mentorDiaryText={mentorDairyText} handleTextChange={handleMentorTextChange} handleSubmit={handleMentorTextSubmit} advisorAllocationID={studentJSON.advisorAllocationID}/>
                             </div>
                         </Box>
                         <Divider orientation="vertical" flexItem />
@@ -81,10 +73,10 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                             <div className='accordionDividerContent'>
                                 <b>Attendance Summary</b>
                                 <Box height={10}/>
-                                    {studentJSON.attendanceDetails.map((item,index)=>(
+                                    {studentJSON.attendanceDetails.map((item)=>(
                                         <div>
                                             <span>{item.courseName+" : "}</span>
-                                            <span id={getAttendancePercentageTextStyle(((item.studentAttendance/item.classesTaken)*100).toFixed(2))}>{((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}</span>
+                                            <span id={AttendanceServices.getAttendancePercentageTextStyle(AttendanceServices.getAttendancePercentage(item))}>{AttendanceServices.getAttendancePercentage(item)+" %"}</span>
                                         </div>
 
                                         // <div>{item.courseName+" : "+((item.studentAttendance/item.classesTaken)*100).toFixed(2)+" %"}
@@ -96,7 +88,7 @@ export default function MentoringStudentAccordion({accordionID, studentJSON, men
                                 <Box height={8}/>
                                 <b>Disciplinary Actions</b>
                                 <Box height={10}/>
-                                    {studentJSON.personalDetails.studentID.disciplinaryActions.map((item,index)=>(
+                                    {studentJSON.personalDetails.studentID.disciplinaryActions.map((item)=>(
                                         <div className='disciplinaryActionText'>{item}
                                             <Box height={4}/>
                                         </div>
