@@ -1,7 +1,7 @@
 const User=require('../models/userSchema');
 
 
-module.exports=checkCredentials=(req,res,next)=>{
+module.exports=(req,res,next)=>{
     User.findById(req.headers['dbid'])
     .then((user)=>{
         if(!user){

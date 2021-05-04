@@ -1,18 +1,18 @@
 const express=require('express');
-const bodyParser=require('body-parser');
-const { post } = require('../app');
 
 const authRouter=express.Router();
 const User=require('../models/userSchema');
 
+const resetLockTime=require('../services/resetLockTime');
+const wrongAuthRoutine=require('../services/wrongAuthRoutine');
+
 //This route handles authentication
 
 authRouter.route('/')
-.post((req,res,next)=>{
+.post((req,res)=>{
     if(req.body.loginType==="cookie"){
         User.findById(req.body.dbID)
-        .then((user)=>{
-            
+        .then(async (user)=>{
             if(!user){
                 res.statusCode=404;
                 res.json({
@@ -21,21 +21,17 @@ authRouter.route('/')
                 return;
             }
 
-            if(user.wrongAttempts>=10){
-                var timeDiff=Date.now()-user.accountLockTime;
-                console.log(((timeDiff)/(1000*60*60)).toFixed(2));
-                if(((timeDiff/(1000*60*60))).toFixed(2)<12){
-                    res.statusCode=401;
-                    res.json({
-                        "status":"Account locked! Try after "+(12-(timeDiff/(1000*60*60))).toFixed(2)+" hours",
-                        "remainingAttempts":0
-                    });
-                    console.log("Time remaining: "+(12-(timeDiff/(1000*60*60))).toFixed(2));
+            try{
+                if(await resetLockTime(user,res)){
                     return;
                 }
-                user.wrongAttempts=0;
-                user.save();
+            }catch(e){
+                res.statusCode=500;
+                res.json({
+                   'status':"Internal Server Error"
+                });
             }
+
             if(user.authToken===req.body.authToken){
                 User.findByIdAndUpdate(req.body.dbID,{
                     $set:{'lastSuccessfulLogin': new Date(Date.now())}
@@ -46,26 +42,15 @@ authRouter.route('/')
                         "status": "Login Success",
                         "dbID": user._id,
                         "name":user.name,
+                        "hod":user.hod,
                         "facultyType":user.facultyType,
                         "remainingAttempts": 10
                     });
                 });
             }else{
-                user.wrongAttempts++;
-                if(user.wrongAttempts>=10){
-                    user.accountLockTime=new Date(Date.now());
-                }
-                user.save()
-                .then(()=>{
-                    res.statusCode=401;
-                    res.json({
-                        "status": `Wrong Password Remaining Attempts: ${10-user.wrongAttempts}`,
-                    });
-                    return;
-                });
-                return;
+                wrongAuthRoutine(user,res);
             }
-        },(err)=>{
+        },()=>{
             res.statusCode=500;
             res.json({
                 status:"Something went wrong"
@@ -74,7 +59,7 @@ authRouter.route('/')
     }
     if(req.body.loginType==="user"){
         User.findOne({clgID:req.body.clgID})
-        .then((user)=>{ 
+        .then(async (user)=>{
             if(!user){
                 res.statusCode=404;
                 res.json({
@@ -82,20 +67,15 @@ authRouter.route('/')
                 });
                 return;
             }
-            if(user.wrongAttempts>=10){
-                var timeDiff=Date.now()-user.accountLockTime;
-                console.log(((timeDiff)/(1000*60*60)).toFixed(2));
-                if(((timeDiff/(1000*60*60))).toFixed(2)<12){
-                    res.statusCode=401;
-                    res.json({
-                        "status":"Account locked! Try after "+(12-(timeDiff/(1000*60*60))).toFixed(2)+" hours",
-                        "remainingAttempts":0
-                    });
-                    console.log("Time remaining: "+(12-(timeDiff/(1000*60*60))).toFixed(2));
+            try{
+                if(await resetLockTime(user,res)){
                     return;
                 }
-                user.wrongAttempts=0;
-                user.save();
+            }catch(e){
+                res.statusCode=500;
+                res.json({
+                    'status':"Internal Server Error"
+                });
             }
             if(user.authToken===req.body.authToken){
                 User.findByIdAndUpdate(user._id,{
@@ -107,44 +87,17 @@ authRouter.route('/')
                         "dbID": user._id,
                         "name":user.name,
                         "facultyType":user.facultyType,
+                        "hod":user.hod,
                         "remainingAttempts": 10
                     });
                 });
             }
             else{
-                user.wrongAttempts++;
-                if(user.wrongAttempts>=10){
-                    user.accountLockTime=new Date(Date.now());
-                }
-                user.save()
-                .then(()=>{
-                    res.statusCode=401;
-                    res.json({
-                        "status": `Wrong Password Remaining Attempts: ${10-user.wrongAttempts}`,
-                    });
-                    return;
-                });
-                return;
+                wrongAuthRoutine(user,res);
             }
         })
     }
     
-})
-
-.put((req,res,next)=>{
-    User.create(req.body)
-    .then((doc)=>{
-        res.statusCode=200;
-        res.json(doc);
-    })
-})
-
-.patch((req,res,next)=>{
-    User.findByIdAndUpdate(req.body.id,{
-        $set:{"wrongAttempts":0}
-    }).then((doc)=>{
-        res.end("Updated");
-    })
 })
 
 module.exports=authRouter;

@@ -4,13 +4,21 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors=require('cors');
+require('dotenv').config();
 
 
-var authRouter=require('./routes/authRouter');
-var recoveryRouter=require('./routes/recoveryRouter');
-var profileRouter=require('./routes/profileRouter');
-const checkCredentials=require('./services/checkCredentialsService');
+const authRouter=require('./routes/authRouter');
+const recoveryRouter=require('./routes/recoveryRouter');
+const profileRouter=require('./routes/profileRouter');
 const mentoringRouter = require('./routes/mentoringRouter');
+const gatePassRouter=require('./routes/gatePassRouter');
+const medicalLeaveRouter=require('./routes/medicalLeaveRouter');
+const odFormRouter=require('./routes/odFormRouter');
+const facultyLeaveApplyRouter=require('./routes/facultyLeaveApplyRouter');
+const hodLeaveApproveRouter=require('./routes/hodLeaveApproveRouter');
+const facultyTimetableRouter=require('./routes/facultyTimetableRouter');
+const facultyCourseNotesRouter=require('./routes/facultyCourseNotesRouter');
+const forumPostRouter=require('./routes/forumPostRouter');
 
 const mongoose=require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -19,8 +27,7 @@ mongoose.set('useFindAndModify', false);
 const User=require('./models/userSchema');
 
 
-const dbURL='mongodb://127.0.0.1:27017/'
-
+const dbURL='mongodb://127.0.0.1:27017/';
 const dbConnect=mongoose.connect(dbURL);
 dbConnect.then((db)=>{
   console.log("DB connection successful");
@@ -47,6 +54,14 @@ app.use('/auth',authRouter);
 app.use('/recovery',recoveryRouter);
 app.use('/profile',profileRouter);
 app.use('/mentoring',mentoringRouter);
+app.use('/gatepass',gatePassRouter);
+app.use('/studentMedical',medicalLeaveRouter);
+app.use('/odform',odFormRouter);
+app.use('/facultyLeave',facultyLeaveApplyRouter);
+app.use('/hodLeaveApprove',hodLeaveApproveRouter);
+app.use('/timetable',facultyTimetableRouter);
+app.use('/courseNotes',facultyCourseNotesRouter);
+app.use('/forum',forumPostRouter);
 
 
 app.get('/images/:dbID/',(req,res,next)=>{

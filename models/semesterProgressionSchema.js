@@ -7,21 +7,29 @@ const semesterProgressionSchema=new Schema({
         required:true
     },
     facultyID:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         ref:'User',
         required:true
     },
     courseProgression:{
         type:[{
+            advisorAllocationID:{
+                type:[String],
+                ref:'AdvisorAllocation'
+            },
             courseID:{
-                type:mongoose.Schema.Types.ObjectId,
+                type:String,
                 ref:'Course',
-                unique:true
             },
             classesTaken:{
                 type:Number,
             }
         }],
+        required:true
+    },
+    sem:{
+        type:Number,
+        enum:[0,1],
         required:true
     }
 });

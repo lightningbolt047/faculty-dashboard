@@ -54,7 +54,8 @@ const userSchema=new Schema({
         required:true
     },
     hod:{
-        type:Boolean
+        type:Boolean,
+        required:false
     }
 });
 

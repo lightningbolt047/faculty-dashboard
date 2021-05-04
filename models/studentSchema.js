@@ -29,6 +29,20 @@ const studentSchema=new Schema({
     advisorID:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"User",
+    },
+    bloodGroup:{
+        type:String,
+        enum:['A+','A-','B+','B-','AB+','AB-','O+','O-','H/H','Unknown'],
+        default:'Unknown',
+        required:true,
+    },
+    phoneNumber:{
+        type:String,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
     }
 });
 
