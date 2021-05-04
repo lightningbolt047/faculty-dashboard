@@ -113,11 +113,11 @@ export default function MentorDiary(){
             <div>
                 <SearchBar searchText={showSearchText} searchHelpText={"Search"} handleSearchTextChange={handleSearchTextChange}/>
                 <Box height={10}/>
-                {shownStudentsDetails.map((studentItem,index)=>(
-                <div>
-                    <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
-                </div>
-                ))}
+                    {shownStudentsDetails.map((studentItem,index)=>(
+                        <div>
+                            <MentoringStudentAccordion key={index} accordionID={index} studentJSON={studentItem} mentorDairyText={mentoringDiaries[index]} handleMentorTextChange = {handleMentorTextChange} handleMentorTextSubmit={sendMentoringTextToBackend}/>
+                        </div>
+                    ))}
                 <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
                     {successDiv()}
                 </Snackbar>
