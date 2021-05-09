@@ -10,7 +10,7 @@ export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
 
     if(typeof facultyAttendance==='undefined'){
         return (
-            <CircularProgress size={24} color="inherit"/>
+            <CircularProgress size={24} color="secondary"/>
         );
     }
 
