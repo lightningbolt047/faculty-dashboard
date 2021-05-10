@@ -78,7 +78,7 @@ export default function LeaveODApproval({passRoute}){
                 tempPassList.splice(curPassIndex,1);
                 setShownRegularPasses(tempPassList);
             }
-            else if(curPassType==='cancelled'){
+            else{
                 pass=shownCancelledPasses[curPassIndex];
                 let tempPassList=[];
                 for(const pass of shownCancelledPasses){
