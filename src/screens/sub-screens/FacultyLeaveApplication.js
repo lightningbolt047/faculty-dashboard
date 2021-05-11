@@ -114,12 +114,12 @@ export default function FacultyLeaveApplication(){
 
         if(remainingCasualLeaves!==0){
             selectOptions.push(
-                <MenuItem value="cl">Casual Leave</MenuItem>
+                <MenuItem id={`casualLeaveType`} value="cl">Casual Leave</MenuItem>
             );
         }
         if(remainingEarnedLeaves!==0 && !(typeof fromDateISO!=='undefined' && typeof toDateISO!=='undefined' && (DateServices.getDateDifference(new Date(toDateISO),new Date(fromDateISO))%3)!==0 && remainingCasualLeaves>0)){
             selectOptions.push(
-                <MenuItem value="el">Earned Leave</MenuItem>
+                <MenuItem id={`earnedLeaveType`} value="el">Earned Leave</MenuItem>
             );
         }else{
             if(leaveType==='el'){
@@ -128,7 +128,7 @@ export default function FacultyLeaveApplication(){
         }
         if(remainingMedicalLeaves!==0){
             selectOptions.push(
-                <MenuItem value="ml">Medical Leave</MenuItem>
+                <MenuItem id={`medicalLeaveType`} value="ml">Medical Leave</MenuItem>
             );
         }
 
@@ -246,9 +246,9 @@ export default function FacultyLeaveApplication(){
                                     <InputLabel>Leave Timing</InputLabel>
                                     <Select disabled={leaveTimingDisabled} id={'leaveApplyLeaveTimingField'} className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
                                         {/*<MenuItem value="">Select</MenuItem>*/}
-                                        <MenuItem value="fn">Forenoon</MenuItem>
-                                        <MenuItem value="an">Afternoon</MenuItem>
-                                        <MenuItem value="full">Full Day</MenuItem>
+                                        <MenuItem id={`forenoonLeaveTiming`} value="fn">Forenoon</MenuItem>
+                                        <MenuItem id={`afternoonLeaveTiming`} value="an">Afternoon</MenuItem>
+                                        <MenuItem id={`fullDayLeaveTiming`} value="full">Full Day</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
