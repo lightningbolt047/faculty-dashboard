@@ -48,7 +48,7 @@ export default function CourseNotesAccordion({accordionID,note,handleDeleteNote}
                     <Box flex={1}>
                         <Typography className="accordionText" id="accordionTextSecondary">Hour: <b>{TimeTableServices.getTimeRangeFromHour(note.hour)}</b></Typography>
                     </Box>
-                    <IconButton size={'small'} onClick={handleDeleteIconAction}>
+                    <IconButton size={'small'} id={`courseNotesAccordionDelete${accordionID}`} onClick={handleDeleteIconAction}>
                         <DeleteForeverIcon/>
                     </IconButton>
                 </AccordionSummary>
@@ -72,10 +72,10 @@ export default function CourseNotesAccordion({accordionID,note,handleDeleteNote}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleDialogClose} color="secondary" id={`courseNotesAddNewNoteDiscardButton`}>
+                        <Button onClick={handleDialogClose} color="secondary" id={`courseNotesDeleteNoteDiscardButton`}>
                             Cancel
                         </Button>
-                        <Button onClick={handleDeleteButtonClick} color="secondary" id={`courseNotesAddNewNoteButton`}>
+                        <Button onClick={handleDeleteButtonClick} color="secondary" id={`courseNotesDeleteNoteButton`}>
                             Delete
                         </Button>
                     </DialogActions>

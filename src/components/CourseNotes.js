@@ -193,7 +193,7 @@ export default function CourseNotes({course}){
                 <CourseNotesAccordion accordionID={index} note={item} handleDeleteNote={handleNoteDeletion}/>
             ))}
             <Box height={10}/>
-            <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
+            <Fab className="floatingBtns" id={'courseNotesAddNewNoteFab'} color="secondary" onClick={handleClickOpen}>
                 <AddIcon/>
             </Fab>
             <Dialog open={open} onClose={handleNewNoteCancel} aria-labelledby="form-dialog-title">
@@ -208,7 +208,7 @@ export default function CourseNotes({course}){
                 <Box height={10}/>
                 <FormControl color={'secondary'} variant="outlined" id="hourDropdown">
                     <InputLabel>Hour</InputLabel>
-                    <Select className="leftAlignDropdownText" value={selectedHour} onChange={handleSelectedHourChange} label="Hour">
+                    <Select className="leftAlignDropdownText" id={'courseNotesAddNewNoteHourSelect'} value={selectedHour} onChange={handleSelectedHourChange} label="Hour">
                         {/*<MenuItem value="">Select</MenuItem>*/}
                         {hours.map((item,index)=>(
                             <MenuItem value={item}>Hour: {item+1} {TimeTableServices.getTimeRangeFromHour(item)}</MenuItem>

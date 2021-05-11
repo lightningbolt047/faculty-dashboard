@@ -244,7 +244,7 @@ export default function FacultyLeaveApplication(){
                             <Grid container alignContent="center" justify="center">
                                 <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Timing</InputLabel>
-                                    <Select disabled={leaveTimingDisabled} className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
+                                    <Select disabled={leaveTimingDisabled} id={'leaveApplyLeaveTimingField'} className="leftAlignDropdownText" value={leaveTiming} onChange={handleLeaveTimingChange} label="Leave Timing">
                                         {/*<MenuItem value="">Select</MenuItem>*/}
                                         <MenuItem value="fn">Forenoon</MenuItem>
                                         <MenuItem value="an">Afternoon</MenuItem>
@@ -256,7 +256,7 @@ export default function FacultyLeaveApplication(){
                             <Grid container alignContent="center" justify="center">
                             <FormControl color={'secondary'} variant="outlined" id="leaveDropdown">
                                     <InputLabel>Leave Type</InputLabel>
-                                    <Select className="leftAlignDropdownText" value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
+                                    <Select className="leftAlignDropdownText" id={'leaveApplyLeaveTypeField'} value={leaveType} onChange={handleLeaveTypeChange} label="Leave Type">
                                         {/*<MenuItem value="">Select</MenuItem>*/}
                                         {leaveTypeSelectOptions.map((item,index)=>(
                                             item
@@ -293,9 +293,6 @@ export default function FacultyLeaveApplication(){
             <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={handleSnackbarClose}>
                 {getAlertDiv()}
             </Snackbar>
-
-            
-            
         </div>
     );
 }
