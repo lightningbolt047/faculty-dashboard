@@ -7,7 +7,7 @@ var cors=require('cors');
 require('dotenv').config();
 
 const localDBURL='mongodb://127.0.0.1:27017/';
-const cloudDBURL='mongodb+srv://sashank:sashank123@faculty-dashboard.0mowq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+// const cloudDBURL='mongodb+srv://sashank:sashank123@faculty-dashboard.0mowq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 
 const authRouter=require('./routes/authRouter');
@@ -30,7 +30,7 @@ mongoose.set('useFindAndModify', false);
 const User=require('./models/userSchema');
 
 
-const dbConnect=mongoose.connect(cloudDBURL);
+const dbConnect=mongoose.connect(localDBURL);
 dbConnect.then((db)=>{
   console.log("DB connection successful");
 },(err)=>{
