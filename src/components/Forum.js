@@ -175,7 +175,7 @@ export default function Forum({course}){
                 <ForumPostAccordion key={index} postIndex={index} commentText={commentText} onCommentTextChangeHandler={handleCommentTextChange} postCommentHandler={addNewComment} post={item} voteClickHandler={voteClickHandler}/>
             ))}
             <Box height={10}/>
-            <Fab className="floatingBtns" color="secondary" onClick={handleClickOpen}>
+            <Fab className="floatingBtns" id={'forumCreatePostFab'} color="secondary" onClick={handleClickOpen}>
                 <AddIcon/>
             </Fab>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

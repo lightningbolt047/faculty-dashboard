@@ -155,12 +155,12 @@ export default function DashboardHome(){
                         <ListItemIcon>{<AccountCircleIcon/>}</ListItemIcon>
                         <ListItemText primary="Profile"/>
                     </ListItem>
-                    {!isHOD && <ListItem button key="FacultyAttendance" id="dashboardAttendanceBtn"
+                    {!isHOD && <ListItem button key="FacultyAttendance" id="dashboardLeaveManagementBtn"
                                onClick={() => handleSubScreenChange(2)}>
                         <ListItemIcon>{<ListIcon/>}</ListItemIcon>
                         <ListItemText primary="Leave Management"/>
                     </ListItem>}
-                    {isHOD && <ListItem button key="LeaveApproval" id="dashboardAttendanceBtn"
+                    {isHOD && <ListItem button key="LeaveApproval" id="dashboardLeaveApprovalBtn"
                                onClick={() => handleSubScreenChange(3)}>
                         <ListItemIcon>{<LockOpenIcon/>}</ListItemIcon>
                         <ListItemText primary="Leave Approval"/>
@@ -169,11 +169,11 @@ export default function DashboardHome(){
                         <ListItemIcon>{<HourglassEmptyIcon/>}</ListItemIcon>
                         <ListItemText primary="Course Info"/>
                     </ListItem>
-                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardGatePassBtn" onClick={()=>handleSubScreenChange(5)}>
+                    {sessionStorage.FACULTY_TYPE==='advisor' && <ListItem button key="Gate Pass" id="dashboardStudentPassBtn" onClick={()=>handleSubScreenChange(5)}>
                         <ListItemIcon>{<AssignmentIcon/>}</ListItemIcon>
                         <ListItemText primary="Student Passes"/>
                     </ListItem>}
-                    <ListItem button key="OD Forms" id="dashboardCourseBtn" onClick={()=>handleSubScreenChange(6)}>
+                    <ListItem button key="OD Forms" id="dashboardODFormBtn" onClick={()=>handleSubScreenChange(6)}>
                         <ListItemIcon>{<WorkOffIcon/>}</ListItemIcon>
                         <ListItemText primary="OD Forms"/>
                     </ListItem>

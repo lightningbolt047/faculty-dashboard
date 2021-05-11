@@ -8,7 +8,7 @@ export default function SearchBar({searchText,searchHelpText,handleSearchTextCha
 
     return (
         <div className="searchComponent">
-            <TextField variant="outlined" color="secondary" size="small" placeholder={searchHelpText} value={searchText} onChange={handleSearchTextChange}
+            <TextField variant="outlined" id={'searchBarTextField'} color="secondary" size="small" placeholder={searchHelpText} value={searchText} onChange={handleSearchTextChange}
             InputProps={{
                 endAdornment: <InputAdornment position="end">
                     <SearchIcon />

@@ -13,14 +13,15 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FacultyLeaveServices from "../services/FacultyLeaveServices";
 
 export default function HodLeaveApproveAccordion({accordionID, passType, passJSON, handlePassAction}){
-    const departureTime=new Date(passJSON.passDetails.departureTime);
-    const arrivalTime=new Date(passJSON.passDetails.arrivalTime);
 
     if(typeof passJSON==='undefined'){
         return (
             <CircularProgress size={24} color="secondary"/>
         );
     }
+
+    const departureTime=new Date(passJSON.passDetails.departureTime);
+    const arrivalTime=new Date(passJSON.passDetails.arrivalTime);
 
     let remainingCasualLeaves=passJSON.attendanceDetails.totalLeaveDays.casualLeaves-passJSON.attendanceDetails.facultyLeaveDays.casualLeaves;
     let remainingEarnedLeaves=passJSON.attendanceDetails.totalLeaveDays.earnedLeaves-passJSON.attendanceDetails.facultyLeaveDays.earnedLeaves;

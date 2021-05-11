@@ -29,11 +29,7 @@ export default function FacultyAttendanceCard({fieldID,facultyAttendance}){
     }
 
     const getLeaveWarning=(leaveType)=>{
-        if(getRemainingLeavePercentage(leaveType)<0.2){
-            return true;
-        }else{
-            return false;
-        }
+        return getRemainingLeavePercentage(leaveType)<0.2;
     }
 
 
