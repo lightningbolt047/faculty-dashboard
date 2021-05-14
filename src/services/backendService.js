@@ -1,6 +1,6 @@
 
 
-const cloudBackendURL='https://faculty-dash-backend.herokuapp.com:443';
+const cloudBackendURL='https://ec2-35-175-181-113.compute-1.amazonaws.com:4000';
 // const localBackendURL='http://localhost:4000';
 const backendService = async (reqType, endpoint, reqBody, authToken, dbID) => {
     const reqOptions={
