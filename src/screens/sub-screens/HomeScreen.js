@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import backendService from "../../services/backendService";
 import HodLeaveStatusCard from '../../components/HodLeaveStatusCard';
 import FacultyAttendanceCard from "../../components/FacultyAttendanceCard";
+import {Alert} from "@material-ui/lab";
 
 function createTimeTable(weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7) {
     return { weekDay, hr1, hr2, hr3, hr4, hr5, hr6, hr7 };
@@ -35,6 +36,8 @@ export default function HomeScreen(){
     const [pendingLeaveApprovals,setPendingLeaveApprovals]=useState(-1);
     const [pendingLeaveApprovalsLoading,setPendingLeaveApprovalsLoading]=useState(true);
     const [facultyAttendanceDetails,setFacultyAttendanceDetails]=useState();
+    const [timetableStatusCode,setTimetableStatusCode]=useState(0);
+    const [enrolledCoursesStatusCode,setEnrolledCoursesStatusCode]=useState(0);
     // const [isHOD,setIsHOD]=useState(false);
 
     const getTimetableFromServer=async ()=>{
@@ -44,6 +47,7 @@ export default function HomeScreen(){
         if(responseBody.statusCode===200){
             setTimetableInTable(responseBody)
         }
+        setTimetableStatusCode(responseBody.statusCode);
     }
 
     const getNumPendingLeaveApprovals=async ()=>{
@@ -64,6 +68,7 @@ export default function HomeScreen(){
         if(responseBody.statusCode===200){
             setEnrolledCoursesInTable(responseBody);
         }
+        setEnrolledCoursesStatusCode(responseBody.statusCode);
     }
 
     const getAttendanceDetails=async ()=>{
@@ -148,28 +153,33 @@ export default function HomeScreen(){
                                 Your Enrolled Courses
                             </Typography>
                             <Box height={8}/>
-                            <TableContainer component={Paper}>
+                            {enrolledCoursesStatusCode===200 && <TableContainer component={Paper}>
                                 <Table className='timetable' size="small">
                                     <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center">Course Name</TableCell>
-                                        <TableCell align="center">Course Code</TableCell>
-                                        <TableCell align="center">Handling Sections</TableCell>
-                                    </TableRow>
+                                        <TableRow>
+                                            <TableCell align="center">Course Name</TableCell>
+                                            <TableCell align="center">Course Code</TableCell>
+                                            <TableCell align="center">Handling Sections</TableCell>
+                                        </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                    {courseRows.map((row) => (
-                                        <TableRow key={row.name}>
-                                        <TableCell component="th" align="center" scope="row">
-                                            {row.courseName}
-                                        </TableCell>
-                                        <TableCell align="center">{row.courseCode}</TableCell>
-                                        <TableCell align="center">{row.sections}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                        {courseRows.map((row) => (
+                                            <TableRow key={row.name}>
+                                                <TableCell component="th" align="center" scope="row">
+                                                    {row.courseName}
+                                                </TableCell>
+                                                <TableCell align="center">{row.courseCode}</TableCell>
+                                                <TableCell align="center">{row.sections}</TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
-                            </TableContainer>
+                            </TableContainer>}
+                            {enrolledCoursesStatusCode===404 && <Alert variant="outlined" severity="error">
+                                <Typography id={'warningColor'} variant={'h6'}>
+                                    You are not enrolled in a course
+                                </Typography>
+                            </Alert>}
                             <Box height={10}/>
                         </CardContent>
                     </Card>
@@ -180,44 +190,44 @@ export default function HomeScreen(){
                 </Grid>
             </Grid>
 
-            <Grid container spacing={3} alignContent="center" justify="center">
+            {timetableStatusCode===200 && <Grid container spacing={3} alignContent="center" justify="center">
                 <Grid item>
                     <Card className='homeCard' variant="outlined">
                         <CardContent>
                             <Box flex={1}/>
-                            <Typography  variant="h5" color={"secondary"} component="h2">
-                            Your Timetable
+                            <Typography variant="h5" color={"secondary"} component="h2">
+                                Your Timetable
                             </Typography>
                             <Box height={8}/>
                             <TableContainer component={Paper}>
                                 <Table className='timetable' size="small">
                                     <TableHead>
-                                    <TableRow>
-                                        <TableCell>Weekday</TableCell>
-                                        <TableCell align="center">8:50 to 9:40</TableCell>
-                                        <TableCell align="center">9:50 to 10:40</TableCell>
-                                        <TableCell align="center">11:00 to 11:50</TableCell>
-                                        <TableCell align="center">12:00 to 12:50</TableCell>
-                                        <TableCell align="center">2:00 to 3:00</TableCell>
-                                        <TableCell align="center">3:00 to 4:00</TableCell>
-                                        <TableCell align="center">4:00 to 5:00</TableCell>
-                                    </TableRow>
+                                        <TableRow>
+                                            <TableCell>Weekday</TableCell>
+                                            <TableCell align="center">8:50 to 9:40</TableCell>
+                                            <TableCell align="center">9:50 to 10:40</TableCell>
+                                            <TableCell align="center">11:00 to 11:50</TableCell>
+                                            <TableCell align="center">12:00 to 12:50</TableCell>
+                                            <TableCell align="center">2:00 to 3:00</TableCell>
+                                            <TableCell align="center">3:00 to 4:00</TableCell>
+                                            <TableCell align="center">4:00 to 5:00</TableCell>
+                                        </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                    {timetableRows.map((row) => (
-                                        <TableRow key={row.name}>
-                                        <TableCell component="th" scope="row">
-                                            {row.weekDay}
-                                        </TableCell>
-                                        <TableCell  align="center">{row.hr1}</TableCell>
-                                        <TableCell  align="center">{row.hr2}</TableCell>
-                                        <TableCell  align="center">{row.hr3}</TableCell>
-                                        <TableCell  align="center">{row.hr4}</TableCell>
-                                        <TableCell  align="center">{row.hr5}</TableCell>
-                                        <TableCell  align="center">{row.hr6}</TableCell>
-                                        <TableCell  align="center">{row.hr7}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                        {timetableRows.map((row) => (
+                                            <TableRow key={row.name}>
+                                                <TableCell component="th" scope="row">
+                                                    {row.weekDay}
+                                                </TableCell>
+                                                <TableCell align="center">{row.hr1}</TableCell>
+                                                <TableCell align="center">{row.hr2}</TableCell>
+                                                <TableCell align="center">{row.hr3}</TableCell>
+                                                <TableCell align="center">{row.hr4}</TableCell>
+                                                <TableCell align="center">{row.hr5}</TableCell>
+                                                <TableCell align="center">{row.hr6}</TableCell>
+                                                <TableCell align="center">{row.hr7}</TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
@@ -225,7 +235,7 @@ export default function HomeScreen(){
                         </CardContent>
                     </Card>
                 </Grid>
-            </Grid>
+            </Grid>}
                 
             
 
