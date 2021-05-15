@@ -211,7 +211,7 @@ export default function CourseNotes({course}){
                     <Select className="leftAlignDropdownText" id={'courseNotesAddNewNoteHourSelect'} value={selectedHour} onChange={handleSelectedHourChange} label="Hour">
                         {/*<MenuItem value="">Select</MenuItem>*/}
                         {hours.map((item,index)=>(
-                            <MenuItem value={item}>Hour: {item+1} {TimeTableServices.getTimeRangeFromHour(item)}</MenuItem>
+                            <MenuItem id={'hourSelector'+index} value={item}>Hour: {item+1} {TimeTableServices.getTimeRangeFromHour(item)}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
