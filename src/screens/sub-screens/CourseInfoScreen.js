@@ -5,6 +5,8 @@ import Tab from '@material-ui/core/Tab';
 import backendService from "../../services/backendService";
 import CourseTabScreen from "./CourseTabScreen";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@material-ui/core/Box";
+import Alert from "@material-ui/lab/Alert";
 
 
 let key=1;
@@ -12,6 +14,7 @@ export default function CourseInfoScreen(){
     const [tabIndex,setTabIndex]=useState(0);
     const [courses,setCourses]=useState([]);
     const [dataAvailable,setDataAvailable]=useState(false);
+    const [statusCode,setStatusCode]=useState(0);
 
 
     const getCoursesFromBackend=async ()=>{
@@ -23,6 +26,7 @@ export default function CourseInfoScreen(){
             setCourses(responseBody);
             setDataAvailable(true);
         }
+        setStatusCode(responseBody.statusCode);
     }
 
     const handleTabIndexChange=(event,value)=>{
@@ -51,8 +55,14 @@ export default function CourseInfoScreen(){
 
     return (
         <div>
-            {!dataAvailable && <CircularProgress size={24} color="secondary"/>}
             {dataAvailable && getMainUI()}
+            <Box height={12}/>
+            {!dataAvailable && statusCode===0 && <CircularProgress size={24} color="secondary"/>}
+            {statusCode===404 && <div id='mentorNotAllocated'>
+                <Alert variant="filled" severity="error">
+                    You have not been assigned a course
+                </Alert>
+            </div>}
         </div>
 
     );
