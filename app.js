@@ -72,14 +72,14 @@ app.get('/images/:dbID/',(req,res,next)=>{
 
   User.findById(req.params.dbID)
     .then((user)=>{
-        if(!user){
+        if(!user || !user.imagePath){
             res.statusCode=404;
             res.json({
                 status: "Invalid dbID"
             });
             return;
         }
-        var imageName=user.imagePath.split('\\')[2];
+        let imageName=user.imagePath.split('\\')[2];
         res.sendFile(imageName,{
           root: './public/images',
           dotfiles:'deny',

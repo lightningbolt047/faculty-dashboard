@@ -3,3 +3,4 @@ public
 .idea
 coverage
 .nyc_output
+.env
