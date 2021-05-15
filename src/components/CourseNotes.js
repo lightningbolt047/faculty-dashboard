@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TimeTableServices from "../services/TimeTableServices";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 let courseNotesFromServer=[];
@@ -32,6 +33,7 @@ export default function CourseNotes({course}){
     const [note,setNote]=useState("");
     const [courseNotesID,setCourseNotesID]=useState();
     const [selectedHour,setSelectedHour]=useState(hours[0]+1);
+    const [getStatusCode,setGetStatusCode]=useState(0);
 
 
     const getCourseNotesFromServer=async ()=>{
@@ -43,6 +45,7 @@ export default function CourseNotes({course}){
             setCourseNotesID(responseBody._id);
             getSortedOrder();
         }
+        setGetStatusCode(responseBody.statusCode);
     }
 
     const sendNewCourseNoteToServer=async ()=>{
@@ -193,9 +196,10 @@ export default function CourseNotes({course}){
                 <CourseNotesAccordion accordionID={index} note={item} handleDeleteNote={handleNoteDeletion}/>
             ))}
             <Box height={10}/>
-            <Fab className="floatingBtns" id={'courseNotesAddNewNoteFab'} color="secondary" onClick={handleClickOpen}>
+            {getStatusCode===0 && <CircularProgress size={24} color="secondary"/>}
+            {getStatusCode!==0 && <Fab className="floatingBtns" id={'courseNotesAddNewNoteFab'} color="secondary" onClick={handleClickOpen}>
                 <AddIcon/>
-            </Fab>
+            </Fab>}
             <Dialog open={open} onClose={handleNewNoteCancel} aria-labelledby="form-dialog-title">
             <DialogTitle>
                 <Typography variant="h5" color="secondary">Add New Note</Typography>

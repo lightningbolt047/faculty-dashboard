@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 
 export default function Forum({course}){
@@ -20,6 +21,7 @@ export default function Forum({course}){
     const [postText,setPostText]=useState("");
     const [commentText,setCommentText]=useState("");
     const [facultyName,setFacultyName]=useState();
+    const [getStatusCode,setGetStatusCode]=useState(0);
 
     const getForumPostsFromServer=async ()=>{
         let responseBody=await backendService('GET',`/forum/${course.courseID}`,
@@ -31,6 +33,7 @@ export default function Forum({course}){
         responseBody=await backendService('GET',`/profile/getFacultyNameOnly`,
             {},sessionStorage.USER_AUTH_TOKEN,sessionStorage.USER_DB_ID
         );
+        setGetStatusCode(responseBody.statusCode);
         setFacultyName(responseBody.name);
     }
 
@@ -175,9 +178,10 @@ export default function Forum({course}){
                 <ForumPostAccordion key={index} postIndex={index} commentText={commentText} onCommentTextChangeHandler={handleCommentTextChange} postCommentHandler={addNewComment} post={item} voteClickHandler={voteClickHandler}/>
             ))}
             <Box height={10}/>
-            <Fab className="floatingBtns" id={'forumCreatePostFab'} color="secondary" onClick={handleClickOpen}>
+            {getStatusCode===0 && <CircularProgress size={24} color="secondary"/>}
+            {getStatusCode!==0 && <Fab className="floatingBtns" id={'forumCreatePostFab'} color="secondary" onClick={handleClickOpen}>
                 <AddIcon/>
-            </Fab>
+            </Fab>}
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle>
                     <Typography variant="h5" color="secondary">Add New Post</Typography>
