@@ -3,7 +3,3 @@
 node_modules
 test
 coverage/lcov-report
-
-routes/gatePassRouter.js
-routes/medicalLeaveRouter.js
-models/courseMentorSchema.js
