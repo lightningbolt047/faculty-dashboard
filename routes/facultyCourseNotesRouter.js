@@ -145,40 +145,40 @@ facultyCourseNotesRouter.route('/:courseID')
                 });
         }
     })
-    .post(checkCredentials,(req,res,next)=>{
-        FacultyCourseNotes.findById(req.body.facultyCourseNotesID)
-            .then((document)=>{
-               let notes=document.notes;
-               for(const note of document.notes){
-                   notes.push(note);
-               }
-               try{
-                   notes[req.body.noteIndex]=req.body.noteText;
-                   FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseID,{$set:{'notes':notes}})
-                       .then(()=>{
-                           res.statusCode=200;
-                           res.json({
-                               status:"Note updated successfully"
-                           });
-                       },(err)=>{
-                           res.statusCode=500;
-                           res.json({
-                               status:"Internal Server Error"
-                           });
-                       });
-               }catch(e){
-                   res.statusCode=400;
-                   res.json({
-                       status:"Bad Request"
-                   });
-               }
-            },(err)=>{
-                res.statusCode=500;
-                res.json({
-                    status:"Internal Server Error"
-                });
-            });
-    })
+    // .post(checkCredentials,(req,res,next)=>{
+    //     FacultyCourseNotes.findById(req.body.facultyCourseNotesID)
+    //         .then((document)=>{
+    //            let notes=document.notes;
+    //            for(const note of document.notes){
+    //                notes.push(note);
+    //            }
+    //            try{
+    //                notes[req.body.noteIndex]=req.body.noteText;
+    //                FacultyCourseNotes.findByIdAndUpdate(req.body.facultyCourseID,{$set:{'notes':notes}})
+    //                    .then(()=>{
+    //                        res.statusCode=200;
+    //                        res.json({
+    //                            status:"Note updated successfully"
+    //                        });
+    //                    },(err)=>{
+    //                        res.statusCode=500;
+    //                        res.json({
+    //                            status:"Internal Server Error"
+    //                        });
+    //                    });
+    //            }catch(e){
+    //                res.statusCode=400;
+    //                res.json({
+    //                    status:"Bad Request"
+    //                });
+    //            }
+    //         },(err)=>{
+    //             res.statusCode=500;
+    //             res.json({
+    //                 status:"Internal Server Error"
+    //             });
+    //         });
+    // })
     .delete(checkCredentials,async (req,res,next)=>{
         try{
             if(await checkCoursePresentForFaculty(req.headers['dbid'],req.params.courseID)){

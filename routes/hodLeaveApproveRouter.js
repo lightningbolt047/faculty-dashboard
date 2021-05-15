@@ -10,6 +10,9 @@ const checkCredentials=require('../services/checkCredentialsService');
 const getFacultyAttendance=require('../services/getFacultyAttendance');
 const getLeaveDifferenceAsNumDays=require('../services/getDateDifferenceAsNumDays');
 const getMaxYearDocument=require('../services/getMaxYearDocument');
+const sendMail=require('../services/mailService');
+const getDateStringFromDateObject=require('../services/getDateStringFromDateObject');
+const getDayStringFromDateObject=require('../services/getDayStringFromDateObject');
 
 hodLeaveApproveRouter.route('/:reqType')
     .get(checkCredentials,(req,res,next)=>{
@@ -174,6 +177,12 @@ hodLeaveApproveRouter.route('/')
                                status:'Invalid leave id'
                            });
                        }
+                       User.findById(document.facultyID)
+                           .then((user)=>{
+                               let fromDate=new Date(document.departureTime);
+                               let toDate=new Date(document.arrivalTime);
+                               sendMail(user.email,`Your leave request was ${req.body.passStatus}`,"Leave Details:\n\nFrom: "+getDateStringFromDateObject(fromDate)+" "+getDayStringFromDateObject(fromDate)+"\n"+"Till: "+getDateStringFromDateObject(toDate)+" "+getDayStringFromDateObject(toDate)+"\n"+"Number of Days: "+getLeaveDifferenceAsNumDays(toDate,fromDate)+"\n"+"Leave Timing: "+document.leaveTiming.toUpperCase()+"\n"+"Leave Type: "+document.leaveType.toUpperCase()+"\n"+"Leave Reason: "+document.reason);
+                           });
                        res.statusCode=200;
                        res.json({
                            status:'Leave status updated successfully'
