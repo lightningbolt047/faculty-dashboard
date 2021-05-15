@@ -910,4 +910,160 @@ describe('Unit testing the /courseNotes get route', function() {
             })
     })
 });
+describe('Unit testing the /courseNotes get route', function() {
 
+    it('should return 200 status', function() {
+        return request(app)
+            .get('/studentMedical')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f8623915")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 200 status', function() {
+        return request(app)
+            .get('/studentMedical')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f8623918")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/studentMedical')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f8623915")
+            .send({"passID":"606ace76cb953c22ccb4517f","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/studentMedical')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f8623915")
+            .send({"passID":"606ace76cb953c22ccb4517o","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 400).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/studentMedical')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f862391c")
+            .send({"passID":"606ace76cb953c22ccb4517f","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .get('/gatepass')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+});
+
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/gatepass')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send({"passID":"606ace76cb953c22ccb4517f","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/gatepass')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6b")
+            .send({"passID":"606ace76cb953c22ccb4517f","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 400 status', function() {
+        return request(app)
+            .post('/gatepass')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6c")
+            .send({"passID":"606ace76cb953c22ccb4517f","passStatus":"approved"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 404 status', function() {
+        return request(app)
+            .post('/courseNotes')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6c")
+            .send({"facultyCourseNotesID":"608e43d148adc12db822cc2c","noteText":"hey"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /gatepass route ', function() {
+
+    it('should return 404 status', function() {
+        return request(app)
+            .post('/hodLeaveApprove/getAllLeaves')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send({"passID":"606ace10cb953c22ccb4517f","passStatus":"approved","leaveType":"cancelled"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /gatepass get route', function() {
+
+    it('should return 404 status', function() {
+        return request(app)
+            .get('/odform/')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send({"passStatus":"approved","passID":"606ace76cb953c22ccb4517f"})
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+})
