@@ -8,6 +8,9 @@ const transporter=nodemailer.createTransport({
 });
 
 module.exports=(toMailAddress,subject,body)=>{
+    if(typeof toMailAddress==='undefined' || typeof subject==='undefined' || typeof body==='undefined'){
+        return;
+    }
     transporter.sendMail({
         from:process.env.MAIL_SERVICE_MAIL_ADDRESS,
         to:toMailAddress,
