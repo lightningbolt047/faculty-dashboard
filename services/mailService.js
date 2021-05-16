@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const transporter=nodemailer.createTransport({
-   service:process.env.MAIL_SERVICE_TRANSPORT_SERVICE,
+   service:process.env.MAIL_SERVICE,
    auth:{
        user:process.env.MAIL_SERVICE_MAIL_ADDRESS,
        pass:process.env.MAIL_SERVICE_MAIL_PASSWORD
@@ -16,5 +16,9 @@ module.exports=(toMailAddress,subject,body)=>{
         to:toMailAddress,
         subject:subject,
         text:body
+    },(err)=>{
+        if(err){
+            console.log("Mail Send error");
+        }
     });
 };
