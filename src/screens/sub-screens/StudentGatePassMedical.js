@@ -26,8 +26,8 @@ export default function StudentGatePassMedical(){
         <div>
             <Paper variant="outlined">
                 <Tabs value={tabIndex} onChange={handleTabIndexChange}>
-                    <Tab label={"Gate Passes"}/>
-                    <Tab label={"Medical Leaves"}/>
+                    <Tab id={'gatePass'} label={"Gate Passes"}/>
+                    <Tab id={'medicalLeaves'} label={"Medical Leaves"}/>
                 </Tabs>
             </Paper>
             <GetTabIndexUI tabIndex={tabIndex}></GetTabIndexUI>
