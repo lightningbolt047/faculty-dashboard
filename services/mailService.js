@@ -1,20 +1,12 @@
-const nodemailer = require('nodemailer');
-const transporter=nodemailer.createTransport({
-   service:process.env.MAIL_SERVICE_TRANSPORT_SERVICE,
-   auth:{
-       user:process.env.MAIL_SERVICE_MAIL_ADDRESS,
-       pass:process.env.MAIL_SERVICE_MAIL_PASSWORD
-   }
-});
+const mailgun=require('mailgun-js');
+const mg=mailgun({apiKey:process.env.MAIL_API_KEY,domain:process.env.MAIL_DOMAIN});
+
 
 module.exports=(toMailAddress,subject,body)=>{
-    if(typeof toMailAddress==='undefined' || typeof subject==='undefined' || typeof body==='undefined'){
-        return;
-    }
-    transporter.sendMail({
-        from:process.env.MAIL_SERVICE_MAIL_ADDRESS,
+    mg.messages().send({
+        from:process.env.MAIL_FROM,
         to:toMailAddress,
         subject:subject,
         text:body
     });
-};
+}
