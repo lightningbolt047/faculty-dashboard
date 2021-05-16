@@ -431,12 +431,12 @@ describe('Unit testing the /gatepass route ', function() {
 
     it('should return 404 status', function() {
         return request(app)
-            .post('/hodLeaveApprove/getAllLeaves')
+            .post('/hodLeaveApprove')
             .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
             .set("dbID","605a1bdd3dd7450a04455d6a")
             .send({"passID":"606ace10cb953c22ccb4517f","passStatus":"approved"})
             .then((response)=>{
-                expect(response.statusCode === 404).to.be.true;
+                expect(response.statusCode === 403).to.be.true;
             })
     })
 });
@@ -848,6 +848,32 @@ describe('Unit testing the /courseNotes get route', function() {
     it('should return 401 status', function() {
         return request(app)
             .get('/forum/6055c0e75691e12668d498a2')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1d')
+            .set("dbID","6035f1a06493e855f8623915")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 401).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 401 status', function() {
+        return request(app)
+            .get('/forum/6055c0e75691e12668d498a3')
+            .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
+            .set("dbID","6035f1a06493e855f8623915")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 403).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 401 status', function() {
+        return request(app)
+            .get('/forum/6055c0e75691e12668d498a2')
             .set('authToken','42a11909cde8ad0dab84102aa55e820195ae96e13f7fa2f5501d673bb5cfcb92565a9266a0eff75454e3c0c1a32e3d201ef986657f2d17f0ca8e407984efbb1c')
             .set("dbID","6035f1a06493e855f8623918")
             .send()
@@ -1071,9 +1097,9 @@ describe('Unit testing the /gatepass get route', function() {
     it('should return 404 status', function() {
         return request(app)
             .get('/odform/')
-            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
-            .set("dbID","605a1bdd3dd7450a04455d6a")
-            .send({"passStatus":"approved","passID":"606ace76cb953c22ccb4517f"})
+            .set('authToken','854fdf9b1dcf52dafcc1596071677635bc25ba3ae86c9e4d1e3afd80464b03930cb71bc0d4a12039dd4c065b4a9a05d777de6dd949f43b6a4f91ffce6ec9fec4')
+            .set("dbID","605a1f283dd7450a04455d6c")
+            .send({"passStatus":"cancelled","passID":"60716a1e00f68b31f861df90"})
             .then((response)=>{
                 expect(response.statusCode === 200).to.be.true;
             })
