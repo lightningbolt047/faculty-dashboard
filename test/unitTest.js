@@ -765,7 +765,19 @@ describe('Unit testing the /courseNotes get route', function() {
             })
     })
 });
+describe('Unit testing the /courseNotes get route', function() {
 
+    it('should return 200 status', function() {
+        return request(app)
+            .put('/courseNotes')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send({"facultyCourseNotesID":"608e43d148adc12db822cc2c","noteDate":"Wed May 12 2021 05:30:00 GMT+0530 (India Standard Time)","noteText":"hey","hour":"1"})
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
 describe('Unit testing the /facultyLeave route ', function() {
 
     it('should return 404 status', function() {
@@ -1032,9 +1044,9 @@ describe('Unit testing the /courseNotes get route', function() {
 
     it('should return 404 status', function() {
         return request(app)
-            .post('/courseNotes')
+            .post('/courseNotes/')
             .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
-            .set("dbID","605a1bdd3dd7450a04455d6c")
+            .set("dbID","605a1bdd3dd7450a04455d6a")
             .send({"facultyCourseNotesID":"608e43d148adc12db822cc2c","noteText":"hey"})
             .then((response)=>{
                 expect(response.statusCode === 404).to.be.true;
@@ -1067,3 +1079,31 @@ describe('Unit testing the /gatepass get route', function() {
             })
     })
 })
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 404 status', function() {
+        return request(app)
+            .get('/courseNotes/6055c0e75691e12668d498a2')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 404).to.be.true;
+            })
+    })
+});
+describe('Unit testing the /courseNotes get route', function() {
+
+    it('should return 404 status', function() {
+        return request(app)
+            .delete('/courseNotes/6055c0e75691e12668d498a2')
+            .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37007')
+            .set("dbID","605a1bdd3dd7450a04455d6a")
+            .send()
+            .then((response)=>{
+                expect(response.statusCode === 200).to.be.true;
+            })
+    })
+});
+
+
