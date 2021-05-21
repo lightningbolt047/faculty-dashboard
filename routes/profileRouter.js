@@ -82,6 +82,7 @@ profileRouter.route('/')
         res.json({
             status:'Invalid dbID'
         });
+        return;
     }
     if(req.body.updateType==='personalInfoUpdate'){
         User.findByIdAndUpdate(req.headers['dbid'],{
