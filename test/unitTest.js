@@ -218,7 +218,7 @@ describe('Unit testing the /profile route ', function() {
             .set('authToken','04b3d8d2f757c5c6bb3986ff0a43cf7de9b657888173f06c96832ec1091a929ed562e6d1924496e93b98e4d55c5009d5affbaf4654133e32d366255885c37117')
             .send()
             .then((response)=>{
-                expect(response.statusCode === 404).to.be.true
+                expect(response.statusCode === 400).to.be.true
             })
     })
 
