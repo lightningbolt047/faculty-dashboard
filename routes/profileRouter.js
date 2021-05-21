@@ -84,6 +84,13 @@ profileRouter.route('/')
         });
         return;
     }
+    if(typeof req.body.updateType==='undefined'){
+        res.statusCode=400;
+        res.json({
+            status:"Bad Request"
+        });
+        return;
+    }
     if(req.body.updateType==='personalInfoUpdate'){
         User.findByIdAndUpdate(req.headers['dbid'],{
             "$set":{
