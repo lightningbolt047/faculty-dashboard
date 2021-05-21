@@ -2,6 +2,12 @@ const User=require('../models/userSchema');
 
 
 module.exports=(req,res,next)=>{
+    if(typeof req.headers['dbid']==='undefined' || typeof req.headers['authtoken']==='undefined'){
+        res.statusCode=400;
+        res.json({
+            status:"Bad Request"
+        });
+    }
     User.findById(req.headers['dbid'])
     .then((user)=>{
         if(!user){
