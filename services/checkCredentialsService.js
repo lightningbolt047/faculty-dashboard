@@ -7,6 +7,7 @@ module.exports=(req,res,next)=>{
         res.json({
             status:"Bad Request"
         });
+        return;
     }
     User.findById(req.headers['dbid'])
     .then((user)=>{
