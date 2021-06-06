@@ -142,8 +142,14 @@ profileRouter.route('/uploadimg/')
                 fs.unlinkSync(user.imagePath);
             }
         }
+        let imageFileName=req.file.path;
+        if(process.platform==='win32'){
+            imageFileName=imageFileName.split('\\')[2];
+        }else if(process.platform==='linux'){
+            imageFileName=imageFileName.split('/')[2];
+        }
         User.findByIdAndUpdate(req.headers['dbid'],{
-            $set:{'imagePath':req.file.path}
+            $set:{'imagePath':imageFileName}
         }).then((document)=>{
             res.statusCode=200;
             res.json(document);

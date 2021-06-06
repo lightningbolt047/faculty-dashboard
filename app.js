@@ -66,8 +66,6 @@ app.use('/forum',forumPostRouter);
 
 app.get('/images/:dbID/',(req,res,next)=>{
 
-  console.log("dbID"+req.params.dbID);
-
   User.findById(req.params.dbID)
     .then((user)=>{
         if(!user || !user.imagePath){
@@ -77,8 +75,8 @@ app.get('/images/:dbID/',(req,res,next)=>{
             });
             return;
         }
-        let imageName=user.imagePath.split('\\')[2];
-        res.sendFile(imageName,{
+        // let imageName=user.imagePath.split('\\')[2];
+        res.sendFile(user.imagePath,{
           root: './public/images',
           dotfiles:'deny',
           headers: {
