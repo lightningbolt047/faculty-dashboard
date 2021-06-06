@@ -184,7 +184,7 @@ window.env = {
   "npm_package_description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "npm_package_eslintConfig_extends_0": "react-app",
   "npm_package_eslintConfig_extends_1": "react-app/jest",
-  "npm_package_gitHead": "89dd16f125db555959326d1e34a9b44d21ea332b",
+  "npm_package_gitHead": "6c9250e1fa94158da397cbe4e4f1aba157f35272",
   "npm_package_name": "faculty-dashboard",
   "npm_package_private": "true",
   "npm_package_readmeFilename": "README.md",
@@ -222,7 +222,7 @@ window.env = {
   "SystemRoot": "C:\\WINDOWS",
   "TEMP": "C:\\Users\\sasha\\AppData\\Local\\Temp",
   "TERMINAL_EMULATOR": "JetBrains-JediTerm",
-  "TERM_SESSION_ID": "d05693a1-95eb-4ad1-8eee-1d107519ea56",
+  "TERM_SESSION_ID": "4210576d-c4d9-4cd1-b5f3-06b1a4234786",
   "TMP": "C:\\Users\\sasha\\AppData\\Local\\Temp",
   "USERDOMAIN": "SASHANK-ZEPHYRU",
   "USERDOMAIN_ROAMINGPROFILE": "SASHANK-ZEPHYRU",
@@ -231,5 +231,5 @@ window.env = {
   "WebStorm": "C:\\Program Files\\JetBrains\\WebStorm 2020.3.3\\bin;",
   "windir": "C:\\WINDOWS",
   "_prog": "node",
-  "__INTELLIJ_COMMAND_HISTFILE__": "C:\\Users\\sasha\\AppData\\Local\\JetBrains\\WebStorm2021.1\\terminal\\history\\faculty-dash-frontend-history1"
+  "__INTELLIJ_COMMAND_HISTFILE__": "C:\\Users\\sasha\\AppData\\Local\\JetBrains\\WebStorm2021.1\\terminal\\history\\faculty-dash-frontend-history"
 };

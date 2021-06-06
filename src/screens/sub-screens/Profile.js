@@ -141,7 +141,7 @@ export default function Profile(){
         formData.append('imageFile',uploadImageFile);
 
         axios({
-            url:`http://localhost:4000/profile/uploadimg/`,
+            url:`${window.env.BACKEND_URL}/profile/uploadimg/`,
             method:'POST',
             headers:{
                 authtoken:sessionStorage.USER_AUTH_TOKEN,
@@ -158,7 +158,7 @@ export default function Profile(){
         if(typeof imagePath==='undefined' || imagePath===''){
             return '.../assets/userDefaultProfile.png';
         }
-        return `http://localhost:4000/images/${sessionStorage.USER_DB_ID}/`;
+        return `${window.env.BACKEND_URL}/images/${sessionStorage.USER_DB_ID}/`;
     }
 
 
