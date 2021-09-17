@@ -14,7 +14,7 @@
     <li>And its a PWA. Users can install it as an app through their web browser and updates will be served automatically</li>
 </ul>
 
-### Stack used:
+### Stack used
 MERN
 <ul>
     <li>MongoDB</li>
@@ -22,3 +22,12 @@ MERN
     <li>ReactJS</li>
     <li>NodeJS</li>
 </ul>
+
+### How to run
+<ol>
+    <li>Make sure nodejs and npm is installed and path configured</li>
+    <li>Clone this repo: <code>git clone https://github.com/lightningbolt047/faculty-dashboard/</code></li>
+    <li>Install dependencies: <code>npm install</code></li>
+    <li>Run debug build: <code>npm start</code></li>
+    <li>Or get release build: <code>npm run build</code></li>
+</ol>
